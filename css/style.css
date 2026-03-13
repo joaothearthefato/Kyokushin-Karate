@@ -327,3 +327,103 @@ footer {
     .technique-grid { grid-template-columns: 1fr; }
     .training-info { flex-direction: column; align-items: center; }
 }
+/* --- Seção de Faixas --- */
+.belts-section {
+    padding: 80px 20px;
+    background-color: #1a1a1a;
+    color: #fff;
+    text-align: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.section-title span {
+    color: #e60000;
+}
+
+.section-description {
+    max-width: 800px;
+    margin: 0 auto 50px auto;
+    font-size: 1.1rem;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+/* Grid das Faixas */
+.belts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.belt-card {
+    background-color: #111;
+    padding: 30px;
+    border-radius: 8px;
+    border-bottom: 4px solid #333;
+    transition: transform 0.3s ease;
+}
+
+.belt-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Estilo da Faixa Visual */
+.belt-color {
+    height: 30px;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+/* Cores Específicas das Faixas */
+.white-belt { background-color: #ffffff; border: 1px solid #ccc; }
+.orange-belt { background-color: #ff6600; }
+.blue-belt { background-color: #0044cc; }
+.yellow-belt { background-color: #ffcc00; }
+.green-belt { background-color: #008000; }
+.brown-belt { background-color: #663300; }
+.black-belt { background-color: #000000; border: 1px solid #333; }
+
+.belt-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.belt-card h3 span {
+    font-size: 0.9rem;
+    color: #888;
+    display: block;
+    margin-top: 5px;
+}
+
+.belt-card p {
+    color: #aaa;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Destaque para a Faixa Preta */
+.black-belt-card {
+    grid-column: 1 / -1; /* Faz o card da faixa preta ocupar a linha inteira */
+    border-bottom: 4px solid #e60000;
+}
+
+.black-belt-card .titles {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    color: #ccc;
+    font-size: 0.95rem;
+}
