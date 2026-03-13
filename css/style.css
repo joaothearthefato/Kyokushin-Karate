@@ -16,6 +16,15 @@
 --radius:8px;
 --transition:0.25s;
 
+--faixabranca:#ffffff;
+--faixalaranja:#ff9800;
+--faixaazul:#2196f3;
+--faixaamarela:#ffeb3b;
+--faixaverde:#4caf50;
+--faixamarrom:#795548;
+--faixamarrompontapreta:#5d4037;
+--faixapreta:#000000;
+
 }
 
 
@@ -414,3 +423,63 @@ flex-direction:column;
 }
 
 }
+
+/* ===== FAIXAS ===== */
+
+.faixa-card {  
+background:var(--bg-secondary);
+padding:25px;
+border-radius:var(--radius);
+border-left:4px solid var();
+width: 150px;
+}
+
+.faixa-card:hover {
+transform:translateY(-5px);
+transition:var(--transition)
+}
+
+#faixabranca {
+border-color: var(--faixabranca);
+border-left: 4px solid var(--faixabranca);
+}
+
+#faixalaranja {
+border-left: 4px solid var(--faixalaranja);
+}
+
+#faixaazul {
+border-left: 4px solid var(--faixaazul);
+}
+
+#faixaamarela {
+border-left: 4px solid var(--faixaamarela);
+}
+
+#faixaverde {
+border-left: 4px solid var(--faixaverde);
+}
+
+#faixamarrom {
+border-left: 4px solid var(--faixamarrom);
+}
+
+#faixamarrompontapreta {
+border-left: 4px solid var(--faixamarrompontapreta);
+width: 280px;
+} 
+
+#faixapreta {
+border-left: 4px solid var(--faixapreta);
+}
+
+.faixacss {
+display: flex;
+gap: 20px;
+padding: 20px 0px;
+}
+
+.faixas {
+padding:80px 10%;
+}
+/* =====  ===== */
