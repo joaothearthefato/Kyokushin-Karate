@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (isset($_SESSION["id"])) {
+  header("Location: dashboard.php");
+  exit;
+}
+
 require("config.php");
 
 if (isset($_POST["email"])) {
@@ -44,8 +50,8 @@ if (isset($_POST["email"])) {
 
     <h2>LOGIN <span>DOJO</span></h2>
 
-        <?php if (isset($erro))
-          echo "<p style='color:red;text-align:center;'>$erro</p>"; ?>
+    <?php if (isset($erro))
+      echo "<p style='color:red;text-align:center;'>$erro</p>"; ?>
 
     <form method="POST">
 
@@ -65,6 +71,9 @@ if (isset($_POST["email"])) {
 
     <a href="registro.php" class="login-link">
       Não tem conta? Cadastre-se
+    </a>
+    <a href="../index.html" class="login-link">
+      Voltar ao início
     </a>
 
   </div>

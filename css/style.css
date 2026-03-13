@@ -70,6 +70,18 @@ padding:15px 40px;
 
 .logo{
 height:45px;
+cursor:grab;
+
+transition: 
+transform 0.25s ease,
+filter 0.25s ease,
+opacity 0.25s ease;
+}
+
+.logo:hover{
+transform: translateY(-3px) scale(1.05);
+filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+opacity:0.95;
 }
 
 
@@ -140,20 +152,27 @@ max-width:600px;
 }
 
 .hero h1{
-
-font-size:50px;
+font-size:90px;
 margin-bottom:20px;
 line-height:1.2;
+transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
 
+.hero h1:hover{
+transform: translateY(-3px);
+text-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
 .hero p{
-
 color:var(--text-muted);
 margin-bottom:30px;
-
+transition: color 0.3s ease, transform 0.3s ease;
 }
 
+.hero p:hover{
+color:white;
+transform: translateY(-2px);
+}
 
 /* ===== BUTTONS ===== */
 
@@ -220,6 +239,19 @@ color:var(--secondary);
 .about{
 
 background:var(--bg-secondary);
+padding:80px 10%;
+border-radius:12px;
+
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+
+transition:transform .3s ease, box-shadow .3s ease;
+
+}
+
+.about:hover{
+
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(0,0,0,0.35);
 
 }
 
