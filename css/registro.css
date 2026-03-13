@@ -1,0 +1,189 @@
+/* ===== CONFIG ===== */
+
+:root{
+
+--bg:#0f0f0f;
+--bg-card:#161616;
+
+--primary:#c62828;
+--secondary:#d4af37;
+
+--text:#f5f5f5;
+--text-muted:#aaaaaa;
+
+--border:#2a2a2a;
+
+--radius:8px;
+--transition:0.25s;
+
+}
+
+
+/* ===== RESET ===== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+
+font-family:'Montserrat', sans-serif;
+height:100vh;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background-image:
+linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)),
+url("../img/dojo.jpg");
+
+background-size:cover;
+background-position:center;
+
+color:var(--text);
+
+}
+
+
+/* ===== CARD ===== */
+
+.register-box{
+
+width:350px;
+background:var(--bg-card);
+padding:40px;
+
+border-radius:var(--radius);
+border:1px solid var(--border);
+
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+
+}
+
+
+/* ===== TITLE ===== */
+
+.register-box h2{
+
+text-align:center;
+margin-bottom:30px;
+font-weight:900;
+letter-spacing:2px;
+
+}
+
+.register-box span{
+color:var(--secondary);
+}
+
+
+/* ===== INPUTS ===== */
+
+.input-group{
+
+margin-bottom:20px;
+
+}
+
+.input-group label{
+
+display:block;
+font-size:13px;
+margin-bottom:6px;
+color:var(--text-muted);
+
+}
+
+.input-group input{
+
+width:100%;
+padding:12px;
+
+background:#111;
+border:1px solid var(--border);
+border-radius:var(--radius);
+
+color:white;
+font-size:14px;
+
+transition:var(--transition);
+
+}
+
+
+/* INPUT HOVER */
+
+.input-group input:hover{
+
+border-color:var(--secondary);
+
+}
+
+
+/* INPUT FOCUS */
+
+.input-group input:focus{
+
+outline:none;
+border-color:var(--primary);
+
+}
+
+
+/* ===== BUTTON ===== */
+
+.btn-submit{
+
+width:100%;
+padding:14px;
+
+margin-top:10px;
+
+background:var(--primary);
+border:none;
+border-radius:var(--radius);
+
+color:white;
+font-weight:bold;
+letter-spacing:1px;
+
+cursor:pointer;
+transition:var(--transition);
+
+}
+
+
+/* BUTTON HOVER */
+
+.btn-submit:hover{
+
+background:#ff3b3b;
+transform:translateY(-2px);
+
+}
+
+
+/* ===== LOGIN LINK ===== */
+
+.login-link{
+
+display:block;
+text-align:center;
+margin-top:20px;
+
+font-size:13px;
+color:var(--text-muted);
+
+text-decoration:none;
+transition:var(--transition);
+
+}
+
+.login-link:hover{
+
+color:var(--secondary);
+
+}
