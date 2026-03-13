@@ -1,10 +1,5 @@
 <?php
-// Configurações do Banco de Dados
-$host = 'localhost';
-$dbname = 'dojo_kyokushin';
-$user = 'root'; // Usuário padrão do XAMPP
-$pass = '';     // Senha padrão do XAMPP
-
+include('connect.php')
 try {
     // Estabelecendo a conexão
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
