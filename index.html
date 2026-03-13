@@ -1,22 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
-<link rel="icon" href="./img/kyokushinicon.png" type="image/x-icon">
+  <link rel="icon" href="./img/kyokushinicon.png" type="image/x-icon">
   <title>Kyokushin Karate</title>
 </head>
 <body>
-  <nav id="navbar">
-    <a href="#hero" class="nav-logo">
-      <div class="nav-logo-kanji">極</div>
-      <div class="nav-logo-text">
-        <span class="brand">Kyokushin</span>
-        <span class="sub">Brasil Dojo</span>
-      </div>
-    </a>
+<header>
+  <nav class="navbar">
+    <img class="logo" src="./img/kyokushinicon.png" alt="Kyokushin Karate Logo">
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#about">Sobre</a>
+      <a href="#techniques">Técnicas</a>
+      <a href="#training">Treinamento</a>
+      <a href="#contact">Contato</a>
+    </div>
+    <button id="login">Login</button>
+  </nav>
+</header>
 
+<main>
+  <section id="home" class="hero">
+    <h1>DOMINE A FORÇA DO <br> KARATE KYOKUSHIN</h1>
+    <p>Treine o caminho da verdade, e supere seus limites</p>
+    <div class="button-group">
+      <button type="button" id="registro">Registrar-se</button>
+      <button type="button" id="saiba-mais">Saiba Mais</button>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <div class="container">
+      <h2>Sobre o Kyokushin Karate</h2>
+      <p>O Kyokushin Karate é uma arte marcial full-contact fundada por Masutatsu Oyama. Enfatiza a disciplina, resistência e o combate real, preparando praticantes para desafios da vida.</p>
+      <p>Nosso dojo oferece treinamentos intensivos para todos os níveis, desde iniciantes até avançados.</p>
+    </div>
+  </section>
+
+  <section id="techniques" class="techniques">
+    <div class="container">
+      <h2>Técnicas Principais</h2>
+      <div class="technique-grid">
+        <div class="technique">
+          <h3>Soco</h3>
+          <p>Técnicas de punho para máxima potência.</p>
+        </div>
+        <div class="technique">
+          <h3>Chute</h3>
+          <p>Chutes poderosos e precisos.</p>
+        </div>
+        <div class="technique">
+          <h3>Defesa</h3>
+          <p>Bloqueios e esquivas eficazes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="training" class="training">
+    <div class="container">
+      <h2>Treinamento</h2>
+      <p>Junte-se a nós para sessões de treinamento diárias. Desenvolva força, agilidade e mentalidade vencedora.</p>
+      <div class="training-info">
+        <div class="info">
+          <h3>Horários</h3>
+          <p>Segunda a Sexta: 18h - 20h<br>Sábado: 10h - 12h</p>
+        </div>
+        <div class="info">
+          <h3>Local</h3>
+          <p>Dojo Kyokushin<br>Rua do Karate, 123</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2>Contato</h2>
+      <p>Entre em contato para mais informações ou para se inscrever.</p>
+      <p>Email: info@kyokushin.com<br>Telefone: (11) 1234-5678</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 Kyokushin Karate. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="#contact">Contato</a>
+  </div>
+</footer>
 </body>
 </html>
 
