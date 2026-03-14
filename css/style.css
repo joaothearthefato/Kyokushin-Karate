@@ -239,7 +239,7 @@ color:var(--secondary);
 }
 
 .section-title:hover{
-
+    transition: var(--transition);
 }
 
 
@@ -430,14 +430,14 @@ flex-direction:column;
 background:var(--bg-secondary);
 padding:25px;
 border-radius:var(--radius);
-border-left:4px solid var();
-width: 150px;
+transition:var(--transition);
 }
 
 .faixa-card:hover {
 transform:translateY(-5px);
-transition:var(--transition)
+transition:var(--transition);
 }
+
 
 #faixabranca {
 border-color: var(--faixabranca);
