@@ -18,7 +18,6 @@ CREATE TABLE katas (
   nivel_dificuldade ENUM('iniciante', 'intermediario', 'avancado') NOT NULL
 );
 
--- Criação da tabela de informações
 CREATE TABLE informacoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   titulo VARCHAR(100) NOT NULL,
