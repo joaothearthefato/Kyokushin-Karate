@@ -1,26 +1,6 @@
-<?php
-session_start();
-
-if (!isset($_SESSION["id"])) {
-  header("Location: login.php");
-  exit;
-}
-
-require("config.php");
-?>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-</head>
-
-<body>
 
   <?php
-include 'connect.php'; // Remova o "$conn->close();" do seu connect.php original para funcionar aqui
+require_once("config.php"); // Remova o "$conn->close();" do seu connect.php original para funcionar aqui
 
 // Lógica para DELETAR (Delete)
 if (isset($_GET['delete'])) {
@@ -33,7 +13,7 @@ if (isset($_GET['delete'])) {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <title>Meu Diário de Treino - Oyama Hub</title>
 </head>
 <body>
