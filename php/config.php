@@ -2,7 +2,7 @@
 // Configurações do banco de dados
 $host = "localhost";   // Servidor
 $usuario = "root";     // Usuário do banco
-$senha = "";           // Senha do banco
+$senha = "Home@spSENAI2025!";           // Senha do banco
 $banco = "oyama_hub";  // Nome do banco
 
 // Criar conexão
