@@ -38,7 +38,7 @@ if (isset($_POST["email"])) {
 
 <head>
   <meta charset="UTF-8">
-  <title>Login - Kyokushin</title>
+  <title>Login - Oyama Hub</title>
 
   <link rel="icon" href="../img/kyokushinicon.png">
   <link rel="stylesheet" href="../css/registro.css">
@@ -48,7 +48,7 @@ if (isset($_POST["email"])) {
 
   <div class="register-box">
 
-    <h2>LOGIN <span>DOJO</span></h2>
+    <h2>LOGIN <span>Oyama-HUB</span></h2>
 
     <?php if (isset($erro))
       echo "<p style='color:red;text-align:center;'>$erro</p>"; ?>
