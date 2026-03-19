@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION["id"])) {
-  header("Location: dashboard.php");
+  header("Location: ../dashboard.php");
   exit;
 }
 
@@ -22,8 +22,9 @@ if (isset($_POST["email"])) {
 
     $_SESSION["id"] = $usuario["id"];
     $_SESSION["nome"] = $usuario["nome"];
+    $_SESSION["tipo"] = $usuario["tipo"];
 
-    header("Location: dashboard.php");
+    header("Location: ../dashboard.php");
     exit;
 
   } else {
@@ -32,13 +33,14 @@ if (isset($_POST["email"])) {
 
 }
 ?>
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
-  <title>Login - Kyokushin</title>
+  <title>Login - Oyama Hub</title>
 
   <link rel="icon" href="../img/kyokushinicon.png">
   <link rel="stylesheet" href="../css/registro.css">
@@ -48,7 +50,7 @@ if (isset($_POST["email"])) {
 
   <div class="register-box">
 
-    <h2>LOGIN <span>DOJO</span></h2>
+    <h2>LOGIN <span>Oyama-HUB</span></h2>
 
     <?php if (isset($erro))
       echo "<p style='color:red;text-align:center;'>$erro</p>"; ?>

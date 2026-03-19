@@ -2,14 +2,14 @@
 // Configurações do banco de dados
 $host = "localhost";   // Servidor
 $usuario = "root";     // Usuário do banco
-$senha = "Home@spSENAI2025!";           // Senha do banco
+$senha = "";           // Senha do banco (vazia por padrão no XAMPP)
 $banco = "oyama_hub";  // Nome do banco
 
 // Criar conexão
-$conn = new mysqli($host, $usuario, $senha, $banco);
+$conn = mysqli_connect($host, $usuario, $senha, $banco);
 
 // Verificar conexão
-if ($conn->connect_error) {
-    die("Falha na conexão: " . $conn->connect_error);
+if (!$conn) {
+    die("Falha na conexão: " . mysqli_connect_error());
 }
 ?>
