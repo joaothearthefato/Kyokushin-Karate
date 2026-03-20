@@ -29,16 +29,12 @@ CREATE TABLE faixas (
 INSERT INTO faixas (nome, ordem) VALUES 
 ('Branca (Iniciante)', 1),
 ('Laranja (10º Kyu)', 2),
-('Laranja com Tarja (9º Kyu)', 3),
-('Azul (8º Kyu)', 4),
-('Azul com Tarja (7º Kyu)', 5),
-('Amarela (6º Kyu)', 6),
-('Amarela com Tarja (5º Kyu)', 7),
-('Verde (4º Kyu)', 8),
-('Verde com Tarja (3º Kyu)', 9),
-('Marrom (2º Kyu)', 10),
-('Marrom com Tarja (1º Kyu)', 11),
-('Preta (1º Dan)', 12);
+('Azul (8º Kyu)', 3),
+('Amarela (6º Kyu)', 4),
+('Verde (4º Kyu)', 5),
+('Marrom (2º Kyu)', 6),
+('Marrom com Ponta Preta (1º Kyu)', 7),
+('Preta (1º Dan)', 8);
 
 select * from usuarios_oyama;
 select * FROM FAIXAS;

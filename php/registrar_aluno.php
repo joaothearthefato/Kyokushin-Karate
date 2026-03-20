@@ -17,7 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO usuarios_oyama (nome, email, senha, tipo) VALUES ('$nome', '$email', '$senha', 'aluno')";
 
     if (mysqli_query($conn, $sql)) {
-      echo "<script>alert('Usuário cadastrado com sucesso!'); window.location.href='../index.html';</script>";
+      $usuario_id = mysqli_insert_id($conn);
+      header("Location: perfil_aluno.php?id=$usuario_id");
+      exit();
     } else {
       echo "<script>alert('Erro ao cadastrar usuário. Tente novamente.'); history.back();</script>";
     }

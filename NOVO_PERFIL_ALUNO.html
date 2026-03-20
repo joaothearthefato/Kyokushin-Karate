@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruções - Perfil do Aluno</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #c62828 0%, #d4af37 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            font-size: 20px;
+            color: #c62828;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+        }
+        
+        .section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .code {
+            background: #f5f5f5;
+            border-left: 4px solid #c62828;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .step {
+            background: #f9f9f9;
+            border-left: 4px solid #d4af37;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+        
+        .step strong {
+            color: #c62828;
+        }
+        
+        .list {
+            margin-left: 20px;
+        }
+        
+        .list li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #c62828 0%, #a01a1a 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Nova Funcionalidade - Perfil do Aluno</h1>
+            <p>Instruções de implementação</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>📋 O que foi criado?</h2>
+                <p>Uma nova página de perfil do aluno que é exibida após o registro. O aluno pode informar:</p>
+                <ul class="list">
+                    <li>Idade</li>
+                    <li>Altura (em cm)</li>
+                    <li>Peso (em kg)</li>
+                    <li>Faixa (selecionada do banco de dados)</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>🔧 Passo 1: Executar o SQL</h2>
+                <p>Antes de usar a nova funcionalidade, execute o arquivo <strong>sql/adicionar_colunas.sql</strong> no phpMyAdmin:</p>
+                <div class="step">
+                    <strong>Instruções:</strong>
+                    <ol class="list">
+                        <li>Abra o phpMyAdmin (http://localhost/phpmyadmin)</li>
+                        <li>Selecione a base de dados <strong>Oyama_Hub</strong></li>
+                        <li>Clique em "SQL" na barra superior</li>
+                        <li>Copie e cole o conteúdo de <strong>sql/adicionar_colunas.sql</strong></li>
+                        <li>Clique em "Executar"</li>
+                    </ol>
+                </div>
+                <p>Isso irá adicionar as colunas: <strong>idade, altura, peso</strong> e garantir que <strong>faixa_id</strong> existe.</p>
+            </div>
+            
+            <div class="section">
+                <h2>✅ Passo 2: Testar a nova funcionalidade</h2>
+                <div class="step">
+                    <strong>Para testar:</strong>
+                    <ol class="list">
+                        <li>Acesse <strong>php/registro.php</strong></li>
+                        <li>Preencha o formulário de registro com um novo aluno</li>
+                        <li>Após clicar em "MATRICULAR-SE", você será levado para a página de perfil</li>
+                        <li>Preencha idade, altura, peso e escolha uma faixa</li>
+                        <li>Clique em "Completar Perfil" para salvar</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📁 Arquivos criados/modificados</h2>
+                <ul class="list">
+                    <li><strong>php/perfil_aluno.php</strong> - Nova página de perfil do aluno</li>
+                    <li><strong>css/perfil_aluno.css</strong> - Estilos para a página de perfil (tema Kyokushin)</li>
+                    <li><strong>sql/adicionar_colunas.sql</strong> - Script SQL para adicionar colunas à tabela</li>
+                    <li><strong>php/registrar_aluno.php</strong> - Modificado para redirecionar para perfil</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>🎨 Características do CSS</h2>
+                <ul class="list">
+                    <li>Tema Kyokushin com cores: vermelho (#c62828) e ouro (#d4af37)</li>
+                    <li>Design responsivo (funciona em mobile)</li>
+                    <li>Campos com validação visual (focus states)</li>
+                    <li>Gradiente de fundo similar ao resto do site</li>
+                    <li>Botões com hover effects</li>
+                    <li>Opção de "Pular por enquanto" para usuários que não querem completar agora</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>💡 Observações importantes</h2>
+                <div class="step">
+                    <ul class="list">
+                        <li>As faixas são puxadas automaticamente da tabela <strong>faixas</strong></li>
+                        <li>Os dados são salvos na tabela <strong>usuarios_oyama</strong></li>
+                        <li>O usuário pode pular o preenchimento do perfil usando o botão "Pular por enquanto"</li>
+                        <li>O formulário valida os dados de entrada (idade, altura, peso)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🚀 Próximos passos opcionais</h2>
+                <ul class="list">
+                    <li>Adicionar página de edição de perfil para alunos já cadastrados</li>
+                    <li>Exibir os dados de perfil no dashboard</li>
+                    <li>Criar relatórios de alunos por faixa</li>
+                    <li>Adicionar foto de perfil</li>
+                </ul>
+            </div>
+            
+            <a href="../php/registro.php" class="btn">Testar Novo Registro</a>
+        </div>
+    </div>
+</body>
+</html>

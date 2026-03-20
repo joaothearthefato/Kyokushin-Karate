@@ -1,0 +1,118 @@
+<?php
+include("config.php");
+
+// Verificar se o ID do usuário foi passado
+if (!isset($_GET['id'])) {
+  header("Location: ../index.html");
+  exit();
+}
+
+$usuario_id = $_GET['id'];
+
+// Verificar se o usuário existe
+$sql = "SELECT id, nome, email FROM usuarios_oyama WHERE id = '$usuario_id' AND tipo = 'aluno'";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) == 0) {
+  echo "<script>alert('Usuário não encontrado!'); window.location.href='../index.html';</script>";
+  exit();
+}
+
+$usuario = mysqli_fetch_assoc($result);
+
+// Processar o formulário
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $idade = $_POST["idade"];
+  $altura = $_POST["altura"];
+  $peso = $_POST["peso"];
+  $faixa_id = $_POST["faixa_id"];
+
+  // Atualizar dados do usuário
+  $sql = "UPDATE usuarios_oyama SET idade = '$idade', altura = '$altura', peso = '$peso', faixa_id = '$faixa_id' WHERE id = '$usuario_id'";
+
+  if (mysqli_query($conn, $sql)) {
+    echo "<script>alert('Perfil completado com sucesso!'); window.location.href='../index.html';</script>";
+    exit();
+  } else {
+    $erro = "Erro ao atualizar perfil: " . mysqli_error($conn);
+  }
+}
+
+// Buscar todas as faixas
+$sql_faixas = "SELECT id, nome FROM faixas ORDER BY ordem ASC";
+$result_faixas = mysqli_query($conn, $sql_faixas);
+
+mysqli_close($conn);
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Completar Perfil - Kyokushin Dojo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="../img/kyokushinicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="../css/perfil_aluno.css">
+</head>
+
+<body>
+  <div class="perfil-container">
+    <div class="perfil-card">
+      <div class="perfil-header">
+        <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
+        <p>Complete seu perfil para começar sua jornada no Kyokushin</p>
+      </div>
+
+      <?php if (isset($erro)): ?>
+        <div class="alert alert-error">
+          <?php echo $erro; ?>
+        </div>
+      <?php endif; ?>
+
+      <form method="POST" class="perfil-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="idade">Idade</label>
+            <input type="number" id="idade" name="idade" min="1" max="120" required placeholder="Digite sua idade">
+          </div>
+
+          <div class="form-group">
+            <label for="altura">Altura (cm)</label>
+            <input type="number" id="altura" name="altura" min="50" max="250" step="0.01" required
+              placeholder="Ex: 170">
+          </div>
+
+          <div class="form-group">
+            <label for="peso">Peso (kg)</label>
+            <input type="number" id="peso" name="peso" min="10" max="300" step="0.1" required placeholder="Ex: 70.5">
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="faixa_id">Sua Faixa Atual</label>
+          <select id="faixa_id" name="faixa_id" required>
+            <option value="">Selecione sua faixa</option>
+            <?php while ($faixa = mysqli_fetch_assoc($result_faixas)): ?>
+              <option value="<?php echo $faixa['id']; ?>">
+                <?php echo htmlspecialchars($faixa['nome']); ?>
+              </option>
+            <?php endwhile; ?>
+          </select>
+        </div>
+
+        <div class="info-box">
+          <p><strong>Email cadastrado:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Completar Perfil</button>
+          <a href="../index.html" class="btn-skip">Pular por enquanto</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

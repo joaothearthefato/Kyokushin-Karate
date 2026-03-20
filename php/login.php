@@ -33,7 +33,6 @@ if (isset($_POST["email"])) {
 
 }
 ?>
-?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
