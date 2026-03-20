@@ -2,7 +2,7 @@
 // Configurações do banco de dados
 $host = "localhost";   // Servidor
 $usuario = "root";     // Usuário do banco
-$senha = "";           // Senha do banco (vazia por padrão no XAMPP)
+$senha = "Home@spSENAI2025!";           // Senha do banco (vazia por padrão no XAMPP)
 $banco = "oyama_hub";  // Nome do banco
 
 // Criar conexão
