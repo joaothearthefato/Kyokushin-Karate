@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION["id"])) {
-  header("Location: ../dashboard.php");
+  header("Location: ../php/dashboard.php");
   exit;
 }
 
@@ -24,7 +24,7 @@ if (isset($_POST["email"])) {
     $_SESSION["nome"] = $usuario["nome"];
     $_SESSION["tipo"] = $usuario["tipo"];
 
-    header("Location: ../dashboard.php");
+    header("Location: ../php/dashboard.php");
     exit;
 
   } else {
