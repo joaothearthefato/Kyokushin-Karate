@@ -80,6 +80,7 @@ body::before {
 .nav-links {
   display: flex;
   gap: 18px;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -98,14 +99,19 @@ body::before {
   width: min(1200px, 95%);
   margin: 0 auto;
   padding: 34px 0 48px;
+  display: grid;
+  gap: 14px;
+}
+
+.hero,
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px;
 }
 
 .hero {
-  padding: 22px;
-  background: var(--surface);
-  border: 1px solid var(--border);
   border-left: 3px solid var(--red);
-  margin-bottom: 20px;
 }
 
 .hero h2 {
@@ -126,13 +132,6 @@ body::before {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
-  margin-bottom: 20px;
-}
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 20px;
 }
 
 .stat-card h3 {
@@ -151,7 +150,6 @@ body::before {
 }
 
 .alert {
-  margin-bottom: 14px;
   padding: 12px;
   border: 1px solid;
   font-family: 'Oswald', sans-serif;
@@ -187,7 +185,8 @@ body::before {
   gap: 8px;
 }
 
-.perfil-form label {
+.perfil-form label,
+.filtro-form label {
   font-family: 'Oswald', sans-serif;
   font-size: 11px;
   text-transform: uppercase;
@@ -197,7 +196,11 @@ body::before {
 
 .perfil-form input,
 .perfil-form select,
-.filtro-form select {
+.perfil-form textarea,
+.filtro-form select,
+.inline-form input,
+.inline-form textarea,
+.inline-form select {
   width: 100%;
   background: var(--dark);
   border: 1px solid var(--border);
@@ -206,8 +209,14 @@ body::before {
   font-family: 'Barlow Condensed', sans-serif;
 }
 
-.perfil-form button {
-  margin-top: 10px;
+.perfil-form textarea,
+.inline-form textarea {
+  resize: vertical;
+}
+
+.perfil-form button,
+.inline-form button {
+  margin-top: 8px;
   border: none;
   background: var(--red);
   color: #fff;
@@ -218,9 +227,14 @@ body::before {
   cursor: pointer;
 }
 
-.perfil-form button:hover {
+.perfil-form button:hover,
+.inline-form button:hover {
   background: var(--red2);
   box-shadow: 0 0 20px var(--red-glow);
+}
+
+.inline-form.danger button {
+  background: #494949;
 }
 
 .card-header {
@@ -229,15 +243,6 @@ body::before {
   align-items: end;
   gap: 10px;
   margin-bottom: 12px;
-}
-
-.filtro-form label {
-  display: block;
-  font-family: 'Oswald', sans-serif;
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--muted);
 }
 
 .kata-lista {
@@ -270,6 +275,8 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .badge {
@@ -282,9 +289,33 @@ body::before {
   padding: 2px 8px;
 }
 
-.meta a {
+.media-links {
+  display: flex;
+  gap: 10px;
+}
+
+.meta a,
+details summary {
   color: var(--white);
   text-decoration: none;
+  cursor: pointer;
+}
+
+details {
+  margin-top: 8px;
+}
+
+.inline-form {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.kata-foto {
+  width: 100%;
+  max-width: 280px;
+  border: 1px solid var(--border);
+  margin-top: 8px;
 }
 
 .empty {
@@ -305,10 +336,6 @@ body::before {
   .topbar {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
   }
 
   .stats-grid {
