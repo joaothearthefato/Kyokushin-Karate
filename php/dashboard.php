@@ -20,7 +20,7 @@ require 'config.php';
 
 <section class="navbarArea">
 <div class="header">
-<a href="../index.html">Inicio</a>
+<a href="../index.php">Inicio</a>
 <a href="../dashboard/progresso.php">Progresso</a>
 <a href="../dashboard/katas.php">Katas</a>
 <a href="../dashboard/kihon.php">Kihon</a>
