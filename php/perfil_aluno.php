@@ -7,7 +7,6 @@ if (!isset($_GET['id'])) {
 }
 
 $usuario_id = $_GET['id'];
-
 $sql = "SELECT id, nome, email FROM usuarios_oyama WHERE id = '$usuario_id' AND tipo = 'aluno'";
 $result = mysqli_query($conn, $sql);
 
@@ -181,7 +180,7 @@ mysqli_close($conn);
       if (modalRedirect) window.location.href = modalRedirect;
     }
 
-    // Disparar modal vindo do PHP
+  
     <?php if (isset($modal_erro)): ?>
       showModal("<?php echo $modal_erro; ?>", "error", "<?php echo $modal_redirect; ?>");
     <?php elseif (isset($modal_sucesso)): ?>

@@ -10,8 +10,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $result = mysqli_query($conn, $sql);
 
   if (mysqli_num_rows($result) > 0) {
-    // Volta para a página anterior com mensagem de erro via query string
-    header("Location: " . $_SERVER['HTTP_REFERER'] . "?modal=email_existente");
+    /* volta para o formulário com flag de erro */
+    $origem = $_SERVER['HTTP_REFERER'] ?? '../index.html';
+    header("Location: $origem?modal=email_existente");
     exit();
   } else {
     $sql = "INSERT INTO usuarios_oyama (nome, email, senha, tipo) VALUES ('$nome', '$email', '$senha', 'aluno')";
@@ -21,7 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       header("Location: perfil_aluno.php?id=$usuario_id");
       exit();
     } else {
-      header("Location: " . $_SERVER['HTTP_REFERER'] . "?modal=erro_cadastro");
+      $origem = $_SERVER['HTTP_REFERER'] ?? '../index.html';
+      header("Location: $origem?modal=erro_cadastro");
       exit();
     }
   }
