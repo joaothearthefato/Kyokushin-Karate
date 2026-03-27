@@ -986,6 +986,6 @@ include_once __DIR__ . '/../php/config.php';
         link.classList.remove('active');
       }
     });
-
+  </script>
 </body>
 </html>
