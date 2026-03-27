@@ -1,6 +1,6 @@
 <?php
 session_start();
-include ('config.php');
+include_once __DIR__ . '/../php/config.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -11,6 +11,7 @@ include ('config.php');
   <link rel="icon" href="./img/kyokushinicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboard.css">
   <style>
     :root {
       --black:      #0a0a0a;
@@ -94,6 +95,33 @@ include ('config.php');
     }
     .nav-links a:hover { color: var(--gold); }
     .nav-links a.active { color: var(--white); }
+
+    .navbarArea {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.98) 0%, rgba(10,10,10,0.85) 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      justify-content: flex-end;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header a.active {
+      color: var(--white);
+    }
 
     .btn-back {
       background: var(--red-soft);
@@ -455,20 +483,16 @@ include ('config.php');
 <body>
 
   <!-- NAV -->
-  <nav>
-    <a href="./index.php" class="nav-logo">
-      <img src="./img/kyokushinicon.png" alt="Logo">
-      <span>Oyama Hub</span>
-    </a>
-    <div class="nav-links">
-      <a href="#tsuki">Tsuki</a>
-      <a href="#geri">Geri</a>
-      <a href="#uke">Uke</a>
-      <a href="#dachi">Dachi</a>
-      <a href="#uchi">Uchi</a>
+  <section class="navbarArea">
+    <div class="header">
+      <a href="../index.php">Inicio</a>
+      <a href="../dashboard/progresso.php">Progresso</a>
+      <a href="../dashboard/katas.php">Katas</a>
+      <a href="../dashboard/kihon.php">Kihon</a>
+      <a href="../dashboard/treinos.php">Treinos</a>
+      <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
     </div>
-    <a href="./index.php" class="btn-back">← Voltar</a>
-  </nav>
+  </section>
 
   <!-- HERO -->
   <header class="hero">
@@ -950,6 +974,18 @@ include ('config.php');
     }, { threshold: 0.05 });
 
     document.querySelectorAll('.cards-grid').forEach(g => cardObserver.observe(g));
-  </script>
+
+    /* ── Dashboard-style top nav active item ── */
+    const navLinks = document.querySelectorAll('.header a');
+    const currentPage = window.location.pathname.split('/').pop();
+    navLinks.forEach(link => {
+      const hrefPage = link.getAttribute('href').split('/').pop();
+      if (hrefPage === currentPage) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
 </body>
 </html>
