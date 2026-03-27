@@ -28,15 +28,7 @@ require 'config.php';
 </section>
 
 <div class="welcome-container">
-<h1>Bem-vindo ao Oyama Hub, <span class="user-dropdown"><?php 
-echo $_SESSION['nome']; ?>
-<ul class="dropdown-menu">
-<li><a href="../dashboard/progresso.php">Progresso</a></li>
-<li><a href="../dashboard/katas.php">Katas</a></li>
-<li><a href="../dashboard/kihon.php">Kihon</a></li>
-<li><a href="../dashboard/treinos.php">Treinos</a></li>
-</ul>
-</span>!</h1>
+<h1>Bem-vindo ao Oyama Hub, <?php echo $_SESSION['nome']; ?>!</h1>
 </div>
 
 <div class="dashboard-container">
