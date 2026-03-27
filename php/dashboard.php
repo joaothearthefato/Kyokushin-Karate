@@ -37,24 +37,24 @@ echo $_SESSION['nome']; ?>
 
 <container class="dashboard-container">
 <section class="dashboard-section">
-  <a href="progresso.php" class="dashboard-link">
+  <a href="../dashboard/progresso.php" class="dashboard-link">
     <div class="dashboard-card">
       <h2>Progresso</h2>
       <p>Acompanhe seu progresso e conquistas no Karate Kyokushin.</p>
     </div>
 
-    <a href="katas.php" class="dashboard-link">
+    <a href="../dashboard/katas.php" class="dashboard-link">
     <div class="dashboard-card">
       <h2>Katas</h2>
       <p>Explore os katas e aprimore suas técnicas de forma estruturada.</p>
     </div>
-    <a href="kihon.php" class="dashboard-link">
+    <a href="../dashboard/kihon.php" class="dashboard-link">
     <div class="dashboard-card">
       <h2>Kihon</h2>
       <p>Domine os fundamentos do Karate Kyokushin com os exercícios de Kihon.</p>
     </div>
 
-    <a href="treinos.php" class="dashboard-link">
+    <a href="../dashboard/treinos.php" class="dashboard-link">
     <div class="dashboard-card">
       <h2>Treinos</h2>
       <p>Encontre treinos personalizados para aprimorar suas habilidades no Karate Kyokushin.</p>
