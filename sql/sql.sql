@@ -77,3 +77,13 @@ INSERT INTO kihons (nome, descricao, nivel_dificuldade) VALUES
 
 select * from usuarios_oyama;
 select * FROM FAIXAS;
+
+CREATE TABLE treinos_registrados (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id   INT NOT NULL,
+    exercicios   VARCHAR(255) NOT NULL,
+    duracao_min  INT NOT NULL,
+    observacoes  TEXT,
+    data_treino  DATE NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios_oyama(id)
+);
