@@ -39,3 +39,4 @@ INSERT INTO faixas (nome, ordem) VALUES
 select * from usuarios_oyama;
 select * FROM FAIXAS;
 	
+  // tomas burrao
