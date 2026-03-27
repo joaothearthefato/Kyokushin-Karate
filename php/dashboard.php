@@ -2,9 +2,7 @@
 session_start();
 require 'config.php'; 
 
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -73,4 +71,4 @@ echo $_SESSION['nome']; ?>
 </section>
 </div>
 </body>
-</html>
+</html> 
