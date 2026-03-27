@@ -22,7 +22,7 @@ session_start();
     <a href="katas.php">KATAS</a>
     <a href="kihon.php">KIHON</a>
     <a href="treinos.php">TREINOS</a>
-    <a href="logout.php" class="logout-btn">LOGOUT</a>
+    <a href="../php/logout.php" class="logout-btn">LOGOUT</a>
   </div>
 </section>
 

@@ -29,7 +29,7 @@ require './php/config.php';
 </div>
 <?php 
 if(isset($_SESSION['nome'])) {
-    echo '<a href="./php/dashboard.php"><button id="login">' . htmlspecialchars($_SESSION['nome']) . '</button></a>';
+    echo '<a href="./php/dashboard.php"><button id="login">Voltar</button></a>';
 } else {
     echo '<a href="./php/login.php"><button id="login">Login</button></a>';
 }
@@ -48,7 +48,9 @@ if(isset($_SESSION['nome'])) {
 <p>O caminho da verdade. Disciplina, força e superação.</p>
 
 <div class="button-group">
+<?php if (!isset($_SESSION['nome'])): ?>
 <a href="./php/registro.php" class="btn-primary">Registrar</a>
+<?php endif; ?>
 <a href="https://www.youtube.com/watch?v=viLy-JlkTCw&pp=ygUdZG9jdW1lbnRhcmlvIGthcmF0ZSBreW9rdXNoaW4%3D" class="btn-secondary">Saiba mais</a>
 </div>
 

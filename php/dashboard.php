@@ -23,7 +23,6 @@ require 'config.php';
 <a href="../dashboard/katas.php">Katas</a>
 <a href="../dashboard/kihon.php">Kihon</a>
 <a href="../dashboard/treinos.php">Treinos</a>
-<span id="user-label"><?= isset($_SESSION['nome']) ? htmlspecialchars($_SESSION['nome']) : 'PARDON'; ?></span>
  <a href="../php/logout.php"> <button class="logout-btn">Logout</button></a>
 </div>
 </section>
