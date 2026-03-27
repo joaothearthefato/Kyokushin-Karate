@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: $origem?modal=email_existente");
     exit();
   } else {
-    $sql = "INSERT INTO usuarios_oyama (nome, email, senha, tipo) VALUES ('$nome', '$email', '$senha', 'aluno')";
+    $sql = "INSERT INTO usuarios_oyama (nome, email,  senha, tipo) VALUES ('$nome', '$email', '$senha', 'aluno')";
 
     if (mysqli_query($conn, $sql)) {
       $usuario_id = mysqli_insert_id($conn);
