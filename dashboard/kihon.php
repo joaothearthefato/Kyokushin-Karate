@@ -230,7 +230,7 @@ include_once __DIR__ . '/../php/config.php';
       white-space: nowrap;
       transition: color .2s, border-color .2s;
     }
-    .cat-btn:hover { color: var(--white); }
+    .cat-btn:hover { color: var(--white); background: rgba(255,255,255,0.1); border-bottom-color: var(--gold); }
     .cat-btn.active {
       color: var(--gold);
       border-bottom-color: var(--gold);
