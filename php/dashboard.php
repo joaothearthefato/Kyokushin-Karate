@@ -18,7 +18,7 @@ require 'config.php';
 
 <section class="navbarArea">
 <div class="header">
-<a href="../index.php" id="inicio-link">Inicio</a>
+<a href="../dashboard.php" id="inicio-link">Inicio</a>
 <a href="../dashboard/progresso.php">Progresso</a>
 <a href="../dashboard/katas.php">Katas</a>
 <a href="../dashboard/kihon.php">Kihon</a>

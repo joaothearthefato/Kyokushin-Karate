@@ -17,7 +17,7 @@ session_start();
 
 <section class="navbarArea">
   <div class="header">
-    <a href="../index.php">INICIO</a>
+    <a href="../php/dashboard.php">INICIO</a>
     <a href="progresso.php" class="active">PROGRESSO</a>
     <a href="katas.php">KATAS</a>
     <a href="kihon.php">KIHON</a>

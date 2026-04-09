@@ -12,7 +12,7 @@ $usuario_id = $_SESSION['id'];
 
 // Busca faixa do usuário
 $sql_user = "SELECT u.nome, f.nome AS faixa_nome, f.ordem AS faixa_ordem 
-             FROM usuarios_oyama u 
+             FROM usuarios u 
              LEFT JOIN faixas f ON u.faixa_id = f.id 
              WHERE u.id = '$usuario_id'";
 $result_user = mysqli_query($conn, $sql_user);

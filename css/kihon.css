@@ -75,21 +75,28 @@ body::before {
 .header a:hover,
 .header a.active { color: var(--white); }
 
+/* Logout wrapper — disable underline trick */
+.header a:last-child::after { display: none; }
+ 
 .logout-btn {
-  background: var(--red-soft);
-  border: 1px solid var(--red);
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: transparent;
   color: var(--white);
-  padding: .4rem 1.1rem;
-  border-radius: 50px;
-  font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .08em;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 9px 22px;
   cursor: pointer;
-  transition: background .2s, box-shadow .2s;
+  transition: all 0.2s;
 }
+ 
 .logout-btn:hover {
   background: var(--red);
-  box-shadow: 0 0 16px var(--red-glow);
+  border-color: var(--red);
+  box-shadow: 0 0 24px var(--red-glow);
+  color: #fff;
 }
 
 /* ── Hero ── */

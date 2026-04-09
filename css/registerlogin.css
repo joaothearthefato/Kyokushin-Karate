@@ -1,230 +1,449 @@
-/* ===================================
-   OYAMA HUB — LOGIN / REGISTRO
-   Estilo igual ao site principal
-=================================== */
+/* ======================================
+OYAMA HUB — LOGIN / REGISTRO
+Estética: Dark Kyokushin Editorial
+====================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600&family=Barlow+Condensed:wght@300;400&display=swap');
 
+/* ========= VARIÁVEIS ========= */
+
 :root{
-  --black:#0a0a0a;
-  --dark:#111;
-  --surface:#181818;
-  --surface2:#222;
-  --border:rgba(255,255,255,0.08);
 
-  --red:#c8000a;
-  --red2:#e8230e;
-  --red-glow:rgba(200,0,10,0.25);
+--black:#0a0a0a;
+--dark:#111;
+--surface:#181818;
+--surface2:#222;
+--border:rgba(255,255,255,0.08);
 
-  --white:#f2ede8;
-  --muted:#888;
-  --text:#d8d3cc;
+--red:#c8000a;
+--red2:#e8230e;
+--red-glow:rgba(200,0,10,0.35);
+
+--white:#f2ede8;
+--muted:#888880;
+--text:#d8d3cc;
+
 }
 
-/* RESET */
+/* ========= RESET ========= */
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-  font-family:'Barlow Condensed', sans-serif;
-  background:var(--black);
-  color:var(--text);
 
-  min-height:100vh;
+font-family:'Barlow Condensed', sans-serif;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+background:var(--black);
+
+color:var(--text);
+
+min-height:100vh;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:40px;
+
 }
 
-/* caixa principal */
+/* ========= CARD PRINCIPAL ========= */
 
 .register-box{
 
-  width:420px;
-  padding:50px 45px;
+width:420px;
 
-  background:var(--surface);
+background:var(--surface);
 
-  border-left:4px solid var(--red);
+padding:50px 45px;
 
-  box-shadow:
-  0 20px 60px rgba(0,0,0,0.7);
+border-left:4px solid var(--red);
 
-  animation:fadeUp .6s ease;
+box-shadow:
+0 25px 70px rgba(0,0,0,0.75);
+
+animation:fadeUp .6s ease;
+
 }
 
-/* título */
+/* ========= TÍTULO ========= */
 
 .register-box h2{
 
-  font-family:'Bebas Neue', sans-serif;
+font-family:'Bebas Neue', sans-serif;
 
-  font-size:48px;
-  letter-spacing:3px;
+font-size:48px;
 
-  color:var(--white);
+letter-spacing:4px;
 
-  margin-bottom:35px;
+color:var(--white);
+
+margin-bottom:30px;
+
 }
 
 .register-box h2 span{
-  color:var(--red);
+color:var(--red);
 }
 
-/* grupo input */
+/* ========= FEEDBACK ========= */
+
+.form-feedback{
+
+background:#2b0c0c;
+
+border-left:3px solid var(--red);
+
+padding:12px 14px;
+
+margin-bottom:22px;
+
+font-size:15px;
+
+letter-spacing:.5px;
+
+}
+
+/* ========= INPUT GROUP ========= */
 
 .input-group{
 
-  display:flex;
-  flex-direction:column;
+display:flex;
 
-  margin-bottom:22px;
+flex-direction:column;
+
+margin-bottom:20px;
+
 }
+
+/* LABEL */
 
 .input-group label{
 
-  font-family:'Oswald', sans-serif;
+font-family:'Oswald', sans-serif;
 
-  font-size:12px;
-  letter-spacing:3px;
+font-size:12px;
 
-  text-transform:uppercase;
+letter-spacing:3px;
 
-  color:var(--muted);
+text-transform:uppercase;
 
-  margin-bottom:6px;
+color:var(--muted);
+
+margin-bottom:6px;
+
 }
 
-/* inputs */
+/* ========= INPUTS ========= */
 
-.input-group input{
+.input-group input,
+.input-group select{
 
-  background:var(--dark);
+background:var(--dark);
 
-  border:1px solid var(--border);
+border:1px solid var(--border);
 
-  padding:12px 14px;
+padding:12px 14px;
 
-  color:var(--white);
+font-size:15px;
 
-  font-size:15px;
+color:var(--white);
 
-  outline:none;
+outline:none;
 
-  transition:0.2s;
+font-family:'Barlow Condensed', sans-serif;
+
+transition:.2s;
+
 }
 
-.input-group input:focus{
+/* PLACEHOLDER */
 
-  border-color:var(--red);
-
-  box-shadow:0 0 10px var(--red-glow);
+input::placeholder{
+color:#666;
 }
 
-/* botão */
+/* FOCUS */
+
+.input-group input:focus,
+.input-group select:focus{
+
+border-color:var(--red);
+
+box-shadow:0 0 12px var(--red-glow);
+
+}
+
+/* ========= SELECT ========= */
+
+.input-group select{
+
+appearance:none;
+
+cursor:pointer;
+
+background-image:
+linear-gradient(45deg,transparent 50%,var(--muted) 50%),
+linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+
+background-position:
+calc(100% - 18px) calc(50% - 3px),
+calc(100% - 12px) calc(50% - 3px);
+
+background-size:6px 6px;
+
+background-repeat:no-repeat;
+
+}
+
+.input-group select option{
+
+background:var(--surface);
+
+color:var(--white);
+
+}
+
+/* ========= BOTÃO ========= */
 
 .btn-submit{
 
-  width:100%;
+margin-top:10px;
 
-  margin-top:10px;
+width:100%;
 
-  padding:14px;
+background:var(--red);
 
-  border:none;
+border:none;
 
-  background:var(--red);
+padding:14px;
 
-  font-family:'Oswald', sans-serif;
+font-family:'Oswald', sans-serif;
 
-  letter-spacing:3px;
+font-size:14px;
 
-  text-transform:uppercase;
+letter-spacing:3px;
 
-  color:white;
+text-transform:uppercase;
 
-  font-size:14px;
+color:white;
 
-  cursor:pointer;
+cursor:pointer;
 
-  transition:0.25s;
+transition:.25s;
+
 }
 
 .btn-submit:hover{
 
-  background:var(--red2);
+background:var(--red2);
 
-  box-shadow:
-  0 0 25px var(--red-glow);
+box-shadow:0 0 25px var(--red-glow);
 
-  transform:translateY(-2px);
+transform:translateY(-2px);
+
 }
 
-/* links */
+/* ========= LINKS ========= */
 
 .login-link{
 
-  display:block;
+display:block;
 
-  margin-top:18px;
+text-align:center;
 
-  text-align:center;
+margin-top:18px;
 
-  font-family:'Oswald', sans-serif;
+font-family:'Oswald', sans-serif;
 
-  font-size:12px;
+font-size:12px;
 
-  letter-spacing:2px;
+letter-spacing:2px;
 
-  text-transform:uppercase;
+text-transform:uppercase;
 
-  color:var(--muted);
+color:var(--muted);
 
-  transition:.2s;
+transition:.2s;
+
 }
 
 .login-link:hover{
-  color:var(--red);
+
+color:var(--red);
+
 }
 
-/* erro */
+/* ========= MODAL ========= */
 
-p[style]{
-  margin-bottom:20px;
+.modal-overlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.75);
+
+backdrop-filter:blur(3px);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+opacity:0;
+
+pointer-events:none;
+
+transition:.25s;
+
 }
 
-/* animação */
+.modal-overlay.open{
+
+opacity:1;
+
+pointer-events:all;
+
+}
+
+.modal-box{
+
+background:var(--surface);
+
+border-left:4px solid var(--red);
+
+padding:2rem;
+
+width:340px;
+
+box-shadow:0 20px 60px rgba(0,0,0,.7);
+
+text-align:center;
+
+transform:translateY(20px);
+
+transition:.3s;
+
+}
+
+.modal-overlay.open .modal-box{
+transform:translateY(0);
+}
+
+.modal-title{
+
+font-family:'Bebas Neue', sans-serif;
+
+font-size:28px;
+
+letter-spacing:3px;
+
+color:var(--red);
+
+margin-bottom:8px;
+
+}
+
+.modal-msg{
+
+font-family:'Oswald', sans-serif;
+
+font-size:13px;
+
+color:var(--muted);
+
+letter-spacing:1px;
+
+margin-bottom:20px;
+
+line-height:1.6;
+
+}
+
+.modal-btn{
+
+background:var(--red);
+
+border:none;
+
+color:#fff;
+
+font-family:'Oswald', sans-serif;
+
+font-size:13px;
+
+letter-spacing:3px;
+
+text-transform:uppercase;
+
+padding:12px;
+
+cursor:pointer;
+
+width:100%;
+
+transition:.2s;
+
+}
+
+.modal-btn:hover{
+
+background:var(--red2);
+
+box-shadow:0 0 20px var(--red-glow);
+
+transform:translateY(-2px);
+
+}
+
+/* ========= ANIMAÇÃO ========= */
 
 @keyframes fadeUp{
 
-  from{
-    opacity:0;
-    transform:translateY(30px);
-  }
+from{
 
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+opacity:0;
+
+transform:translateY(30px);
 
 }
 
-/* responsivo */
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+/* ========= RESPONSIVO ========= */
 
 @media(max-width:500px){
 
-  .register-box{
-    width:90%;
-    padding:40px 30px;
-  }
+body{
+padding:20px;
+}
 
-  .register-box h2{
-    font-size:40px;
-  }
+.register-box{
+
+width:100%;
+
+padding:40px 30px;
+
+}
+
+.register-box h2{
+
+font-size:38px;
+
+}
 
 }

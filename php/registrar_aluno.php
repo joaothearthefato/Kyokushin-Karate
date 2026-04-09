@@ -1,31 +1,50 @@
 <?php
 include("config.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome  = mysqli_real_escape_string($conn, $_POST["nome"]);
-    $email = mysqli_real_escape_string($conn, $_POST["email"]);
-    $senha = $_POST["senha"]; // Recomendo usar password_hash futuramente
-
-    $sql    = "SELECT id FROM usuarios_oyama WHERE email = '$email'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
-        header("Location: ../index.html?status=erro&msg=email_cadastrado");
-        exit();
-    } else {
-        // Removi a idade daqui, pois ela será preenchida no perfil_aluno.php
-        $sql = "INSERT INTO usuarios_oyama (nome, email, senha, tipo) VALUES ('$nome', '$email', '$senha', 'aluno')";
-
-        if (mysqli_query($conn, $sql)) {
-            $usuario_id = mysqli_insert_id($conn);
-            // Redireciona com sucesso
-            header("Location: perfil_aluno.php?id=$usuario_id&status=sucesso_registro");
-            exit();
-        } else {
-            header("Location: ../index.html?status=erro&msg=db_error");
-            exit();
-        }
-    }
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: registro.php");
+    exit();
 }
+
+$nome = trim($_POST["nome"] ?? "");
+$email = trim($_POST["email"] ?? "");
+$senha = $_POST["senha"] ?? "";
+$nascimento = $_POST["nascimento"] ?? "";
+$faixa_id = $_POST["faixa_id"] ?? "";
+
+if ($nome === "" || $email === "" || $senha === "" || $nascimento === "") {
+    header("Location: registro.php?status=erro&msg=campos_obrigatorios");
+    exit();
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    header("Location: registro.php?status=erro&msg=email_invalido");
+    exit();
+}
+
+$nome_esc = mysqli_real_escape_string($conn, $nome);
+$email_esc = mysqli_real_escape_string($conn, $email);
+$nascimento_esc = mysqli_real_escape_string($conn, $nascimento);
+$senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+$faixa_id_sql = ($faixa_id === "" ? "NULL" : (int) $faixa_id);
+
+$sql = "SELECT id FROM usuarios WHERE email = '$email_esc'";
+$result = mysqli_query($conn, $sql);
+
+if ($result && mysqli_num_rows($result) > 0) {
+    header("Location: registro.php?status=erro&msg=email_cadastrado");
+    exit();
+}
+
+$sql = "INSERT INTO usuarios (nome, email, senha_hash, nascimento, tipo, faixa_id) VALUES ('$nome_esc', '$email_esc', '$senha_hash', '$nascimento_esc', 'aluno', $faixa_id_sql)";
+
+if (mysqli_query($conn, $sql)) {
+    mysqli_close($conn);
+    header("Location: login.php?status=sucesso_registro");
+    exit();
+}
+
 mysqli_close($conn);
+header("Location: registro.php?status=erro&msg=db_error");
+exit();
 ?>

@@ -3,8 +3,8 @@ session_start();
 include_once __DIR__ . '/../php/config.php';
 
 // ── Redireciona se não autenticado ──────────────────────────────
-if (empty($_SESSION['usuario_id'])) {
-    header('Location: ../index.php');
+if (empty($_SESSION['id'])) {
+    header('Location: ../index.html');
     exit;
 }
 
@@ -87,7 +87,7 @@ function yt_id(string $url): string {
 <!-- ── Navbar ── -->
 <section class="navbarArea">
   <div class="header">
-    <a href="../index.php">Início</a>
+    <a href="../php/dashboard.php">Início</a>
     <a href="progresso.php">Progresso</a>
     <a href="katas.php">Katas</a>
     <a href="kihon.php" class="active">Kihon</a>
