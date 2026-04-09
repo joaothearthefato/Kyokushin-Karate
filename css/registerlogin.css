@@ -1,0 +1,230 @@
+/* ===================================
+   OYAMA HUB — LOGIN / REGISTRO
+   Estilo igual ao site principal
+=================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600&family=Barlow+Condensed:wght@300;400&display=swap');
+
+:root{
+  --black:#0a0a0a;
+  --dark:#111;
+  --surface:#181818;
+  --surface2:#222;
+  --border:rgba(255,255,255,0.08);
+
+  --red:#c8000a;
+  --red2:#e8230e;
+  --red-glow:rgba(200,0,10,0.25);
+
+  --white:#f2ede8;
+  --muted:#888;
+  --text:#d8d3cc;
+}
+
+/* RESET */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Barlow Condensed', sans-serif;
+  background:var(--black);
+  color:var(--text);
+
+  min-height:100vh;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* caixa principal */
+
+.register-box{
+
+  width:420px;
+  padding:50px 45px;
+
+  background:var(--surface);
+
+  border-left:4px solid var(--red);
+
+  box-shadow:
+  0 20px 60px rgba(0,0,0,0.7);
+
+  animation:fadeUp .6s ease;
+}
+
+/* título */
+
+.register-box h2{
+
+  font-family:'Bebas Neue', sans-serif;
+
+  font-size:48px;
+  letter-spacing:3px;
+
+  color:var(--white);
+
+  margin-bottom:35px;
+}
+
+.register-box h2 span{
+  color:var(--red);
+}
+
+/* grupo input */
+
+.input-group{
+
+  display:flex;
+  flex-direction:column;
+
+  margin-bottom:22px;
+}
+
+.input-group label{
+
+  font-family:'Oswald', sans-serif;
+
+  font-size:12px;
+  letter-spacing:3px;
+
+  text-transform:uppercase;
+
+  color:var(--muted);
+
+  margin-bottom:6px;
+}
+
+/* inputs */
+
+.input-group input{
+
+  background:var(--dark);
+
+  border:1px solid var(--border);
+
+  padding:12px 14px;
+
+  color:var(--white);
+
+  font-size:15px;
+
+  outline:none;
+
+  transition:0.2s;
+}
+
+.input-group input:focus{
+
+  border-color:var(--red);
+
+  box-shadow:0 0 10px var(--red-glow);
+}
+
+/* botão */
+
+.btn-submit{
+
+  width:100%;
+
+  margin-top:10px;
+
+  padding:14px;
+
+  border:none;
+
+  background:var(--red);
+
+  font-family:'Oswald', sans-serif;
+
+  letter-spacing:3px;
+
+  text-transform:uppercase;
+
+  color:white;
+
+  font-size:14px;
+
+  cursor:pointer;
+
+  transition:0.25s;
+}
+
+.btn-submit:hover{
+
+  background:var(--red2);
+
+  box-shadow:
+  0 0 25px var(--red-glow);
+
+  transform:translateY(-2px);
+}
+
+/* links */
+
+.login-link{
+
+  display:block;
+
+  margin-top:18px;
+
+  text-align:center;
+
+  font-family:'Oswald', sans-serif;
+
+  font-size:12px;
+
+  letter-spacing:2px;
+
+  text-transform:uppercase;
+
+  color:var(--muted);
+
+  transition:.2s;
+}
+
+.login-link:hover{
+  color:var(--red);
+}
+
+/* erro */
+
+p[style]{
+  margin-bottom:20px;
+}
+
+/* animação */
+
+@keyframes fadeUp{
+
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+/* responsivo */
+
+@media(max-width:500px){
+
+  .register-box{
+    width:90%;
+    padding:40px 30px;
+  }
+
+  .register-box h2{
+    font-size:40px;
+  }
+
+}

@@ -2,7 +2,7 @@
 include("config.php");
 
 if (!isset($_GET['id'])) {
-    header("Location: ../index.html");
+    header("Location: ./dashboard.php");
     exit();
 }
 

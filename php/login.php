@@ -42,7 +42,7 @@ if (isset($_POST["email"])) {
   <title>Login - Oyama Hub</title>
 
   <link rel="icon" href="../img/kyokushinicon.png">
-  <link rel="stylesheet" href="../css/registro.css">
+  <link rel="stylesheet" href="../css/registerlogin.css">
 </head>
 
 <body>
