@@ -19,6 +19,12 @@
   --white:    #f2ede8;
   --muted:    #888880;
   --text:     #d8d3cc;
+
+  /* LIGHT MODE VARIAVEIS */
+
+  --brancolightmode: #F0F0F0;
+
+
 }
  
 html { scroll-behavior: smooth; }
