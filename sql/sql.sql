@@ -195,6 +195,8 @@ INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nive
 (4, 'Posição Imóvel',              'Fudo Dachi',    '不動立ち', 'Posição natural de combate do Kyokushin — similar ao zenkutsu mas mais natural. Base do kumite, equilibra mobilidade e estabilidade.',                                                                'https://www.youtube.com/watch?v=rtM5H0lpe20&pp=ygUKZnVkbyBkYWNoaQ%3D%3D',    'intermediario', 5),
 (4, 'Posição dos Três Conflitos',  'Sanchin Dachi', '三戦立ち', 'Posição fechada e tensa onde os pés se cruzam levemente. Base do kata Sanchin — treina contração muscular total, respiração e tensão corporal. Fundamental no Kyokushin.',                           'https://www.youtube.com/watch?v=ryziGsaoOFU&pp=ygUNc2FuY2hpbiBkYWNoaQ%3D%3D', 'intermediario', 6);
 
+
+
 -- ── UCHI ───────────────────────────────────────────────────────
 INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
 (5, 'Golpe Mão-Faca',       'Shuto Uchi',  '手刀打ち', 'Ataque com a lateral da mão aberta em movimento circular. Pode ser executado de dentro para fora ou de fora para dentro. Alvo clássico: pescoço ou têmpora do adversário.',                                   'https://www.youtube.com/watch?v=AbDz5GKXlU0&pp=ygUKc2h1dG8gdWNoaQ%3D%3D', 'intermediario', 1),
@@ -212,6 +214,48 @@ INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
 ('Pinan Sono Ichi',    'Kata intermediário 1 — sequências mais longas com giros.',                             'https://www.youtube.com/watch?v=WejnMH3Q21w&pp=ugMGCgJwdBABugUEEgJwdMoFD3BpbmFuIHNvbm8gaWNoadgHAQ%3D%3D', 'intermediario', 4),
 ('Sanchin',            'Kata de respiração e tensão — fundamental no Kyokushin.',                              'https://www.youtube.com/watch?v=QPGLyHwtepA&pp=ygUWc2FuY2hpbiBrYXRhIGt5b2t1c2hpbg%3D%3D', 'intermediario', 5);
 
-UPDATE kihons
-SET video_url = 'https://www.youtube.com/watch?v=yPROqoPx3z8&pp=ygUIbWFlIGdlcmk%3D'
-WHERE romaji = 'Mae Geri';
+-- Exercicios
+CREATE TABLE exercicios_kyokushin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    categoria VARCHAR(50) NOT NULL
+);
+
+INSERT INTO exercicios_kyokushin (nome,categoria) VALUES
+
+-- SOCOS
+('Seiken Choku Tsuki','Soco'),
+('Seiken Ago Uchi','Soco'),
+('Seiken Shita Tsuki','Soco'),
+('Seiken Mawashi Uchi','Soco'),
+('Uraken Shomen Uchi','Soco'),
+('Uraken Sayu Uchi','Soco'),
+('Uraken Hizo Uchi','Soco'),
+('Tettsui Oroshi Ganmen Uchi','Soco'),
+
+-- CHUTES
+('Mae Geri','Chute'),
+('Yoko Geri','Chute'),
+('Mawashi Geri','Chute'),
+('Ushiro Geri','Chute'),
+('Ushiro Mawashi Geri','Chute'),
+('Hiza Geri','Chute'),
+('Kansetsu Geri','Chute'),
+
+-- DEFESAS
+('Jodan Uke','Defesa'),
+('Chudan Soto Uke','Defesa'),
+('Chudan Uchi Uke','Defesa'),
+('Gedan Barai','Defesa'),
+('Shuto Uke','Defesa'),
+
+-- COTOVELADAS
+('Empi Uchi Jodan','Cotovelada'),
+('Empi Uchi Mawashi','Cotovelada'),
+('Empi Uchi Oroshi','Cotovelada'),
+
+-- JOELHADAS
+('Hiza Geri Jodan','Joelhada'),
+('Hiza Geri Chudan','Joelhada');
+
+select * from kihons;

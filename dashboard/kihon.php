@@ -44,7 +44,7 @@ if ($result) {
                 'cor'    => $row['cor'],
                 'numero' => str_pad($row['numero'], 2, '0', STR_PAD_LEFT),
                 'kihons' => [],
-            ];
+            ]; 
         }
         if ($row['kihon_id']) {
             $categorias[$cid]['kihons'][] = [
