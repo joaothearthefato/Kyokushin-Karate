@@ -30,21 +30,22 @@ if ($result && $result->num_rows > 0) {
   <link rel="icon" href="../img/kyokushinicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboard.css">
   <link rel="stylesheet" href="../css/katas.css">
 </head>
 <body>
 
-<nav class="navbar">
-  <a href="../php/dashboard.php" class="navbar-brand">OYAMA<span>HUB</span></a>
-  <div class="nav-links">
-    <a href="../php/dashboard.php">Início</a>
-    <a href="progresso.php">Progresso</a>
-    <a href="katas.php" class="active">Katas</a>
-    <a href="kihon.php">Kihon</a>
-    <a href="treinos.php">Treinos</a>
-  </div>
-  <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
-</nav>
+<!-- ── Navbar ── -->
+<section class="navbarArea">
+    <div class="header">
+        <a href="../php/dashboard.php">Início</a>
+        <a href="progresso.php">Progresso</a>
+        <a href="katas.php" class="active">Katas</a>
+        <a href="kihon.php">Kihon</a>
+        <a href="treinos.php">Treinos</a>
+        <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
+    </div>
+</section>
 
 <div class="page-hero">
   <div class="hero-tag">Kyokushin Karate</div>

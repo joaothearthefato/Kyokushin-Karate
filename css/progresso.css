@@ -78,7 +78,7 @@ body {
     background: #1a1a1a;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 /* MAIN CARD */
@@ -102,11 +102,25 @@ body {
     border-radius: 4px;
 }
 
-.white { background: #fff; }
-.white-orange { background: linear-gradient(90deg, #fff 50%, orange 50%); }
-.orange { background: orange; }
-.blue { background: #007bff; }
-.yellow { background: #ffd000; }
+.white {
+    background: #fff;
+}
+
+.white-orange {
+    background: linear-gradient(90deg, #fff 50%, orange 50%);
+}
+
+.orange {
+    background: orange;
+}
+
+.blue {
+    background: #007bff;
+}
+
+.yellow {
+    background: #ffd000;
+}
 
 .current {
     transform: scale(1.2);
@@ -121,7 +135,7 @@ body {
 /* PROGRESS TEXT */
 .progress-big-text {
     font-size: 26px;
-    font-weight: bold;
+    font-weight: 400;
     margin-bottom: 5px;
 }
 

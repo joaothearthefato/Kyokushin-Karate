@@ -39,6 +39,10 @@ $mensagem_erro = '';
 
 if (isset($_GET['sucesso']) && $_GET['sucesso'] === 'treino_registrado') {
     $mensagem_sucesso = '✅ Treino registrado com sucesso! Parabéns pela dedicação! 💪';
+} elseif (isset($_GET['sucesso']) && $_GET['sucesso'] === 'treino_deletado') {
+    $mensagem_sucesso = '✅ Treino deletado com sucesso!';
+} elseif (isset($_GET['sucesso']) && $_GET['sucesso'] === 'treino_atualizado') {
+    $mensagem_sucesso = '✅ Treino atualizado com sucesso!';
 } elseif (isset($_GET['erro'])) {
     $erro = $_GET['erro'];
     switch($erro) {
@@ -140,6 +144,19 @@ mysqli_close($conn);
         </div>
     <?php endif; ?>
 
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="delete-confirm-box">
+            <h3>⚠️ Excluir Treino?</h3>
+            <p>Tem certeza que deseja excluir este treino? Esta ação não pode ser desfeita.</p>
+            <div class="delete-confirm-buttons">
+                <button type="button" class="btn-cancelar" onclick="cancelarDelecao()">Cancelar</button>
+                <button type="button" class="btn-confirmar-delete" onclick="executarDelecao()">Excluir</button>
+            </div>
+            <input type="hidden" id="treinoParaDeletar" value="">
+        </div>
+    </div>
+
     <!-- Seção: Registrar Treino -->
     <section class="registrar-treino-section">
         <h2>REGISTRAR UM TREINO</h2>
@@ -205,6 +222,10 @@ mysqli_close($conn);
                         <div class="card-duracao">
                             ⏱ <?php echo intval($t['duracao_min']); ?> minutos
                         </div>
+                        <div class="card-buttons">
+                            <button type="button" class="btn-editar-treino" onclick="window.location.href='editar_treino.php?id=<?php echo $t['id']; ?>'">✏️ Editar</button>
+                            <button type="button" class="btn-deletar-treino" onclick="confirmarDelecao(<?php echo $t['id']; ?>)">🗑️ Excluir</button>
+                        </div>
                     </article>
                 <?php endforeach; ?>
             </div>
@@ -231,6 +252,26 @@ mysqli_close($conn);
         if (modal) {
             modal.classList.remove('show');
         }
+    }
+
+    function confirmarDelecao(treinoId) {
+        const modal = document.getElementById('deleteConfirmModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.getElementById('treinoParaDeletar').value = treinoId;
+        }
+    }
+
+    function cancelarDelecao() {
+        const modal = document.getElementById('deleteConfirmModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    function executarDelecao() {
+        const treinoId = document.getElementById('treinoParaDeletar').value;
+        window.location.href = 'deletar_treino.php?id=' + treinoId;
     }
 
     // RF02 – Adicionar Exercício Dinamicamente

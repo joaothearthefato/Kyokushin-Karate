@@ -17,14 +17,14 @@ require 'config.php';
 <body>
 
 <section class="navbarArea">
-<div class="header">
-<a href="../dashboard.php" id="inicio-link">Inicio</a>
-<a href="../dashboard/progresso.php">Progresso</a>
-<a href="../dashboard/katas.php">Katas</a>
-<a href="../dashboard/kihon.php">Kihon</a>
-<a href="../dashboard/treinos.php">Treinos</a>
- <a href="../php/logout.php"> <button class="logout-btn">Logout</button></a>
-</div>
+    <div class="header">
+        <a href="../php/dashboard.php" class="active">Início</a>
+        <a href="../dashboard/progresso.php">Progresso</a>
+        <a href="../dashboard/katas.php">Katas</a>
+        <a href="../dashboard/kihon.php">Kihon</a>
+        <a href="../dashboard/treinos.php">Treinos</a>
+        <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
+    </div>
 </section>
 
 <div class="welcome-container">
