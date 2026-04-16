@@ -116,6 +116,10 @@ mysqli_close($conn);
         <a href="katas.php">Katas</a>
         <a href="kihon.php">Kihon</a>
         <a href="treinos.php" class="active">Treinos</a>
+        <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
+            <span class="theme-icon">☀️</span>
+            <span class="theme-label">Light</span>
+        </button>
         <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
     </div>
 </section>
@@ -334,6 +338,41 @@ mysqli_close($conn);
 
         return true;
     }
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const themeLabel = themeToggle.querySelector('.theme-label');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      html.classList.add('light');
+      themeIcon.textContent = '🌙';
+      themeLabel.textContent = 'Dark';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('light');
+      const isLight = html.classList.contains('light');
+
+      // Update button appearance with animation
+      if (isLight) {
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'Dark';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Light';
+        localStorage.setItem('theme', 'dark');
+      }
+
+      // Add click animation
+      themeToggle.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        themeToggle.style.transform = '';
+      }, 150);
+    });
 </script>
 
 </body>

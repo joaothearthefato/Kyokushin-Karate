@@ -57,9 +57,11 @@ body::before {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(to bottom, rgba(10, 10, 10, .98), rgba(10, 10, 10, .85));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(to bottom, rgba(20, 20, 20, 0.99) 0%, rgba(15, 15, 15, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 4px 20px rgba(200, 0, 10, 0.15);
 }
 
 .header {
@@ -71,27 +73,64 @@ body::before {
   align-items: center;
   gap: 36px;
   justify-content: flex-end;
-  border-bottom: 1px solid var(--border);
+  border-bottom: none;
 }
 
 .header a {
-  color: var(--muted);
+  color: #e0e0e0;
   text-decoration: none;
   font-size: .8rem;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
-  transition: color .2s;
+  transition: all .2s;
+  position: relative;
 }
 
 .header a:hover,
 .header a.active {
-  color: var(--white);
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(200, 0, 10, 0.5);
 }
 
 /* Logout wrapper — disable underline trick */
 .header a:last-child::after {
   display: none;
+}
+
+.theme-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  border-radius: 3px;
+}
+
+.theme-btn:hover {
+  background: var(--panel);
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 15px var(--red-glow);
+}
+
+.theme-btn .theme-icon {
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.theme-btn:hover .theme-icon {
+  transform: scale(1.1) rotate(15deg);
 }
 
 .logout-btn {
@@ -101,11 +140,13 @@ body::before {
   letter-spacing: 3px;
   text-transform: uppercase;
   background: transparent;
-  color: var(--white);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border: 2px solid var(--red);
   padding: 9px 22px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
+  border-radius: 3px;
+  font-weight: 700;
 }
 
 .logout-btn:hover {
@@ -113,6 +154,7 @@ body::before {
   border-color: var(--red);
   box-shadow: 0 0 24px var(--red-glow);
   color: #fff;
+  transform: translateY(-2px);
 }
 
 /* ── Hero ── */
@@ -529,8 +571,6 @@ main {
   gap: 1rem;
 }
 
-.modal-title-group {}
-
 .modal-romaji {
   color: var(--gold);
   font-size: .7rem;
@@ -663,4 +703,238 @@ footer {
   .modal-box {
     border-radius: 12px;
   }
+}
+
+/* ═══════════════════════════════════════════════════
+   LIGHT MODE
+   ═══════════════════════════════════════════════════ */
+
+html.light {
+  --black: #f5f0eb;
+  --deep: #ece7e1;
+  --panel: #e2ddd8;
+  --border: rgba(0, 0, 0, 0.10);
+  --red: #c8000a;
+  --red-glow: rgba(200, 0, 10, 0.15);
+  --red-soft: rgba(200, 0, 10, 0.08);
+  --gold: #8a6f20;
+  --white: #1a1614;
+  --muted: #7a7570;
+}
+
+/* Navbar light mode */
+html.light .navbarArea {
+  background: linear-gradient(to bottom, rgba(240, 240, 240, 0.99) 0%, rgba(230, 230, 230, 0.95) 100%);
+  border-bottom: 2px solid var(--red);
+}
+
+html.light .header a {
+  color: #333333;
+}
+
+html.light .header a:hover,
+html.light .header a.active {
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(200, 0, 10, 0.3);
+}
+
+html.light .logout-btn {
+  color: var(--red);
+  border: 2px solid var(--red);
+}
+
+html.light .logout-btn:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+html.light .theme-btn {
+  color: var(--red);
+  border: 2px solid rgba(200, 0, 10, 0.4);
+}
+
+html.light .theme-btn:hover {
+  background: rgba(200, 0, 10, 0.1);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* Category nav light mode */
+html.light .cat-nav {
+  background: rgba(240, 240, 240, 0.9);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(12px);
+}
+
+html.light .cat-btn {
+  color: #7a7570;
+}
+
+html.light .cat-btn:hover {
+  color: var(--white);
+  background: rgba(200, 0, 10, 0.08);
+  border-bottom-color: var(--red);
+}
+
+html.light .cat-btn.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+/* Cards light mode */
+html.light .tech-card {
+  background: #e2ddd8;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+html.light .tech-card.visible:hover {
+  border-color: rgba(200, 0, 10, 0.4);
+  box-shadow: 0 16px 40px rgba(200, 0, 10, 0.1), 0 0 0 1px rgba(200, 0, 10, 0.2);
+}
+
+html.light .card-video-zone {
+  background: #d6d0cb;
+}
+
+html.light .card-video-zone .yt-thumb {
+  filter: brightness(0.85);
+}
+
+html.light .tech-card:hover .yt-thumb {
+  filter: brightness(0.75);
+}
+
+html.light .play-icon {
+  background: rgba(200, 0, 10, 0.8);
+  box-shadow: 0 4px 20px rgba(200, 0, 10, 0.3);
+}
+
+html.light .tech-card:hover .play-icon {
+  background: var(--red);
+}
+
+html.light .play-label {
+  color: rgba(26, 22, 20, 0.9);
+}
+
+html.light .card-kana {
+  color: rgba(26, 22, 20, 0.7);
+}
+
+html.light .card-romaji {
+  color: var(--red);
+}
+
+html.light .card-name {
+  color: #1a1614;
+}
+
+html.light .card-desc {
+  color: #7a7570;
+}
+
+html.light .level-badge {
+  color: #1a1614;
+}
+
+/* Modal light mode */
+html.light .modal-overlay {
+  background: rgba(26, 22, 20, 0.88);
+}
+
+html.light .modal-box {
+  background: #e2ddd8;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  box-shadow: 0 40px 100px rgba(200, 0, 10, 0.15);
+}
+
+html.light .modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+html.light .modal-romaji {
+  color: var(--red);
+}
+
+html.light .modal-name {
+  color: #1a1614;
+}
+
+html.light .modal-close {
+  background: rgba(200, 0, 10, 0.08);
+  border: 1px solid rgba(200, 0, 10, 0.2);
+  color: #1a1614;
+}
+
+html.light .modal-close:hover {
+  background: rgba(200, 0, 10, 0.15);
+  border-color: var(--red);
+}
+
+html.light .modal-desc {
+  color: #7a7570;
+}
+
+/* Sections light mode */
+html.light .section-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+html.light .section-kanji {
+  color: var(--red);
+}
+
+html.light .section-title {
+  color: #1a1614;
+}
+
+html.light .divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Hero light mode */
+html.light .hero {
+  color: #1a1614;
+}
+
+html.light .hero-tag {
+  color: var(--red);
+}
+
+html.light .hero h1 {
+  background: linear-gradient(135deg, var(--red) 0%, #c8000a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+html.light .level-badge.iniciante {
+  background: rgba(39, 174, 96, 0.15);
+  border: 1px solid #27ae60;
+  color: #27ae60;
+}
+
+html.light .level-badge.intermediario {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid #8a6f20;
+  color: #8a6f20;
+}
+
+html.light .level-badge.avancado {
+  background: rgba(200, 0, 10, 0.15);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+html.light footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.10);
+  color: #7a7570;
+}
+
+html.light footer a {
+  color: var(--red);
+}
+
+html.light body::before {
+  opacity: 0.1;
 }

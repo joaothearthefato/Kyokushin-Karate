@@ -15,12 +15,13 @@
   <header>
     <nav class="navbar">
 
-      <img src="./img/kyokushinicon.png" class="logo" alt="Kyokushin Logo">
-      <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
-  <span class="theme-icon">☀️</span>
-  <span class="theme-label">Light</span>
-</button>
-
+      <div class="nav-left">
+        <img src="./img/kyokushinicon.png" class="logo" alt="Kyokushin Logo">
+        <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-label">Light</span>
+        </button>
+      </div>
 
       <div class="nav-links">
         <a href="#home">Home</a>
@@ -207,7 +208,7 @@
           </blockquote>
 
           <blockquote class="faixa-card" id="faixamarrompontapreta">
-            <p>"Faixa Marrom com Ponto Preto"</p><br>
+            <p>"Faixa Marrom com Ponta Preta"</p><br>
             <cite>1° Kyu</cite>
           </blockquote>
 
@@ -230,6 +231,43 @@
     </div>
 
   </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const themeLabel = themeToggle.querySelector('.theme-label');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      html.classList.add('light');
+      themeIcon.textContent = '🌙';
+      themeLabel.textContent = 'Dark';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('light');
+      const isLight = html.classList.contains('light');
+
+      // Update button appearance with animation
+      if (isLight) {
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'Dark';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Light';
+        localStorage.setItem('theme', 'dark');
+      }
+
+      // Add click animation
+      themeToggle.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        themeToggle.style.transform = '';
+      }, 150);
+    });
+  </script>
 
 </body>
 

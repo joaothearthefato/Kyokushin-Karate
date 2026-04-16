@@ -29,6 +29,19 @@
 
 }
 
+html.light {
+  --black: #f5f0eb;
+  --dark: #ece7e1;
+  --surface: #e2ddd8;
+  --surface2: #d6d0cb;
+  --border: rgba(0, 0, 0, 0.10);
+  --red-glow: rgba(200, 0, 10, 0.15);
+  --gold: #8a6f20;
+  --white: #1a1614;
+  --muted: #7a7570;
+  --text: #c8000a;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -90,9 +103,11 @@ a {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.98) 0%, rgba(10, 10, 10, 0.85) 100%);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(to bottom, rgba(20, 20, 20, 0.99) 0%, rgba(15, 15, 15, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 4px 20px rgba(200, 0, 10, 0.15);
 }
 
 .header {
@@ -104,17 +119,17 @@ a {
   align-items: center;
   gap: 36px;
   justify-content: flex-end;
-  border-bottom: 1px solid var(--border);
+  border-bottom: none;
 }
 
 .header a {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--muted);
-  transition: color 0.2s;
+  color: #e0e0e0;
+  transition: all 0.2s;
   position: relative;
 }
 
@@ -130,11 +145,29 @@ a {
 }
 
 .header a:hover {
-  color: var(--white);
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(200, 0, 10, 0.5);
 }
 
 .header a:hover::after {
   width: 100%;
+  box-shadow: 0 0 8px var(--red);
+}
+
+/* Navbar light mode */
+html.light .navbarArea {
+  background: linear-gradient(to bottom, rgba(240, 240, 240, 0.99) 0%, rgba(230, 230, 230, 0.95) 100%);
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 4px 20px rgba(200, 0, 10, 0.2);
+}
+
+html.light .header a {
+  color: #333333;
+}
+
+html.light .header a:hover {
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(200, 0, 10, 0.4);
 }
 
 /* Logout wrapper — disable underline trick */
@@ -149,11 +182,13 @@ a {
   letter-spacing: 3px;
   text-transform: uppercase;
   background: transparent;
-  color: var(--white);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border: 2px solid var(--red);
   padding: 9px 22px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
+  border-radius: 3px;
+  font-weight: 700;
 }
 
 .logout-btn:hover {
@@ -161,6 +196,104 @@ a {
   border-color: var(--red);
   box-shadow: 0 0 24px var(--red-glow);
   color: #fff;
+  transform: translateY(-2px);
+}
+
+html.light .logout-btn {
+  color: var(--red);
+  border: 2px solid var(--red);
+}
+
+html.light .logout-btn:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  border-radius: 3px;
+}
+
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 15px var(--red-glow);
+}
+
+.theme-icon {
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.theme-toggle:hover .theme-icon {
+  transform: scale(1.1) rotate(15deg);
+}
+
+.theme-label {
+  transition: opacity 0.2s;
+}
+
+/* Theme Button (alternate class name) */
+.theme-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  border-radius: 3px;
+}
+
+.theme-btn:hover {
+  background: var(--surface2);
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 15px var(--red-glow);
+}
+
+.theme-btn .theme-icon {
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.theme-btn:hover .theme-icon {
+  transform: scale(1.1) rotate(15deg);
+}
+
+html.light .theme-btn {
+  color: var(--red);
+  border: 2px solid rgba(200, 0, 10, 0.4);
+}
+
+html.light .theme-btn:hover {
+  background: rgba(200, 0, 10, 0.1);
+  border-color: var(--red);
+  color: var(--red);
 }
 
 /* ===== WELCOME CONTAINER ===== */

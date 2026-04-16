@@ -115,6 +115,10 @@ if (isset($_POST["email"])) {
 <body>
 
   <div class="register-box">
+    <button id="theme-toggle" class="theme-btn-icon" aria-label="Alternar tema">
+      <span class="theme-icon">☀️</span>
+    </button>
+    
     <h2>LOGIN <span>Oyama-HUB</span></h2>
 
     <form method="POST">
@@ -151,6 +155,31 @@ if (isset($_POST["email"])) {
   <?php endif; ?>
 
   <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      html.classList.add('light');
+      themeIcon.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('light');
+      const isLight = html.classList.contains('light');
+
+      // Update button appearance with animation
+      if (isLight) {
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
     function fecharModal() {
       document.getElementById('modal-erro').classList.remove('open');
     }

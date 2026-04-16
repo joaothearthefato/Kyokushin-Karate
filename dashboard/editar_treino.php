@@ -77,6 +77,10 @@ mysqli_close($conn);
         <a href="katas.php">Katas</a>
         <a href="kihon.php">Kihon</a>
         <a href="treinos.php" class="active">Treinos</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema">
+            <span class="theme-icon">🌙</span>
+            <span class="theme-label">Modo Escuro</span>
+        </button>
         <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
     </div>
 </section>
@@ -226,6 +230,36 @@ mysqli_close($conn);
 
         return true;
     }
+
+    // ── Theme Toggle ──
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const themeLabel = themeToggle.querySelector('.theme-label');
+    const html = document.documentElement;
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        html.classList.add('light');
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Modo Claro';
+    }
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+        html.classList.toggle('light');
+        const isLight = html.classList.contains('light');
+        
+        if (isLight) {
+            themeIcon.textContent = '☀️';
+            themeLabel.textContent = 'Modo Claro';
+            localStorage.setItem('theme', 'light');
+        } else {
+            themeIcon.textContent = '🌙';
+            themeLabel.textContent = 'Modo Escuro';
+            localStorage.setItem('theme', 'dark');
+        }
+    });
 </script>
 
 </body>

@@ -40,7 +40,12 @@ mysqli_close($conn);
 </head>
 
 <body>
+
   <div class="register-box">
+    <button id="theme-toggle" class="theme-btn-icon" aria-label="Alternar tema">
+      <span class="theme-icon">☀️</span>
+    </button>
+    
     <h2>NOVO <span>ALUNO</span></h2>
     <?php if ($feedback): ?>
         <div class="form-feedback"><?php echo htmlspecialchars($feedback); ?></div>
@@ -75,6 +80,39 @@ mysqli_close($conn);
     </form>
     <a href="login.php" class="login-link">Já tem cadastro? Faça o login</a>
   </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      html.classList.add('light');
+      themeIcon.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('light');
+      const isLight = html.classList.contains('light');
+
+      // Update button appearance with animation
+      if (isLight) {
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+
+      // Add click animation
+      themeToggle.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        themeToggle.style.transform = '';
+      }, 150);
+    });
+  </script>
 
 </body>
 
