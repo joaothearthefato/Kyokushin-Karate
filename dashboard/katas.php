@@ -7,10 +7,11 @@ if (!isset($_SESSION["id"])) {
 
 // 1. CONEXÃO
 require_once('../php/config.php'); 
-// Se no seu config.php a variável for $con, mude abaixo para $con
 $conexao = $conn; 
 
-// 2. BUSCAR KATAS
+// 2. BUSCAR KATAS (Note que adicionei categoria_id 6 no seu INSERT anterior, 
+// se quiser filtrar apenas katas, pode usar WHERE categoria_id = 6 se a tabela for a mesma,
+// mas como você criou uma tabela separada 'katas', o SQL abaixo está correto)
 $sql = "SELECT * FROM katas ORDER BY ordem ASC";
 $result = $conexao->query($sql);
 
@@ -88,16 +89,19 @@ if ($result && $result->num_rows > 0) {
 </div>
 
 <script>
+// Passa os dados do PHP para o JS
 const katas = <?php echo json_encode($katas_db); ?>;
 let activeFilter = 'todos';
 
 function renderGrid(lista) {
   const grid = document.getElementById('kataGrid');
   grid.innerHTML = '';
+  
   if (lista.length === 0) {
     grid.innerHTML = '<div class="no-results">Nenhum kata encontrado</div>';
     return;
   }
+
   lista.forEach((k, i) => {
     const card = document.createElement('div');
     card.className = 'kata-card';
@@ -107,35 +111,43 @@ function renderGrid(lista) {
         <div class="kata-number">${String(k.ordem).padStart(2,'0')}</div>
         <span class="kata-level level-${k.nivel}">${k.nivel}</span>
         <div class="kata-name">${k.nome}</div>
-        <p class="kata-desc">${k.descricao.substring(0, 80)}...</p>
+        <p class="kata-desc">${k.descricao.substring(0, 100)}...</p>
         <button class="kata-btn" onclick="openModal(${k.id})">Assistir Vídeo ›</button>
       </div>`;
     grid.appendChild(card);
   });
 }
 
-// Função para extrair o ID do vídeo do YouTube e gerar link de Embed
+/**
+ * Extrai o ID do vídeo de qualquer URL do YouTube e retorna o link de EMBED.
+ */
 function getYouTubeEmbed(url) {
     if (!url) return "";
     let videoId = "";
     
-    // Formato: youtube.com/watch?v=XXXX
-    if (url.includes("v=")) {
-        videoId = url.split("v=")[1].split("&")[0];
-    } 
-    // Formato: youtu.be/XXXX
-    else if (url.includes("youtu.be/")) {
-        videoId = url.split("youtu.be/")[1].split("?")[0];
-    }
-    // Formato: youtube.com/embed/XXXX
-    else if (url.includes("embed/")) {
-        videoId = url.split("embed/")[1].split("?")[0];
+    try {
+        if (url.includes("youtube.com/watch")) {
+            const urlParams = new URLSearchParams(new URL(url).search);
+            videoId = urlParams.get('v');
+        } else if (url.includes("youtu.be/")) {
+            videoId = url.split("youtu.be/")[1].split(/[?#]/)[0];
+        } else if (url.includes("youtube.com/embed/")) {
+            videoId = url.split("embed/")[1].split(/[?#]/)[0];
+        }
+        
+        // Limpeza adicional caso o ID venha com parâmetros (ex: &pp=...)
+        if (videoId && videoId.includes("&")) {
+            videoId = videoId.split("&")[0];
+        }
+    } catch (e) {
+        console.error("Erro ao processar URL do vídeo", e);
     }
 
-    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : "";
+    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0` : "";
 }
 
 function openModal(id) {
+  // Encontra o objeto no array carregado via PHP
   const k = katas.find(x => x.id == id);
   if (!k) return;
 
@@ -143,28 +155,35 @@ function openModal(id) {
   document.getElementById('m-level-badge').innerHTML = `<span class="kata-level level-${k.nivel}">${k.nivel}</span>`;
   document.getElementById('m-desc').textContent = k.descricao;
   
-  // Transforma o link do banco em link de embed funcional
+  // Converte a URL do banco para Embed
   const embedLink = getYouTubeEmbed(k.video_url); 
-  // IMPORTANTE: k.video_url deve ser o nome da sua coluna no banco!
   
-  document.getElementById('m-video').src = embedLink;
+  const iframe = document.getElementById('m-video');
+  if (embedLink) {
+      iframe.src = embedLink;
+      iframe.style.display = "block";
+  } else {
+      iframe.style.display = "none";
+      console.warn("URL de vídeo inválida para o kata:", k.nome);
+  }
+
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
-  document.getElementById('m-video').src = ""; // Para o som ao fechar
+  document.getElementById('m-video').src = ""; // Reseta o iframe para parar o vídeo
   document.body.style.overflow = '';
 }
 
-// Eventos
-document.getElementById('modalClose').addEventListener('click', closeModal);
+// Eventos de Busca e Filtro
 document.getElementById('searchInput').addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase();
     const filtrados = katas.filter(k => {
         const matchFilter = activeFilter === 'todos' || k.nivel === activeFilter;
-        return matchFilter && (k.nome.toLowerCase().includes(q) || k.descricao.toLowerCase().includes(q));
+        const matchSearch = k.nome.toLowerCase().includes(q) || k.descricao.toLowerCase().includes(q);
+        return matchFilter && matchSearch;
     });
     renderGrid(filtrados);
 });
@@ -174,14 +193,18 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = btn.dataset.filter;
-    // Dispara a busca novamente
+    // Dispara o evento de input para reaplicar a lógica de filtro/busca
     document.getElementById('searchInput').dispatchEvent(new Event('input'));
   });
 });
 
-window.onclick = (e) => { if (e.target.id === 'modal') closeModal(); }
+document.getElementById('modalClose').addEventListener('click', closeModal);
 
-// Inicializa
+window.onclick = (e) => { 
+    if (e.target.id === 'modal') closeModal(); 
+}
+
+// Inicializa a grade
 renderGrid(katas);
 
 const themeToggle = document.getElementById('theme-toggle');

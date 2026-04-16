@@ -208,12 +208,12 @@ INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nive
 
 -- Katas
 INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
-('Taikyoku Sono Ichi', 'Kata básico 1 — movimentos fundamentais em linha reta com bloqueios baixos e socos.', 'https://www.youtube.com/watch?v=jbwuhibM3Uc&pp=ygUcdGFpa3lva3Ugc29ubyBpY2hpIGt5b2t1c2hpbtIHCQnaCgGHKiGM7w%3D%3D', 'iniciante', 1),
-('Taikyoku Sono Ni',   'Kata básico 2 — variação com socos médios.',                                          'https://www.youtube.com/watch?v=W-y0Myy8i9Q&pp=ygUaVGFpa3lva3UgU29ubyBOaSBreW9rdXNoaW4%3D', 'iniciante', 2),
-('Taikyoku Sono San',  'Kata básico 3 — introdução de bloqueios internos.',                                   'https://www.youtube.com/watch?v=5j1i4LHSet0&pp=ygUbVGFpa3lva3UgU29ubyBzYW4ga3lva3VzaGlu0gcJCdoKAYcqIYzv', 'iniciante', 3),
-('Pinan Sono Ichi',    'Kata intermediário 1 — sequências mais longas com giros.',                             'https://www.youtube.com/watch?v=WejnMH3Q21w&pp=ugMGCgJwdBABugUEEgJwdMoFD3BpbmFuIHNvbm8gaWNoadgHAQ%3D%3D', 'intermediario', 4),
-('Sanchin',            'Kata de respiração e tensão — fundamental no Kyokushin.',                              'https://www.youtube.com/watch?v=QPGLyHwtepA&pp=ygUWc2FuY2hpbiBrYXRhIGt5b2t1c2hpbg%3D%3D', 'intermediario', 5);
+-- Katas Básicos (Taikyoku)
+('Tatsu' 1', 'Primeiro kata básico. Foca no Zenkutsu Dachi e bloqueio Gedan Barai com soco Seiken Chudan Tsuki.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 1),
+('Grande Visão 2', 'Similar ao primeiro, mas todos os socos são executados no nível Jodan (rosto).', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 2),
+('Grande Visão 3', 'Introduz a base Kokutsu Dachi e o bloqueio Uchi Uke, além de ataques em Zenkutsu Dachi.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 3),
 
+<<<<<<< Updated upstream
 -- Exercicios
 CREATE TABLE exercicios_kyokushin (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -259,3 +259,24 @@ INSERT INTO exercicios_kyokushin (nome,categoria) VALUES
 ('Hiza Geri Chudan','Joelhada');
 
 select * from kihons;
+=======
+-- Katas de Chute (Sokugi)
+('Ataque de Pernas 1', 'Kata básico focado em técnicas de pernas, utilizando Mae Keage (chute frontal ascendente).', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 4),
+('Ataque de Pernas 3', 'Foca no chute circular Mawashi Geri, fundamental para o combate Kyokushin.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 5),
+
+-- Série Pinan (Mente em Paz)
+('Mente em Paz 1', 'Primeiro da série Pinan. Introduz movimentos de Shuto Uchi e defesas variadas.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 6),
+('Mente em Paz 2', 'Trabalha a coordenação e o uso do Yoko Geri (chute lateral) e Nukite.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 7),
+('Mente em Paz 4', 'Kata dinâmico com movimentos de cotovelo (Empi) e mudanças rápidas de base.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 8),
+
+-- Katas Avançados/Superiores
+('Três Batalhas', 'Kata respiratório fundamental do Kyokushin. Foca no fortalecimento do corpo e respiração Ibuki.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 9),
+('Manter a Paz', 'Kata que enfatiza a pureza do movimento e a manutenção da calma sob pressão.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 10),
+('Destruição Extrema', 'Proveniente do Goju-ryu, utiliza movimentos circulares e ataques de curta distância.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 11),
+('Palmas Rotativas', 'Kata suave e circular que complementa o Sanchin, focando na flexibilidade das palmas das mãos.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 12),
+('Dragão Adormecido', 'Criado por Sosai Mas Oyama. Reflete a filosofia do karateca que permanece humilde mas pronto para agir.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 13),
+('Contemplar o Céu', 'Um dos katas mais longos e complexos, simbolizando a união com o universo.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 14);
+UPDATE kihons
+SET video_url = 'https://www.youtube.com/watch?v=yPROqoPx3z8&pp=ygUIbWFlIGdlcmk%3D'
+WHERE romaji = 'Mae Geri';
+>>>>>>> Stashed changes
