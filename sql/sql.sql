@@ -206,15 +206,102 @@ INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nive
 (5, 'Soco Um Nó',           'Ippon Ken',   '一本拳',  'Soco com o nó do dedo indicador projetado à frente. Penetra em alvos pequenos e pontos de pressão como têmpora, philtrum ou costelas. Exige condicionamento dos dedos.',                                        'https://www.youtube.com/watch?v=0mT37QYsRyg&pp=ygUJaXBwb24ga2Vu',   'avancado',      5),
 (5, 'Golpe Dorso do Punho', 'Uraken Uchi', '裏拳打ち', 'Golpe com o dorso (costas) do punho fechado. Movimento rápido de chicote lateral ou circular. Eficiente para atingir a têmpora com velocidade surpreendente.',                                                'https://www.youtube.com/watch?v=sHyfuXHtpyQ&pp=ygULdXJha2VuIHVjaGk%3D',  'intermediario', 6);
 
--- Katas
-INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
-('Taikyoku Sono Ichi', 'Kata básico 1 — movimentos fundamentais em linha reta com bloqueios baixos e socos.', 'https://www.youtube.com/watch?v=jbwuhibM3Uc&pp=ygUcdGFpa3lva3Ugc29ubyBpY2hpIGt5b2t1c2hpbtIHCQnaCgGHKiGM7w%3D%3D', 'iniciante', 1),
-('Taikyoku Sono Ni',   'Kata básico 2 — variação com socos médios.',                                          'https://www.youtube.com/watch?v=W-y0Myy8i9Q&pp=ygUaVGFpa3lva3UgU29ubyBOaSBreW9rdXNoaW4%3D', 'iniciante', 2),
-('Taikyoku Sono San',  'Kata básico 3 — introdução de bloqueios internos.',                                   'https://www.youtube.com/watch?v=5j1i4LHSet0&pp=ygUbVGFpa3lva3UgU29ubyBzYW4ga3lva3VzaGlu0gcJCdoKAYcqIYzv', 'iniciante', 3),
-('Pinan Sono Ichi',    'Kata intermediário 1 — sequências mais longas com giros.',                             'https://www.youtube.com/watch?v=WejnMH3Q21w&pp=ugMGCgJwdBABugUEEgJwdMoFD3BpbmFuIHNvbm8gaWNoadgHAQ%3D%3D', 'intermediario', 4),
-('Sanchin',            'Kata de respiração e tensão — fundamental no Kyokushin.',                              'https://www.youtube.com/watch?v=QPGLyHwtepA&pp=ygUWc2FuY2hpbiBrYXRhIGt5b2t1c2hpbg%3D%3D', 'intermediario', 5);
+-- Limpa a tabela antes de recriar
+TRUNCATE TABLE katas;
 
--- Exercicios
+-- Limpa a tabela antes de recriar
+TRUNCATE TABLE katas;
+
+INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
+
+-- ══════════════════════════════════════════
+-- KATAS NORTE (origem Shotokan)
+-- ══════════════════════════════════════════
+
+('Taikyoku Sono Ichi',
+ 'Primeiro kata do Kyokushin. Usa apenas dois movimentos: bloqueio baixo (Gedan Barai) e soco médio (Chudan Oi-Tsuki), todos em base Zenkutsu Dachi. É a porta de entrada para todos os katas.',
+ 'https://www.youtube.com/watch?v=NCS6QB3ODnM', 'iniciante', 1),
+
+('Taikyoku Sono Ni',
+ 'Idêntico ao Sono Ichi, porém todos os socos são executados no nível Jodan (rosto). Desenvolve a percepção de altura dos ataques.',
+ 'https://www.youtube.com/watch?v=W-y0Myy8i9Q', 'iniciante', 2),
+
+('Taikyoku Sono San',
+ 'Terceiro kata da série Taikyoku. Introduz a base Kokutsu Dachi e o bloqueio Uchi Ude Uke, combinando socos Chudan e Jodan.',
+ 'https://www.youtube.com/watch?v=5j1i4LHSet0', 'iniciante', 3),
+
+('Pinan Sono Ichi',
+ 'Primeiro kata da série Pinan. Introduz o bloqueio Age Uke (subida), Tetsui (martelo) e Shuto Mawashi Uke. Três bases: Zenkutsu, Neko Ashi e Kokutsu Dachi.',
+ 'https://www.youtube.com/watch?v=WejnMH3Q21w', 'iniciante', 4),
+
+('Pinan Sono Ni',
+ 'Introduz chutes laterais (Yoko Geri), frontais (Mae Geri), Nuki-te e o bloqueio duplo Morote Uke. Apresenta a base Kiba Dachi para fortalecer a parte inferior.',
+ 'https://www.youtube.com/watch?v=wUfnRRHRNmc', 'iniciante', 5),
+
+('Pinan Sono San',
+ 'Combina técnicas dos dois primeiros Pinan com novos movimentos giratórios. Demonstrado por Hajime Kazumi, campeão mundial do Kyokushin.',
+ 'https://www.youtube.com/watch?v=HcZ6ii6vTU4', 'iniciante', 6),
+
+('Pinan Sono Yon',
+ 'Kata de transição para nível intermediário. Inclui sequências de bloqueios e contra-ataques encadeados, exigindo maior precisão e fluidez.',
+ 'https://www.youtube.com/watch?v=972WxHremqo', 'iniciante', 7),
+
+('Pinan Sono Go',
+ 'Último da série Pinan. O mais complexo dos cinco, com combinações avançadas de bloqueios e golpes, preparando o praticante para katas superiores.',
+ 'https://www.youtube.com/watch?v=3LvnVq4hryY', 'iniciante', 8),
+
+('Yantsu',
+ 'Nome significa "seguro em três direções". Kata curto porém avançado, executado em três direções (frente e dois lados). Exigido para graduação ao 1º Kyu (marrom).',
+ 'https://www.youtube.com/watch?v=6rg1VUoLzGM', 'intermediario', 9),
+
+('Tsuki no Kata',
+ 'O "kata dos socos". Foca no desenvolvimento de potência nos golpes a partir de diferentes alturas, direções e bases. Treina a geração de força dos quadris e do Hara.',
+ 'https://www.youtube.com/watch?v=AUxPA-2LDXI', 'intermediario', 10),
+
+('Kanku',
+ 'Nome significa "contemplar o céu". O movimento de abertura com as mãos em arco sobre a cabeça simboliza a grandeza do universo. Kata longo e complexo, exigido para graduação ao 2º Dan.',
+ 'https://www.youtube.com/watch?v=wE5FWQTPG6w', 'avancado', 11),
+
+('Sushiho',
+ 'Nome significa "54 passos". Kata avançado com movimentos rápidos e explosivos, derivado do Gojushiho do Shotokan, modificado por Mas Oyama. Exigido para o 3º Dan.',
+ 'https://www.youtube.com/watch?v=EVkcfY490aw', 'avancado', 12),
+
+-- ══════════════════════════════════════════
+-- KATAS SUL 
+-- ══════════════════════════════════════════
+
+('Sanchin no Kata',
+ 'Nome significa "três batalhas": mente, corpo e espírito. Kata isométrico executado em tensão total com respiração Ibuki profunda. Um dos mais antigos e fundamentais do Kyokushin.',
+ 'https://www.youtube.com/watch?v=pYDEjLVmAmI', 'intermediario', 13),
+
+('Gekisai Dai',
+ 'Nome significa "conquistar e ocupar". Kata dinâmico que ensina fluidez de movimento e mobilidade. Introduz técnicas circulares características dos katas sulistas.',
+ 'https://www.youtube.com/watch?v=6lTHbNMzLRk', 'iniciante', 14),
+
+('Gekisai Sho',
+ 'Versão "menor" do Gekisai. Movimentos mais compactos e próximos ao corpo, reforçando distâncias de combate curtas e técnicas circulares.',
+ 'https://www.youtube.com/watch?v=LpFOJpAT37A', 'intermediario', 15),
+
+('Tensho',
+ 'Nome significa "palmas giratórias". Contraparte suave (Yin) do Sanchin. Considerado por Mas Oyama o kata mais indispensável — afirmou que quem o domina pode se defender de qualquer ataque.',
+ 'https://www.youtube.com/watch?v=mPmpAaDN4vM', 'intermediario', 16),
+
+('Saiha',
+ 'Também chamado Saifa. Nome significa "destruir e rasgar". Kata curto porém avançado, introduzindo técnicas de combate próximo: liberação de agarrões e contra-ataque com Tetsui. Representa a onda no logotipo da IFK.',
+ 'https://www.youtube.com/watch?v=ORRrp4gTVv8', 'intermediario', 17),
+
+('Seienchin',
+ 'Nome significa "subjugar o distante rebelde". Kata longo e exaustivo com muitas técnicas em Shiko Dachi (base de cavaleiro). Desenvolve força e perseverança nos membros inferiores.',
+ 'https://www.youtube.com/watch?v=HimHCy3TBEY', 'avancado', 18),
+
+('Seipai',
+ 'Nome significa "18 mãos", derivado do conceito budista 6×3. Reflete a essência do Goju-Ryu: inclui movimentos duros e suaves, projeções, técnicas de longa e curta distância.',
+ 'https://www.youtube.com/watch?v=5AYmJknIApc', 'avancado', 19),
+
+('Garyu',
+ 'Nome significa "dragão reclinado" — o pseudônimo de Mas Oyama. Um grande homem que mantém sua força em reserva. Kata criado pelo próprio Oyama, simbolizando humildade e potência contida.',
+ 'https://www.youtube.com/watch?v=f4QQzJACKOo', 'avancado', 20);
+
 CREATE TABLE exercicios_kyokushin (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -259,3 +346,24 @@ INSERT INTO exercicios_kyokushin (nome,categoria) VALUES
 ('Hiza Geri Chudan','Joelhada');
 
 select * from kihons;
+=======
+-- Katas de Chute (Sokugi)
+('Ataque de Pernas 1', 'Kata básico focado em técnicas de pernas, utilizando Mae Keage (chute frontal ascendente).', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 4),
+('Ataque de Pernas 3', 'Foca no chute circular Mawashi Geri, fundamental para o combate Kyokushin.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 5),
+
+-- Série Pinan (Mente em Paz)
+('Mente em Paz 1', 'Primeiro da série Pinan. Introduz movimentos de Shuto Uchi e defesas variadas.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 6),
+('Mente em Paz 2', 'Trabalha a coordenação e o uso do Yoko Geri (chute lateral) e Nukite.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 7),
+('Mente em Paz 4', 'Kata dinâmico com movimentos de cotovelo (Empi) e mudanças rápidas de base.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 8),
+
+-- Katas Avançados/Superiores
+('Três Batalhas', 'Kata respiratório fundamental do Kyokushin. Foca no fortalecimento do corpo e respiração Ibuki.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 9),
+('Manter a Paz', 'Kata que enfatiza a pureza do movimento e a manutenção da calma sob pressão.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 10),
+('Destruição Extrema', 'Proveniente do Goju-ryu, utiliza movimentos circulares e ataques de curta distância.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 11),
+('Palmas Rotativas', 'Kata suave e circular que complementa o Sanchin, focando na flexibilidade das palmas das mãos.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 12),
+('Dragão Adormecido', 'Criado por Sosai Mas Oyama. Reflete a filosofia do karateca que permanece humilde mas pronto para agir.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 13),
+('Contemplar o Céu', 'Um dos katas mais longos e complexos, simbolizando a união com o universo.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 14);
+UPDATE kihons
+SET video_url = 'https://www.youtube.com/watch?v=yPROqoPx3z8&pp=ygUIbWFlIGdlcmk%3D'
+WHERE romaji = 'Mae Geri';
+>>>>>>> Stashed changes

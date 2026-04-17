@@ -490,7 +490,7 @@ input::placeholder {
 }
 
 .theme-icon {
-  font-size: 16px;
+  font-size: 12px;
   transition: transform 0.3s ease;
 }
 
@@ -524,9 +524,9 @@ html.light .theme-btn:hover .theme-label {
 
 /* Icon-only theme button */
 .theme-btn-icon {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: flex;
+  top: -25px;
+  right: -300px;
   z-index: 100;
   display: flex;
   align-items: center;

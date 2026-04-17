@@ -8,6 +8,17 @@ if (empty($_SESSION['id'])) {
     exit;
 }
 
+/**
+ * Extrai o Video ID de qualquer formato de URL do YouTube.
+ * Suporta: watch?v=, youtu.be/, /embed/
+ */
+function yt_id(string $url): string {
+    if (preg_match('/(?:v=|youtu\.be\/|\/embed\/)([A-Za-z0-9_\-]{11})/', $url, $m)) {
+        return $m[1];
+    }
+    return '';
+}
+
 // ── Busca categorias + kihons do banco ─────────────────────────
 $categorias = [];
 
@@ -47,6 +58,8 @@ if ($result) {
             ]; 
         }
         if ($row['kihon_id']) {
+            // Extrai o vídeo ID do URL
+            $video_id = yt_id($row['video_url'] ?? '');
             $categorias[$cid]['kihons'][] = [
                 'id'        => $row['kihon_id'],
                 'nome'      => htmlspecialchars($row['nome']),
@@ -54,21 +67,11 @@ if ($result) {
                 'kana'      => htmlspecialchars($row['kana']),
                 'descricao' => htmlspecialchars($row['descricao']),
                 'video_url' => $row['video_url'],
+                'video_id'  => $video_id,
                 'nivel'     => $row['nivel'],
             ];
         }
     }
-}
-
-/**
- * Extrai o Video ID de qualquer formato de URL do YouTube.
- * Suporta: watch?v=, youtu.be/, /embed/
- */
-function yt_id(string $url): string {
-    if (preg_match('/(?:v=|youtu\.be\/|\/embed\/)([A-Za-z0-9_\-]{11})/', $url, $m)) {
-        return $m[1];
-    }
-    return '';
 }
 ?>
 <!DOCTYPE html>
@@ -100,6 +103,17 @@ function yt_id(string $url): string {
     <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
   </div>
 </section>
+
+ <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
 
 <!-- ── Hero ── -->
 <header class="hero">
@@ -134,7 +148,7 @@ function yt_id(string $url): string {
 
       <div class="cards-grid">
         <?php foreach ($cat['kihons'] as $k):
-          $vid_id  = yt_id($k['video_url'] ?? '');
+          $vid_id  = $k['video_id']; // Já extraído no PHP
           $thumb   = $vid_id
             ? "https://img.youtube.com/vi/{$vid_id}/mqdefault.jpg"
             : '../img/kihon-placeholder.jpg';

@@ -63,6 +63,18 @@ mysqli_close($conn);
         <label for="senha">Crie uma Senha</label>
         <input type="password" id="senha" name="senha" required placeholder="Mínimo 6 caracteres" minlength="6">
       </div>
+
+       <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+  
       <div class="input-group">
         <label for="nascimento">Data de Nascimento</label>
         <input type="date" id="nascimento" name="nascimento" required>

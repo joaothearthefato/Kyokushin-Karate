@@ -5,18 +5,36 @@ if (!isset($_SESSION["id"])) {
     exit;
 }
 
-// 1. CONEXÃO
-require_once('../php/config.php'); 
-// Se no seu config.php a variável for $con, mude abaixo para $con
-$conexao = $conn; 
+require_once('../php/config.php');
+$conexao = $conn;
 
-// 2. BUSCAR KATAS
+/**
+ * Converte qualquer URL do YouTube para o formato embed.
+ * Aceita: watch?v=ID, youtu.be/ID, shorts/ID, embed/ID
+ * Retorna string vazia se não conseguir extrair o ID.
+ */
+function youtubeEmbed(?string $url): string {
+    if (!$url) return '';
+    $patterns = [
+        '~youtu\.be/([A-Za-z0-9_-]{11})~',
+        '~youtube\.com/watch\?v=([A-Za-z0-9_-]{11})~',
+        '~youtube\.com/embed/([A-Za-z0-9_-]{11})~',
+        '~youtube\.com/shorts/([A-Za-z0-9_-]{11})~',
+    ];
+    foreach ($patterns as $p) {
+        if (preg_match($p, $url, $m)) {
+            return 'https://www.youtube.com/embed/' . $m[1];
+        }
+    }
+    return '';
+}
+
 $sql = "SELECT * FROM katas ORDER BY ordem ASC";
 $result = $conexao->query($sql);
 
 $katas_db = [];
 if ($result && $result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $katas_db[] = $row;
     }
 }
@@ -30,37 +48,49 @@ if ($result && $result->num_rows > 0) {
   <link rel="icon" href="../img/kyokushinicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/dashboard.css">
   <link rel="stylesheet" href="../css/katas.css">
 </head>
 <body>
 
-<!-- ── Navbar ── -->
-<section class="navbarArea">
-    <div class="header">
-        <a href="../php/dashboard.php">Início</a>
-        <a href="progresso.php">Progresso</a>
-        <a href="katas.php" class="active">Katas</a>
-        <a href="kihon.php">Kihon</a>
-        <a href="treinos.php">Treinos</a>
-        <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
-            <span class="theme-icon">☀️</span>
-            <span class="theme-label">Light</span>
-        </button>
-        <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
-    </div>
-</section>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="home.php" class="navbar-brand">OYAMA<span>HUB</span></a>
+  <div class="nav-links">
+    <a href="home.php">Início</a>
+    <a href="progresso.php">Progresso</a>
+    <a href="katas.php" class="active">Katas</a>
+    <a href="kihon.php">Kihon</a>
+    <a href="treinos.php">Treinos</a>
+  </div>
+  <a href="../php/logout.php" class="logout-btn">Logout</a>
+</nav>
 
-<div class="page-hero">
-  <div class="hero-tag">Kyokushin Karate</div>
+<!-- HERO -->
+<section class="page-hero">
+  <span class="hero-tag">Kyokushin Karate</span>
   <h1>KATAS</h1>
   <p>Formas codificadas de combate. Cada kata é um diálogo com os fundadores do estilo.</p>
-</div>
+</section>
 
+<<<<<<< Updated upstream
+ <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+=======
+<!-- CONTROLS -->
+>>>>>>> Stashed changes
 <div class="controls">
   <div class="search-wrap">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" class="search-input" placeholder="Buscar kata..." id="searchInput">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" id="search" class="search-input" placeholder="Buscar kata...">
   </div>
   <button class="filter-btn active" data-filter="todos">Todos</button>
   <button class="filter-btn" data-filter="iniciante">Iniciante</button>
@@ -68,156 +98,135 @@ if ($result && $result->num_rows > 0) {
   <button class="filter-btn" data-filter="avancado">Avançado</button>
 </div>
 
-<div class="kata-grid" id="kataGrid"></div>
+<!-- GRID -->
+<div class="kata-grid" id="kata-grid">
+  <?php foreach ($katas_db as $i => $kata):
+      $embed = youtubeEmbed($kata['video_url'] ?? '');
+  ?>
+    <article class="kata-card"
+             data-nivel="<?= htmlspecialchars($kata['nivel']) ?>"
+             data-nome="<?= htmlspecialchars(strtolower($kata['nome'])) ?>"
+             data-video="<?= htmlspecialchars($embed) ?>"
+             data-titulo="<?= htmlspecialchars($kata['nome']) ?>"
+             data-descricao="<?= htmlspecialchars($kata['descricao']) ?>">
+      <div class="kata-card-inner">
+        <span class="kata-number"><?= str_pad($kata['ordem'], 2, '0', STR_PAD_LEFT) ?></span>
+        <span class="kata-level level-<?= htmlspecialchars($kata['nivel']) ?>">
+          <?= htmlspecialchars($kata['nivel']) ?>
+        </span>
+        <h3 class="kata-name"><?= htmlspecialchars($kata['nome']) ?></h3>
+        <p class="kata-desc"><?= htmlspecialchars($kata['descricao']) ?></p>
+        <button class="kata-btn">Ver Detalhes</button>
+      </div>
+    </article>
+  <?php endforeach; ?>
+</div>
 
+<!-- MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
-    <button class="modal-close" id="modalClose">✕</button>
+    <button class="modal-close" id="modal-close" aria-label="Fechar">✕</button>
+
     <div id="video-container">
-        <iframe id="m-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe id="m-video"
+              src=""
+              title="Vídeo do kata"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
     </div>
+
     <div class="modal-header">
-      <div class="modal-kata-name" id="m-name"></div>
-      <div id="m-level-badge"></div>
+      <h2 class="modal-kata-name" id="m-title">—</h2>
     </div>
     <div class="modal-body">
-      <div class="modal-section-title">Sobre o Kata</div>
-      <p class="modal-text" id="m-desc"></p>
+      <h4 class="modal-section-title">Sobre o Kata</h4>
+      <p class="modal-text" id="m-desc">—</p>
     </div>
   </div>
 </div>
 
 <script>
-const katas = <?php echo json_encode($katas_db); ?>;
-let activeFilter = 'todos';
+(function () {
+  const grid       = document.getElementById('kata-grid');
+  const modal      = document.getElementById('modal');
+  const closeBtn   = document.getElementById('modal-close');
+  const iframe     = document.getElementById('m-video');
+  const videoBox   = document.getElementById('video-container');
+  const titleEl    = document.getElementById('m-title');
+  const descEl     = document.getElementById('m-desc');
+  const searchEl   = document.getElementById('search');
+  const filterBtns = document.querySelectorAll('.filter-btn');
 
-function renderGrid(lista) {
-  const grid = document.getElementById('kataGrid');
-  grid.innerHTML = '';
-  if (lista.length === 0) {
-    grid.innerHTML = '<div class="no-results">Nenhum kata encontrado</div>';
-    return;
+  function openModal(card) {
+    const video = card.dataset.video;
+    titleEl.textContent = card.dataset.titulo || '';
+    descEl.textContent  = card.dataset.descricao || '';
+
+    // Limpa qualquer placeholder anterior
+    const old = videoBox.querySelector('.no-video');
+    if (old) old.remove();
+
+    if (video) {
+      iframe.style.display = 'block';
+      iframe.src = video + '?autoplay=1&rel=0';
+    } else {
+      iframe.style.display = 'none';
+      iframe.src = '';
+      const ph = document.createElement('div');
+      ph.className = 'no-video';
+      ph.textContent = 'Vídeo indisponível';
+      videoBox.appendChild(ph);
+    }
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
-  lista.forEach((k, i) => {
-    const card = document.createElement('div');
-    card.className = 'kata-card';
-    card.style.animationDelay = (i * 0.05) + 's';
-    card.innerHTML = `
-      <div class="kata-card-inner">
-        <div class="kata-number">${String(k.ordem).padStart(2,'0')}</div>
-        <span class="kata-level level-${k.nivel}">${k.nivel}</span>
-        <div class="kata-name">${k.nome}</div>
-        <p class="kata-desc">${k.descricao.substring(0, 80)}...</p>
-        <button class="kata-btn" onclick="openModal(${k.id})">Assistir Vídeo ›</button>
-      </div>`;
-    grid.appendChild(card);
+
+  function closeModal() {
+    modal.classList.remove('open');
+    iframe.src = ''; // PARA o vídeo
+    document.body.style.overflow = '';
+  }
+
+  // Abrir modal ao clicar no card ou no botão
+  grid.addEventListener('click', (e) => {
+    const card = e.target.closest('.kata-card');
+    if (!card) return;
+    openModal(card);
   });
-}
 
-// Função para extrair o ID do vídeo do YouTube e gerar link de Embed
-function getYouTubeEmbed(url) {
-    if (!url) return "";
-    let videoId = "";
-    
-    // Formato: youtube.com/watch?v=XXXX
-    if (url.includes("v=")) {
-        videoId = url.split("v=")[1].split("&")[0];
-    } 
-    // Formato: youtu.be/XXXX
-    else if (url.includes("youtu.be/")) {
-        videoId = url.split("youtu.be/")[1].split("?")[0];
-    }
-    // Formato: youtube.com/embed/XXXX
-    else if (url.includes("embed/")) {
-        videoId = url.split("embed/")[1].split("?")[0];
-    }
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-    return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : "";
-}
+  // Filtros
+  let currentFilter = 'todos';
+  let currentSearch = '';
 
-function openModal(id) {
-  const k = katas.find(x => x.id == id);
-  if (!k) return;
-
-  document.getElementById('m-name').textContent = k.nome;
-  document.getElementById('m-level-badge').innerHTML = `<span class="kata-level level-${k.nivel}">${k.nivel}</span>`;
-  document.getElementById('m-desc').textContent = k.descricao;
-  
-  // Transforma o link do banco em link de embed funcional
-  const embedLink = getYouTubeEmbed(k.video_url); 
-  // IMPORTANTE: k.video_url deve ser o nome da sua coluna no banco!
-  
-  document.getElementById('m-video').src = embedLink;
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.getElementById('m-video').src = ""; // Para o som ao fechar
-  document.body.style.overflow = '';
-}
-
-// Eventos
-document.getElementById('modalClose').addEventListener('click', closeModal);
-document.getElementById('searchInput').addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase();
-    const filtrados = katas.filter(k => {
-        const matchFilter = activeFilter === 'todos' || k.nivel === activeFilter;
-        return matchFilter && (k.nome.toLowerCase().includes(q) || k.descricao.toLowerCase().includes(q));
+  function applyFilters() {
+    document.querySelectorAll('.kata-card').forEach(card => {
+      const nivel = card.dataset.nivel;
+      const nome  = card.dataset.nome;
+      const okNivel = currentFilter === 'todos' || nivel === currentFilter;
+      const okBusca = !currentSearch || nome.includes(currentSearch);
+      card.style.display = (okNivel && okBusca) ? '' : 'none';
     });
-    renderGrid(filtrados);
-});
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeFilter = btn.dataset.filter;
-    // Dispara a busca novamente
-    document.getElementById('searchInput').dispatchEvent(new Event('input'));
-  });
-});
-
-window.onclick = (e) => { if (e.target.id === 'modal') closeModal(); }
-
-// Inicializa
-renderGrid(katas);
-
-const themeToggle = document.getElementById('theme-toggle');
-const themeIcon = themeToggle.querySelector('.theme-icon');
-const themeLabel = themeToggle.querySelector('.theme-label');
-const html = document.documentElement;
-
-// Check for saved theme preference or default to dark mode
-const currentTheme = localStorage.getItem('theme') || 'dark';
-if (currentTheme === 'light') {
-  html.classList.add('light');
-  themeIcon.textContent = '🌙';
-  themeLabel.textContent = 'Dark';
-}
-
-themeToggle.addEventListener('click', () => {
-  html.classList.toggle('light');
-  const isLight = html.classList.contains('light');
-
-  // Update button appearance with animation
-  if (isLight) {
-    themeIcon.textContent = '🌙';
-    themeLabel.textContent = 'Dark';
-    localStorage.setItem('theme', 'light');
-  } else {
-    themeIcon.textContent = '☀️';
-    themeLabel.textContent = 'Light';
-    localStorage.setItem('theme', 'dark');
   }
 
-  // Add click animation
-  themeToggle.style.transform = 'scale(0.95)';
-  setTimeout(() => {
-    themeToggle.style.transform = '';
-  }, 150);
-});
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  searchEl.addEventListener('input', (e) => {
+    currentSearch = e.target.value.trim().toLowerCase();
+    applyFilters();
+  });
+})();
 </script>
+
 </body>
 </html>
