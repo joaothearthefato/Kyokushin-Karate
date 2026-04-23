@@ -592,6 +592,35 @@ html.light .theme-btn-icon:hover {
   border-color: var(--red);
 }
 
+/* ========= BOTÃO ESQUECI SENHA ========= */
+
+.forgot-password-btn {
+  display: block;
+  margin: 12px auto 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--muted);
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 3px;
+}
+
+html.light .forgot-password-btn {
+  color: var(--red);
+  border-color: rgba(200, 0, 10, 0.3);
+}
+
+html.light .forgot-password-btn:hover {
+  background: rgba(200, 0, 10, 0.05);
+  border-color: var(--red);
+  color: var(--red);
+}
+
 /* ========= RESPONSIVO ========= */
 
 @media(max-width:500px) {

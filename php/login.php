@@ -148,15 +148,50 @@ if (isset($_POST["email"])) {
 
     <a href="registro.php" class="login-link">Não tem conta? Cadastre-se</a>
     <a href="../index.html" class="login-link">Voltar ao início</a>
+    <button class="forgot-password-btn" onclick="openForgotPasswordModal()">Esqueci minha senha</button>
   </div>
 
   <!-- Modal de erro -->
   <div class="modal-overlay" id="modal-erro">
     <div class="modal-box">
-      <div class="modal-icon">⚠️</div>
+      <div class="modal-icon">⚠️</div>    
       <div class="modal-title">Erro ao tentar entrar</div>
       <p class="modal-msg"><?= $erro ?? '' ?></p>
       <button class="modal-btn" onclick="fecharModal()">Tentar Novamente</button>
+    </div>
+  </div>
+
+  <!-- Modal de recuperação de senha -->
+  <div class="modal-overlay" id="modal-forgot-password">
+    <div class="modal-box">
+      <div class="modal-icon">🔐</div>
+      <div class="modal-title">Recuperar Senha</div>
+      <p class="modal-msg">Digite seu email para receber instruções de recuperação de senha.</p>
+      
+      <form id="forgot-password-form" onsubmit="handleForgotPassword(event)">
+        <div class="input-group" style="margin-bottom: 1.5rem;">
+          <input type="email" id="forgot-email" placeholder="seu@email.com" required 
+                 style="width: 100%; padding: 12px 14px; background: var(--dark); border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; outline: none; transition: border-color 0.2s;">
+        </div>
+        
+        <button class="modal-btn" type="submit" id="forgot-submit-btn">
+          <span id="forgot-btn-text">Enviar</span>
+        </button>
+      </form>
+      
+      <button class="modal-btn" onclick="closeForgotPasswordModal()" style="background: transparent; border: 1px solid var(--border); color: var(--muted); margin-top: 10px;">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de sucesso -->
+  <div class="modal-overlay" id="modal-success">
+    <div class="modal-box">
+      <div class="modal-icon">✅</div>
+      <div class="modal-title">Email Enviado!</div>
+      <p class="modal-msg">Verifique sua caixa de entrada e siga as instruções para recuperar sua senha.</p>
+      <button class="modal-btn" onclick="closeSuccessModal()">Entendi</button>
     </div>
   </div>
 
@@ -204,6 +239,67 @@ if (isset($_POST["email"])) {
     // fecha com Escape
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') fecharModal();
+    });
+
+    // Funções para modal de recuperação de senha
+    function openForgotPasswordModal() {
+      document.getElementById('modal-forgot-password').classList.add('open');
+      document.getElementById('forgot-email').focus();
+    }
+
+    function closeForgotPasswordModal() {
+      document.getElementById('modal-forgot-password').classList.remove('open');
+      document.getElementById('forgot-password-form').reset();
+      document.getElementById('forgot-submit-btn').disabled = false;
+      document.getElementById('forgot-btn-text').textContent = 'Enviar';
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('modal-success').classList.remove('open');
+      closeForgotPasswordModal();
+    }
+
+    function handleForgotPassword(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('forgot-email').value;
+      const submitBtn = document.getElementById('forgot-submit-btn');
+      const btnText = document.getElementById('forgot-btn-text');
+      
+      // Simular envio
+      submitBtn.disabled = true;
+      btnText.textContent = 'Enviando...';
+      
+      // Simular delay de envio
+      setTimeout(() => {
+        // Fechar modal de recuperação
+        document.getElementById('modal-forgot-password').classList.remove('open');
+        
+        // Abrir modal de sucesso
+        document.getElementById('modal-success').classList.add('open');
+        
+        // Reset form
+        document.getElementById('forgot-password-form').reset();
+        submitBtn.disabled = false;
+        btnText.textContent = 'Enviar';
+      }, 1500);
+    }
+
+    // Event listeners para os novos modais
+    document.getElementById('modal-forgot-password').addEventListener('click', function(e) {
+      if (e.target === this) closeForgotPasswordModal();
+    });
+
+    document.getElementById('modal-success').addEventListener('click', function(e) {
+      if (e.target === this) closeSuccessModal();
+    });
+
+    // Fecha modais com Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeForgotPasswordModal();
+        closeSuccessModal();
+      }
     });
   </script>
 

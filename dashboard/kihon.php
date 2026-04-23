@@ -119,6 +119,16 @@ function yt_id(string $url): string {
   <p>Os fundamentos que formam a base de todo karateka. Domine cada técnica antes de avançar — <em>kihon</em> é o alicerce da excelência.</p>
 </header>
 
+<!-- ── Search Bar ── -->
+<div class="search-container">
+  <div class="search-wrapper">
+    <input type="text" id="search-input" placeholder="Buscar técnica por nome..." autocomplete="off">
+    <button id="clear-search" class="clear-btn" title="Limpar busca">✕</button>
+    <div class="search-icon">🔍</div>
+  </div>
+  <div id="search-results" class="search-results"></div>
+</div>
+
 <!-- ── Category nav ── -->
 <div class="cat-nav">
   <?php foreach ($categorias as $cat): ?>
@@ -344,6 +354,155 @@ themeToggle.addEventListener('click', () => {
   setTimeout(() => {
     themeToggle.style.transform = '';
   }, 150);
+});
+
+/* ── Search Functionality ───────────────────────────────────── */
+const searchInput = document.getElementById('search-input');
+const clearBtn = document.getElementById('clear-search');
+const searchResults = document.getElementById('search-results');
+const techCards = document.querySelectorAll('.tech-card');
+const kihonSections = document.querySelectorAll('.kihon-section');
+
+// Create searchable data array
+let searchableData = [];
+techCards.forEach(card => {
+  const nome = card.dataset.nome || '';
+  const romaji = card.dataset.romaji || '';
+  const desc = card.dataset.desc || '';
+  const categoryEl = card.closest('.kihon-section').querySelector('.section-title');
+  const category = categoryEl ? categoryEl.textContent : '';
+
+  searchableData.push({
+    element: card,
+    nome: nome.toLowerCase(),
+    romaji: romaji.toLowerCase(),
+    desc: desc.toLowerCase(),
+    category: category.toLowerCase(),
+    fullText: `${nome} ${romaji} ${desc} ${category}`.toLowerCase()
+  });
+});
+
+// Search function
+function performSearch(query) {
+  const q = query.toLowerCase().trim();
+
+  if (q === '') {
+    // Show all cards and sections
+    techCards.forEach(card => card.style.display = '');
+    kihonSections.forEach(section => section.style.display = '');
+    searchResults.style.display = 'none';
+    clearBtn.style.display = 'none';
+    return;
+  }
+
+  clearBtn.style.display = 'block';
+  searchResults.innerHTML = '';
+
+  let visibleCards = 0;
+  let resultsHTML = '';
+
+  searchableData.forEach(item => {
+    const score = getSearchScore(q, item);
+    if (score > 0) {
+      item.element.style.display = '';
+      visibleCards++;
+
+      // Add to dropdown results
+      const categoryEl = item.element.closest('.kihon-section').querySelector('.section-kanji');
+      const categoryKanji = categoryEl ? categoryEl.textContent : '';
+
+      resultsHTML += `
+        <div class="search-result-item" onclick="scrollToCard('${item.element.dataset.nome}')">
+          <div class="search-result-name">${item.element.dataset.nome}</div>
+          <div class="search-result-romaji">${item.element.dataset.romaji}</div>
+          <div class="search-result-category">${categoryKanji} · ${item.element.closest('.kihon-section').querySelector('.section-title').textContent}</div>
+        </div>
+      `;
+    } else {
+      item.element.style.display = 'none';
+    }
+  });
+
+  // Hide sections with no visible cards
+  kihonSections.forEach(section => {
+    const visibleCardsInSection = section.querySelectorAll('.tech-card[style*="display: block"], .tech-card:not([style*="display"])').length;
+    section.style.display = visibleCardsInSection > 0 ? '' : 'none';
+  });
+
+  if (resultsHTML) {
+    searchResults.innerHTML = resultsHTML;
+    searchResults.style.display = 'block';
+  } else {
+    searchResults.innerHTML = '<div class="search-result-item">Nenhuma técnica encontrada</div>';
+    searchResults.style.display = 'block';
+  }
+}
+
+// Calculate search relevance score
+function getSearchScore(query, item) {
+  let score = 0;
+  const words = query.split(' ');
+
+  words.forEach(word => {
+    if (item.nome.includes(word)) score += 10;
+    if (item.romaji.includes(word)) score += 8;
+    if (item.category.includes(word)) score += 5;
+    if (item.desc.includes(word)) score += 3;
+  });
+
+  return score;
+}
+
+// Scroll to specific card
+function scrollToCard(cardName) {
+  const card = Array.from(techCards).find(c => c.dataset.nome === cardName);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Highlight the card temporarily
+    card.style.boxShadow = '0 0 30px var(--red-glow)';
+    setTimeout(() => {
+      card.style.boxShadow = '';
+    }, 2000);
+  }
+  searchInput.value = '';
+  searchResults.style.display = 'none';
+  clearBtn.style.display = 'none';
+}
+
+// Event listeners
+searchInput.addEventListener('input', (e) => {
+  performSearch(e.target.value);
+});
+
+searchInput.addEventListener('focus', () => {
+  if (searchInput.value.trim()) {
+    searchResults.style.display = 'block';
+  }
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    searchInput.blur();
+    searchResults.style.display = 'none';
+  } else if (e.key === 'Enter') {
+    const firstResult = searchResults.querySelector('.search-result-item');
+    if (firstResult) {
+      firstResult.click();
+    }
+  }
+});
+
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  performSearch('');
+  searchInput.focus();
+});
+
+// Close search results when clicking outside
+document.addEventListener('click', (e) => {
+  if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+    searchResults.style.display = 'none';
+  }
 });
 </script>
 </body>
