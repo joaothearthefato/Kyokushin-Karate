@@ -72,7 +72,6 @@ if ($result && $result->num_rows > 0) {
   <p>Formas codificadas de combate. Cada kata é um diálogo com os fundadores do estilo.</p>
 </section>
 
-<<<<<<< Updated upstream
  <div vw class="enabled">
     <div vw-access-button class="active"></div>
     <div vw-plugin-wrapper>
@@ -84,9 +83,7 @@ if ($result && $result->num_rows > 0) {
     new window.VLibras.Widget('https://vlibras.gov.br/app');
   </script>
 
-=======
 <!-- CONTROLS -->
->>>>>>> Stashed changes
 <div class="controls">
   <div class="search-wrap">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
