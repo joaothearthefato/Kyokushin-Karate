@@ -440,10 +440,6 @@ input::placeholder {
 /* ========= THEME TOGGLE BUTTON ========= */
 
 .theme-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -490,7 +486,7 @@ input::placeholder {
 }
 
 .theme-icon {
-  font-size: 12px;
+  font-size: 16px;
   transition: transform 0.3s ease;
 }
 
@@ -524,10 +520,6 @@ html.light .theme-btn:hover .theme-label {
 
 /* Icon-only theme button */
 .theme-btn-icon {
-  position: flex;
-  top: -25px;
-  right: -300px;
-  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -564,7 +556,7 @@ html.light .theme-btn:hover .theme-label {
   background: var(--surface2);
   border-color: var(--red);
   box-shadow: 0 0 15px var(--red-glow);
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .theme-btn-icon:active {
@@ -572,7 +564,7 @@ html.light .theme-btn:hover .theme-label {
 }
 
 .theme-btn-icon .theme-icon {
-  font-size: 20px;
+  font-size: 18px;
   transition: transform 0.3s ease;
 }
 

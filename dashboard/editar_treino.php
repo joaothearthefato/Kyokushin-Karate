@@ -77,7 +77,7 @@ mysqli_close($conn);
         <a href="katas.php">Katas</a>
         <a href="kihon.php">Kihon</a>
         <a href="treinos.php" class="active">Treinos</a>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema">
+        <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
             <span class="theme-icon">🌙</span>
             <span class="theme-label">Modo Escuro</span>
         </button>

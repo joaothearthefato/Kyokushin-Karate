@@ -99,38 +99,58 @@ body::before {
 }
 
 .theme-btn {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  background: transparent;
-  color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  padding: 9px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: auto;
-  border-radius: 3px;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  color: var(--text);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(200, 0, 10, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.theme-btn:hover::before {
+  left: 100%;
 }
 
 .theme-btn:hover {
-  background: var(--panel);
+  background: var(--surface2);
   border-color: var(--red);
-  color: var(--red);
   box-shadow: 0 0 15px var(--red-glow);
+  transform: translateY(-2px);
+}
+
+.theme-btn:active {
+  transform: translateY(0);
 }
 
 .theme-btn .theme-icon {
-  font-size: 14px;
-  transition: transform 0.2s;
+  font-size: 16px;
+  transition: transform 0.3s ease;
 }
 
 .theme-btn:hover .theme-icon {
-  transform: scale(1.1) rotate(15deg);
+  transform: rotate(15deg);
 }
 
 .logout-btn {
@@ -864,14 +884,18 @@ html.light .logout-btn:hover {
 }
 
 html.light .theme-btn {
+  background: var(--surface);
+  border-color: var(--border);
   color: var(--red);
-  border: 2px solid rgba(200, 0, 10, 0.4);
 }
 
 html.light .theme-btn:hover {
-  background: rgba(200, 0, 10, 0.1);
+  background: var(--surface2);
   border-color: var(--red);
-  color: var(--red);
+}
+
+html.light .theme-btn:hover .theme-label {
+  color: var(--white);
 }
 
 /* Category nav light mode */
