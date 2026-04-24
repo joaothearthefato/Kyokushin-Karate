@@ -1,0 +1,131 @@
+.dashboard-main {
+  padding-top: 128px;
+  padding-bottom: 72px;
+}
+
+.dashboard-hero {
+  margin-bottom: 36px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.02), rgba(200, 0, 10, 0.08));
+}
+
+.dashboard-tag {
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 3px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.dashboard-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(38px, 6vw, 62px);
+  letter-spacing: 2px;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.dashboard-hero p {
+  font-size: 20px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.dashboard-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 24px;
+  min-height: 220px;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(200, 0, 10, 0.45);
+}
+
+.dashboard-card h2 {
+  font-family: 'Oswald', sans-serif;
+  color: var(--white);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.dashboard-card p,
+.dashboard-card li {
+  color: var(--text);
+  font-size: 20px;
+}
+
+.dashboard-card ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.dashboard-card li::before {
+  content: '•';
+  color: var(--red2);
+  margin-right: 8px;
+}
+
+.dashboard-card.emphasis {
+  background: linear-gradient(130deg, rgba(200, 0, 10, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.progress-track {
+  margin-top: 18px;
+  height: 11px;
+  border-radius: 999px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--red2));
+}
+
+.dashboard-action {
+  margin-top: 14px;
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.dashboard-action:hover {
+  border-color: var(--red);
+  background: rgba(200, 0, 10, 0.15);
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-hero p,
+  .dashboard-card p,
+  .dashboard-card li {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    padding-top: 104px;
+  }
+}
