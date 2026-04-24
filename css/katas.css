@@ -145,6 +145,7 @@ body {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(135deg, rgba(192,57,43,0.06) 0%, transparent 60%);
   opacity: 0; transition: opacity .3s;
+  pointer-events: none;
 }
 .kata-card:hover { border-color: rgba(192,57,43,0.4); transform: translateY(-2px); }
 .kata-card:hover::before { opacity: 1; }
@@ -192,6 +193,58 @@ body {
   background: rgba(192,57,43,0.08);
   box-shadow: 0 0 20px var(--red-glow);
 }
+
+/* ── CONCLUSÃO ── */
+.kata-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 1.1rem;
+}
+
+.kata-actions .kata-btn {
+  margin-top: 0;
+}
+
+.btn-concluir {
+  width: 100%;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(25, 195, 109, 0.35);
+  color: rgba(25, 195, 109, 0.7);
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-concluir:hover {
+  background: rgba(25, 195, 109, 0.12);
+  border-color: #19c36d;
+  color: #19c36d;
+}
+
+.btn-concluir.concluido {
+  background: rgba(25, 195, 109, 0.12);
+  border-color: #19c36d;
+  color: #19c36d;
+}
+
+.kata-concluido-badge {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  background: rgba(25, 195, 109, 0.12);
+  border: 1px solid rgba(25, 195, 109, 0.3);
+  color: #19c36d;
+  margin-bottom: 8px;
+}
+
 
 /* ── MODAL ── */
 .modal-overlay {

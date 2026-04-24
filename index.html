@@ -250,26 +250,28 @@
     const html = document.documentElement;
 
     // Check for saved theme preference or default to dark mode
-    const currentTheme = localStorage.getItem('theme') || 'dark';
+    const currentTheme = localStorage.getItem('oyama-theme') || localStorage.getItem('theme') || 'dark';
     if (currentTheme === 'light') {
       html.classList.add('light');
+      document.body.classList.add('light-mode');
       themeIcon.textContent = '🌙';
       themeLabel.textContent = 'Dark';
     }
 
     themeToggle.addEventListener('click', () => {
       html.classList.toggle('light');
+      document.body.classList.toggle('light-mode');
       const isLight = html.classList.contains('light');
 
       // Update button appearance with animation
       if (isLight) {
         themeIcon.textContent = '🌙';
         themeLabel.textContent = 'Dark';
-        localStorage.setItem('theme', 'light');
+        localStorage.setItem('oyama-theme', 'light');
       } else {
         themeIcon.textContent = '☀️';
         themeLabel.textContent = 'Light';
-        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('oyama-theme', 'dark');
       }
 
       // Add click animation
