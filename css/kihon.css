@@ -653,6 +653,45 @@ main {
   flex: 1;
 }
 
+/* ── BOTÃO CONCLUSÃO KIHON ── */
+.btn-concluir-kihon {
+  margin-top: 12px;
+  width: 100%;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid rgba(25, 195, 109, 0.3);
+  color: rgba(25, 195, 109, 0.6);
+  padding: 9px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-concluir-kihon:hover {
+  background: rgba(25, 195, 109, 0.1);
+  border-color: #19c36d;
+  color: #19c36d;
+}
+
+.btn-concluir-kihon.concluido {
+  background: rgba(25, 195, 109, 0.1);
+  border-color: #19c36d;
+  color: #19c36d;
+}
+
+.card-dominado {
+  border-color: rgba(25, 195, 109, 0.25) !important;
+}
+
+.card-dominado::before {
+  background: #19c36d !important;
+}
+
+
 /* ── Divider ── */
 .divider {
   height: 1px;

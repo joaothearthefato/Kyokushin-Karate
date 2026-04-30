@@ -1,18 +1,14 @@
 <?php
 session_start();
-if (!isset($_SESSION["id"])) {
-    header("Location: ../php/login.php");
+if (!isset($_SESSION['id'])) {
+    header('Location: ../php/login.php');
     exit;
 }
 
 require_once('../php/config.php');
 $conexao = $conn;
+$usuario_id = $_SESSION['id'];
 
-/**
- * Converte qualquer URL do YouTube para o formato embed.
- * Aceita: watch?v=ID, youtu.be/ID, shorts/ID, embed/ID
- * Retorna string vazia se não conseguir extrair o ID.
- */
 function youtubeEmbed(?string $url): string {
     if (!$url) return '';
     $patterns = [
@@ -22,21 +18,25 @@ function youtubeEmbed(?string $url): string {
         '~youtube\.com/shorts/([A-Za-z0-9_-]{11})~',
     ];
     foreach ($patterns as $p) {
-        if (preg_match($p, $url, $m)) {
-            return 'https://www.youtube.com/embed/' . $m[1];
-        }
+        if (preg_match($p, $url, $m)) return 'https://www.youtube.com/embed/' . $m[1];
     }
     return '';
 }
 
-$sql = "SELECT * FROM katas ORDER BY ordem ASC";
+$sql = 'SELECT * FROM katas ORDER BY ordem ASC';
 $result = $conexao->query($sql);
 
 $katas_db = [];
 if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $katas_db[] = $row;
-    }
+    while ($row = $result->fetch_assoc()) $katas_db[] = $row;
+}
+
+// Buscar progresso do usuário para katas
+$concluidos = [];
+$sql_prog = "SELECT referencia_id FROM progresso WHERE usuario_id = $usuario_id AND tipo = 'kata' AND concluido = 1";
+$r_prog = $conexao->query($sql_prog);
+if ($r_prog) {
+    while ($p = $r_prog->fetch_assoc()) $concluidos[] = $p['referencia_id'];
 }
 ?>
 <!DOCTYPE html>
@@ -52,18 +52,8 @@ if ($result && $result->num_rows > 0) {
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <a href="home.php" class="navbar-brand">OYAMA<span>HUB</span></a>
-  <div class="nav-links">
-    <a href="home.php">Início</a>
-    <a href="progresso.php">Progresso</a>
-    <a href="katas.php" class="active">Katas</a>
-    <a href="kihon.php">Kihon</a>
-    <a href="treinos.php">Treinos</a>
-  </div>
-  <a href="../php/logout.php" class="logout-btn">Logout</a>
-</nav>
+<!-- Navbar -->
+ <?php include '../includes/navbar.php'; ?>
 
 <!-- HERO -->
 <section class="page-hero">
@@ -105,15 +95,27 @@ if ($result && $result->num_rows > 0) {
              data-nome="<?= htmlspecialchars(strtolower($kata['nome'])) ?>"
              data-video="<?= htmlspecialchars($embed) ?>"
              data-titulo="<?= htmlspecialchars($kata['nome']) ?>"
-             data-descricao="<?= htmlspecialchars($kata['descricao']) ?>">
+             data-descricao="<?= htmlspecialchars($kata['descricao']) ?>"
+             data-id="<?= $kata['id'] ?>">
       <div class="kata-card-inner">
         <span class="kata-number"><?= str_pad($kata['ordem'], 2, '0', STR_PAD_LEFT) ?></span>
         <span class="kata-level level-<?= htmlspecialchars($kata['nivel']) ?>">
           <?= htmlspecialchars($kata['nivel']) ?>
         </span>
+        <?php if (in_array($kata['id'], $concluidos)): ?>
+          <span class="kata-concluido-badge">✓ Concluído</span>
+        <?php endif; ?>
         <h3 class="kata-name"><?= htmlspecialchars($kata['nome']) ?></h3>
         <p class="kata-desc"><?= htmlspecialchars($kata['descricao']) ?></p>
-        <button class="kata-btn">Ver Detalhes</button>
+        <div class="kata-actions">
+          <button class="kata-btn" onclick="event.stopPropagation(); openKataModal(this.closest('.kata-card'))">Ver Detalhes</button>
+          <button class="btn-concluir <?= in_array($kata['id'], $concluidos) ? 'concluido' : '' ?>"
+                  data-id="<?= $kata['id'] ?>"
+                  data-tipo="kata"
+                  onclick="event.stopPropagation(); toggleConcluido(this)">
+            <?= in_array($kata['id'], $concluidos) ? '✓ Concluído' : 'Marcar como Concluído' ?>
+          </button>
+        </div>
       </div>
     </article>
   <?php endforeach; ?>
@@ -154,12 +156,12 @@ if ($result && $result->num_rows > 0) {
   const searchEl   = document.getElementById('search');
   const filterBtns = document.querySelectorAll('.filter-btn');
 
-  function openModal(card) {
+  // Expor globalmente para uso no onclick
+  window.openKataModal = function(card) {
     const video = card.dataset.video;
     titleEl.textContent = card.dataset.titulo || '';
     descEl.textContent  = card.dataset.descricao || '';
 
-    // Limpa qualquer placeholder anterior
     const old = videoBox.querySelector('.no-video');
     if (old) old.remove();
 
@@ -176,26 +178,26 @@ if ($result && $result->num_rows > 0) {
     }
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
-  }
+  };
 
   function closeModal() {
     modal.classList.remove('open');
-    iframe.src = ''; // PARA o vídeo
+    iframe.src = '';
     document.body.style.overflow = '';
   }
 
-  // Abrir modal ao clicar no card ou no botão
   grid.addEventListener('click', (e) => {
+    // Não abrir modal ao clicar nos botões de ação
+    if (e.target.closest('.btn-concluir') || e.target.closest('.kata-btn')) return;
     const card = e.target.closest('.kata-card');
     if (!card) return;
-    openModal(card);
+    openKataModal(card);
   });
 
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // Filtros
   let currentFilter = 'todos';
   let currentSearch = '';
 
@@ -223,6 +225,40 @@ if ($result && $result->num_rows > 0) {
     applyFilters();
   });
 })();
+
+// ── Toggle conclusão via AJAX ──
+function toggleConcluido(btn) {
+  const id   = btn.dataset.id;
+  const tipo = btn.dataset.tipo;
+
+  const fd = new FormData();
+  fd.append('referencia_id', id);
+  fd.append('tipo', tipo);
+
+  fetch('toggle_progresso.php', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) return;
+      const card = btn.closest('.kata-card');
+      // Atualizar badge no card
+      let badge = card.querySelector('.kata-concluido-badge');
+      if (data.concluido) {
+        btn.textContent = '✓ Concluído';
+        btn.classList.add('concluido');
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'kata-concluido-badge';
+          badge.textContent = '✓ Concluído';
+          card.querySelector('.kata-card-inner').insertBefore(badge, card.querySelector('h3'));
+        }
+      } else {
+        btn.textContent = 'Marcar como Concluído';
+        btn.classList.remove('concluido');
+        if (badge) badge.remove();
+      }
+    })
+    .catch(() => alert('Erro ao atualizar progresso.'));
+}
 </script>
 
 </body>

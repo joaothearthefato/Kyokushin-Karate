@@ -1,0 +1,466 @@
+/* ═══════════════════════════════════════════════════════════
+   PERFIL PAGE CSS
+   ═══════════════════════════════════════════════════════════ */
+
+.perfil-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 104px 32px 60px;
+}
+
+/* ── HERO ── */
+.perfil-hero {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.perfil-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), #8a0007);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(200, 0, 10, 0.25), 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.perfil-avatar span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: #fff;
+    line-height: 1;
+}
+
+.perfil-hero-info h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 6px;
+}
+
+.perfil-tipo {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+}
+
+.perfil-meta {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+}
+
+/* ── ALERTS ── */
+.perfil-alert {
+    padding: 14px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+}
+
+.perfil-alert-erro {
+    background: rgba(200, 0, 10, 0.1);
+    border-left: 4px solid var(--red);
+    color: var(--red);
+}
+
+.perfil-alert-sucesso {
+    background: rgba(25, 195, 109, 0.1);
+    border-left: 4px solid #19c36d;
+    color: #19c36d;
+}
+
+/* ── GRID ── */
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.perfil-col-left,
+.perfil-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── CARD BASE ── */
+.perfil-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    transition: border-color 0.2s;
+}
+
+.perfil-card:hover {
+    border-color: rgba(200, 0, 10, 0.2);
+}
+
+.perfil-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.perfil-card-header svg {
+    color: var(--red);
+    flex-shrink: 0;
+}
+
+.perfil-card-header h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--white);
+    text-transform: uppercase;
+}
+
+/* ── DADOS PESSOAIS ── */
+.dados-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.dados-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.dados-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.dado-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.dado-valor {
+    font-size: 14px;
+    color: var(--white);
+    text-align: right;
+}
+
+.faixa-badge {
+    padding: 2px 10px;
+    background: rgba(200, 0, 10, 0.15);
+    border: 1px solid rgba(200, 0, 10, 0.3);
+    border-radius: 4px;
+    color: var(--red);
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+/* ── FORM ── */
+.perfil-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.form-group input,
+.form-group select {
+    padding: 11px 14px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(200, 0, 10, 0.12);
+}
+
+.form-group select option {
+    background: var(--dark);
+    color: var(--white);
+}
+
+.form-separator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 4px 0;
+}
+
+.form-separator::before,
+.form-separator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.btn-salvar-perfil {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 4px;
+}
+
+.btn-salvar-perfil:hover {
+    background: var(--red2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(200, 0, 10, 0.25);
+}
+
+/* ── PROGRESSO STATS (RF08) ── */
+.progresso-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.stat-item:hover {
+    border-color: rgba(200, 0, 10, 0.25);
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.red-icon   { background: rgba(200, 0, 10, 0.12); color: var(--red); }
+.gold-icon  { background: rgba(184, 150, 46, 0.12); color: var(--gold); }
+.green-icon { background: rgba(25, 195, 109, 0.12); color: #19c36d; }
+.blue-icon  { background: rgba(41, 128, 185, 0.12); color: #2980b9; }
+
+.stat-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: 1px;
+}
+
+.stat-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* ── JORNADA DE FAIXAS ── */
+.faixas-journey {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    row-gap: 12px;
+}
+
+.faixa-step {
+    display: flex;
+    align-items: center;
+}
+
+.faixa-belt {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.faixa-step.atual .faixa-belt {
+    box-shadow: 0 0 0 3px var(--red), 0 0 12px rgba(200, 0, 10, 0.5);
+    transform: scale(1.2);
+}
+
+.faixa-step.concluida .faixa-belt {
+    opacity: 0.9;
+}
+
+.faixa-step.pendente .faixa-belt {
+    opacity: 0.35;
+    filter: grayscale(60%);
+}
+
+.belt-pulse {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.4); opacity: 0.6; }
+}
+
+.faixa-connector {
+    width: 20px;
+    height: 2px;
+    background: var(--border);
+    margin: 0 2px;
+    transition: background 0.2s;
+}
+
+.faixa-connector.done {
+    background: var(--red);
+}
+
+.faixas-legend {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+}
+
+/* ── LINK PROGRESSO ── */
+.btn-ver-progresso {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-ver-progresso:hover {
+    border-color: var(--red);
+    color: var(--white);
+    background: rgba(200, 0, 10, 0.06);
+}
+
+/* ── LIGHT MODE ── */
+html.light .form-group input,
+html.light .form-group select {
+    background: #fff;
+    color: #1a1614;
+}
+
+html.light .stat-item {
+    background: #e8e3de;
+}
+
+html.light .perfil-avatar {
+    box-shadow: 0 0 0 3px rgba(200, 0, 10, 0.2), 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+    .perfil-grid {
+        grid-template-columns: 1fr;
+    }
+    .perfil-container {
+        padding: 96px 20px 48px;
+    }
+    .perfil-hero {
+        gap: 20px;
+    }
+    .progresso-stats {
+        grid-template-columns: 1fr;
+    }
+}

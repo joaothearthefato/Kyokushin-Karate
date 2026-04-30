@@ -8,6 +8,16 @@ if (empty($_SESSION['id'])) {
     exit;
 }
 
+$usuario_id = $_SESSION['id'];
+
+// Buscar progresso do usuário para kihons
+$concluidos_kihon = [];
+$sql_prog = "SELECT referencia_id FROM progresso WHERE usuario_id = $usuario_id AND tipo = 'kihon' AND concluido = 1";
+$r_prog = mysqli_query($conn, $sql_prog);
+if ($r_prog) {
+    while ($p = mysqli_fetch_assoc($r_prog)) $concluidos_kihon[] = $p['referencia_id'];
+}
+
 /**
  * Extrai o Video ID de qualquer formato de URL do YouTube.
  * Suporta: watch?v=, youtu.be/, /embed/
@@ -89,20 +99,7 @@ if ($result) {
 <body>
 
 <!-- ── Navbar ── -->
-<section class="navbarArea">
-  <div class="header">
-    <a href="../php/dashboard.php">Início</a>
-    <a href="progresso.php">Progresso</a>
-    <a href="katas.php">Katas</a>
-    <a href="kihon.php" class="active">Kihon</a>
-    <a href="treinos.php">Treinos</a>
-    <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
-        <span class="theme-icon">☀️</span>
-        <span class="theme-label">Light</span>
-    </button>
-    <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
-  </div>
-</section>
+  <?php include '../includes/navbar.php'; ?>
 
  <div vw class="enabled">
     <div vw-access-button class="active"></div>
@@ -169,8 +166,7 @@ if ($result) {
              data-video="<?= $vid_id ?>"
              data-nome="<?= $k['nome'] ?>"
              data-romaji="<?= $k['romaji'] ?>"
-             data-desc="<?= $k['descricao'] ?>"
-             onclick="openModal(this)">
+             data-desc="<?= $k['descricao'] ?>">
 
           <div class="card-video-zone">
             <img class="yt-thumb"
@@ -203,6 +199,12 @@ if ($result) {
             <div class="card-romaji"><?= $k['romaji'] ?></div>
             <div class="card-name"><?= $k['nome'] ?></div>
             <div class="card-desc"><?= $k['descricao'] ?></div>
+            <button class="btn-concluir-kihon <?= in_array($k['id'], $concluidos_kihon) ? 'concluido' : '' ?>"
+                    data-id="<?= $k['id'] ?>"
+                    data-tipo="kihon"
+                    onclick="event.stopPropagation(); toggleConcluidoKihon(this)">
+              <?= in_array($k['id'], $concluidos_kihon) ? '✓ Dominado' : 'Marcar como Dominado' ?>
+            </button>
           </div>
         </div>
         <?php endforeach; ?>
@@ -240,13 +242,13 @@ if ($result) {
 </div>
 
 <script>
-/* ── Modal ──────────────────────────────────────────── */
+/* ── Modal ─────────────────────────────────────────────── */
 const modal  = document.getElementById('modal');
 const iframe = document.getElementById('modal-iframe');
 
 function openModal(card) {
   const vid = card.dataset.video;
-  if (!vid) return; // sem vídeo ainda
+  if (!vid) return;
 
   document.getElementById('modal-romaji').textContent = card.dataset.romaji;
   document.getElementById('modal-name').textContent   = card.dataset.nome;
@@ -259,7 +261,7 @@ function openModal(card) {
 
 function closeModal() {
   modal.classList.remove('open');
-  iframe.src = '';                    // para o vídeo ao fechar
+  iframe.src = '';
   document.body.style.overflow = '';
 }
 
@@ -267,7 +269,43 @@ function closeOnBackdrop(e) {
   if (e.target === modal) closeModal();
 }
 
+// Delegated click: abrir modal ao clicar no card, mas NÃO ao clicar no botão de conclusão
+document.querySelectorAll('.tech-card').forEach(card => {
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', (e) => {
+    // Se clicou em qualquer botão, não abrir modal
+    if (e.target.closest('.btn-concluir-kihon')) return;
+    openModal(card);
+  });
+});
+
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Toggle Kihon Concluído ──
+function toggleConcluidoKihon(btn) {
+  const id   = btn.dataset.id;
+  const tipo = btn.dataset.tipo;
+
+  const fd = new FormData();
+  fd.append('referencia_id', id);
+  fd.append('tipo', tipo);
+
+  fetch('toggle_progresso.php', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) return;
+      if (data.concluido) {
+        btn.textContent = '✓ Dominado';
+        btn.classList.add('concluido');
+        btn.closest('.tech-card').classList.add('card-dominado');
+      } else {
+        btn.textContent = 'Marcar como Dominado';
+        btn.classList.remove('concluido');
+        btn.closest('.tech-card').classList.remove('card-dominado');
+      }
+    })
+    .catch(() => alert('Erro ao atualizar progresso.'));
+}
 
 /* ── Scroll-to-top ──────────────────────────────────── */
 const topBtn = document.getElementById('scroll-top');
