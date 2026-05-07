@@ -25,7 +25,7 @@ if ($currentDir === 'dashboard') {
   <div class="nav-links">
     <a href="<?= $link_dashboard ?>" class="<?= $currentPage == 'dashboard.php' ? 'active' : '' ?>">Início</a>
     <a href="<?= $link_katas ?>" class="<?= $currentPage == 'katas.php' ? 'active' : '' ?>">Katas</a>
-    <a href="<?= $link_kihons ?>" class="<?= $currentPage == 'kihon.php' ? 'active' : '' ?>">Kihon</a>
+    <a href="<?= $link_kihons ?>" class="<?= $currentPage == 'kihons.php' ? 'active' : '' ?>">Kihon</a>
     <a href="<?= $link_treinos ?>" class="<?= $currentPage == 'treinos.php' ? 'active' : '' ?>">Treinos</a>
     <a href="<?= $link_progresso ?>" class="<?= $currentPage == 'progresso.php' ? 'active' : '' ?>">Progresso</a>
     <a href="<?= $link_perfil ?>" class="<?= $currentPage == 'perfil.php' ? 'active' : '' ?>">Perfil</a>

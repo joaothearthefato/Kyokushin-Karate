@@ -209,9 +209,6 @@ INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nive
 -- Limpa a tabela antes de recriar
 TRUNCATE TABLE katas;
 
--- Limpa a tabela antes de recriar
-TRUNCATE TABLE katas;
-
 INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
 
 -- ══════════════════════════════════════════
@@ -345,25 +342,23 @@ INSERT INTO exercicios_kyokushin (nome,categoria) VALUES
 ('Hiza Geri Jodan','Joelhada'),
 ('Hiza Geri Chudan','Joelhada');
 
-select * from kihons;
-=======
 -- Katas de Chute (Sokugi)
-('Ataque de Pernas 1', 'Kata básico focado em técnicas de pernas, utilizando Mae Keage (chute frontal ascendente).', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 4),
-('Ataque de Pernas 3', 'Foca no chute circular Mawashi Geri, fundamental para o combate Kyokushin.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 5),
+INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
+('Ataque de Pernas 1', 'Kata básico focado em técnicas de pernas, utilizando Mae Keage (chute frontal ascendente).', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 21),
+('Ataque de Pernas 3', 'Foca no chute circular Mawashi Geri, fundamental para o combate Kyokushin.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 22),
 
 -- Série Pinan (Mente em Paz)
-('Mente em Paz 1', 'Primeiro da série Pinan. Introduz movimentos de Shuto Uchi e defesas variadas.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 6),
-('Mente em Paz 2', 'Trabalha a coordenação e o uso do Yoko Geri (chute lateral) e Nukite.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 7),
-('Mente em Paz 4', 'Kata dinâmico com movimentos de cotovelo (Empi) e mudanças rápidas de base.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 8),
+('Mente em Paz 1', 'Primeiro da série Pinan. Introduz movimentos de Shuto Uchi e defesas variadas.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 23),
+('Mente em Paz 2', 'Trabalha a coordenação e o uso do Yoko Geri (chute lateral) e Nukite.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 24),
+('Mente em Paz 4', 'Kata dinâmico com movimentos de cotovelo (Empi) e mudanças rápidas de base.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 25),
 
 -- Katas Avançados/Superiores
-('Três Batalhas', 'Kata respiratório fundamental do Kyokushin. Foca no fortalecimento do corpo e respiração Ibuki.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 9),
-('Manter a Paz', 'Kata que enfatiza a pureza do movimento e a manutenção da calma sob pressão.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 10),
-('Destruição Extrema', 'Proveniente do Goju-ryu, utiliza movimentos circulares e ataques de curta distância.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 11),
-('Palmas Rotativas', 'Kata suave e circular que complementa o Sanchin, focando na flexibilidade das palmas das mãos.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 12),
-('Dragão Adormecido', 'Criado por Sosai Mas Oyama. Reflete a filosofia do karateca que permanece humilde mas pronto para agir.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 13),
-('Contemplar o Céu', 'Um dos katas mais longos e complexos, simbolizando a união com o universo.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 14);
+('Três Batalhas', 'Kata respiratório fundamental do Kyokushin. Foca no fortalecimento do corpo e respiração Ibuki.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 26),
+('Manter a Paz', 'Kata que enfatiza a pureza do movimento e a manutenção da calma sob pressão.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 27),
+('Destruição Extrema', 'Proveniente do Goju-ryu, utiliza movimentos circulares e ataques de curta distância.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 28),
+('Palmas Rotativas', 'Kata suave e circular que complementa o Sanchin, focando na flexibilidade das palmas das mãos.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 29),
+('Dragão Adormecido', 'Criado por Sosai Mas Oyama. Reflete a filosofia do karateca que permanece humilde mas pronto para agir.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 30),
+('Contemplar o Céu', 'Um dos katas mais longos e complexos, simbolizando a união com o universo.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 31);
 UPDATE kihons
 SET video_url = 'https://www.youtube.com/watch?v=yPROqoPx3z8&pp=ygUIbWFlIGdlcmk%3D'
 WHERE romaji = 'Mae Geri';
->>>>>>> Stashed changes

@@ -10,7 +10,6 @@ if ($currentDir === 'dashboard') {
     $link_logout    = '../php/logout.php';
     $link_progresso = 'progresso.php';
     $link_perfil    = 'perfil.php';
-    $link_anotacoes = 'anotacoes.php';
 } else {
     $link_dashboard = 'dashboard.php';
     $link_katas     = '../dashboard/katas.php';
@@ -19,7 +18,6 @@ if ($currentDir === 'dashboard') {
     $link_logout    = 'logout.php';
     $link_progresso = '../dashboard/progresso.php';
     $link_perfil    = '../dashboard/perfil.php';
-    $link_anotacoes = '../dashboard/anotacoes.php';
 }
 ?>
 
@@ -275,11 +273,6 @@ body.light-mode .navbar-oh {
         <a href="<?= $link_perfil ?>"
            class="<?= $currentPage == 'perfil.php' ? 'active' : '' ?>">
            Perfil
-        </a>
-
-        <a href="<?= $link_anotacoes ?>"
-           class="<?= $currentPage == 'anotacoes.php' ? 'active' : '' ?>">
-           Anotações
         </a>
 
     </div>
