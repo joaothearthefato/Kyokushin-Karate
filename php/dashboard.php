@@ -61,7 +61,8 @@ mysqli_close($conn);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard | Oyama Hub</title>
 <link rel="icon" href="../img/kyokushinicon.png">
-<meta name="description" content="Seu painel principal no Oyama Hub — Kyokushin Karate.">
+<meta name="description" content="Seu pai
+nel principal no Oyama Hub — Kyokushin Karate.">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/dashboard.css">
 <link rel="stylesheet" href="../css/dash_home.css">
