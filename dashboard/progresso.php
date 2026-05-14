@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <?php
 session_start();
 require '../php/config.php';
@@ -436,3 +437,5 @@ mysqli_close($conn);
 </script>
 </body>
 </html>
+=======
+>>>>>>> Stashed changes
