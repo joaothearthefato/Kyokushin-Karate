@@ -32,6 +32,13 @@ function yt_id(string $url): string {
 // ── Busca categorias + kihons do banco ─────────────────────────
 $categorias = [];
 
+// Verificar se tabelas existem
+$check_tables = $conn->query("SHOW TABLES LIKE 'kihon_categorias'");
+if ($check_tables->num_rows == 0) {
+    echo "Erro: Tabela kihon_categorias não existe. Execute o arquivo sql.sql primeiro.";
+    exit;
+}
+
 $sql = "
     SELECT
         c.id        AS cat_id,
@@ -82,7 +89,10 @@ if ($result) {
             ];
         }
     }
+} else {
+    echo "Erro na consulta: " . $conn->error;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -99,7 +109,7 @@ if ($result) {
 <body>
 
 <!-- ── Navbar ── -->
-  <?php include '../includes/navbar.php'; ?>
+<?php include '../includes/navbar.php'; ?>
 
  <div vw class="enabled">
     <div vw-access-button class="active"></div>
@@ -358,43 +368,8 @@ document.querySelectorAll('.cards-grid').forEach(g => cardObs.observe(g));
 
 /* ── Active nav link ─────────────────────────────────── */
 const page = location.pathname.split('/').pop();
-document.querySelectorAll('.header a').forEach(a => {
+document.querySelectorAll('.nav-links a').forEach(a => {
   a.classList.toggle('active', a.getAttribute('href').split('/').pop() === page);
-});
-
-const themeToggle = document.getElementById('theme-toggle');
-const themeIcon = themeToggle.querySelector('.theme-icon');
-const themeLabel = themeToggle.querySelector('.theme-label');
-const html = document.documentElement;
-
-// Check for saved theme preference or default to dark mode
-const currentTheme = localStorage.getItem('theme') || 'dark';
-if (currentTheme === 'light') {
-  html.classList.add('light');
-  themeIcon.textContent = '🌙';
-  themeLabel.textContent = 'Dark';
-}
-
-themeToggle.addEventListener('click', () => {
-  html.classList.toggle('light');
-  const isLight = html.classList.contains('light');
-
-  // Update button appearance with animation
-  if (isLight) {
-    themeIcon.textContent = '🌙';
-    themeLabel.textContent = 'Dark';
-    localStorage.setItem('theme', 'light');
-  } else {
-    themeIcon.textContent = '☀️';
-    themeLabel.textContent = 'Light';
-    localStorage.setItem('theme', 'dark');
-  }
-
-  // Add click animation
-  themeToggle.style.transform = 'scale(0.95)';
-  setTimeout(() => {
-    themeToggle.style.transform = '';
-  }, 150);
 });
 
 /* ── Search Functionality ───────────────────────────────────── */
