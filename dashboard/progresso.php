@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
-<?php
+    x<?php
 session_start();
 require '../php/config.php';
 
