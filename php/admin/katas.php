@@ -122,18 +122,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fetch Katas from REST API
     function loadKatas() {
-        fetch('api/katas.php')
-            .then(res => res.json())
+        adminApi('api/katas.php')
             .then(res => {
-                if (res.success) {
-                    katasData = res.data;
-                    renderKatas();
-                } else {
-                    showNotification(res.error || 'Erro ao carregar Katas', 'error');
-                }
+                katasData = res.data;
+                renderKatas();
             })
             .catch(err => {
-                showNotification('Erro na conexão com API de Katas', 'error');
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--admin-red);">${escapeHtml(err.message)}</td></tr>`;
+                showNotification(err.message, 'error');
             });
     }
 
@@ -214,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save Kata Form
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const id = intval(document.getElementById('kataId').value);
+        const id = parseInt(document.getElementById('kataId').value, 10) || 0;
         const payload = {
             id: id,
             nome: document.getElementById('kataNome').value,
@@ -229,45 +225,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const method = id > 0 ? 'PUT' : 'POST';
         const url = 'api/katas.php' + (id > 0 ? '?id=' + id : '');
 
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
+        adminApi(url, method, payload)
+            .then(res => {
                 showNotification(res.message || 'Operação realizada com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadKatas();
-            } else {
-                showNotification(res.error || 'Erro ao salvar Kata', 'error');
-            }
-        });
+            })
+            .catch(err => showNotification(err.message, 'error'));
     });
 
     // Delete Kata
     window.deleteKata = function(id, nome) {
         if (!confirm(`Tem certeza que deseja excluir o Kata "${nome}"?`)) return;
 
-        fetch('api/katas.php?id=' + id, {
-            method: 'DELETE'
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
+        adminApi('api/katas.php?id=' + id, 'DELETE')
+            .then(res => {
                 showNotification(res.message || 'Kata removido com sucesso!', 'success');
                 loadKatas();
-            } else {
-                showNotification(res.error || 'Erro ao excluir Kata', 'error');
-            }
-        });
+            })
+            .catch(err => showNotification(err.message, 'error'));
     };
-
-    function intval(val) {
-        const parsed = parseInt(val, 10);
-        return isNaN(parsed) ? 0 : parsed;
-    }
 
     loadKatas();
 });

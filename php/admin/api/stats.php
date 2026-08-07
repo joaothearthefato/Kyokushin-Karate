@@ -1,10 +1,6 @@
 <?php
 // admin/api/stats.php - Admin Dashboard KPIs & Activity API
-require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../auth_check.php';
-
-header('Content-Type: application/json; charset=utf-8');
-require_admin();
+require_once __DIR__ . '/bootstrap.php';
 
 $totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM usuarios"))['c'] ?? 0;
 $totalTreinos = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM treinos"))['c'] ?? 0;

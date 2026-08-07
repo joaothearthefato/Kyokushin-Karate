@@ -1,15 +1,6 @@
 <?php
 // admin/api/users.php - REST API for User Management
-require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../auth_check.php';
-
-header('Content-Type: application/json; charset=utf-8');
-require_admin();
-
-$method = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+require_once __DIR__ . '/bootstrap.php';
 
 switch ($method) {
     case 'GET':
@@ -77,14 +68,44 @@ switch ($method) {
         }
         break;
 
-    case 'PUT':
-        if ($id <= 0 && isset($input['id'])) {
-            $id = intval($input['id']);
+    case 'POST':
+        $nome = trim($input['nome'] ?? '');
+        $email = trim($input['email'] ?? '');
+        $senha = trim($input['senha'] ?? '');
+        $nascimento = trim($input['nascimento'] ?? '');
+        $tipo = trim($input['tipo'] ?? 'aluno');
+        $faixa_id = intval($input['faixa_id'] ?? 0);
+        $ativo = isset($input['ativo']) ? (intval($input['ativo']) ? 1 : 0) : 1;
+
+        if (empty($nome) || empty($email) || empty($senha) || empty($nascimento)) {
+            api_error('Nome, Email, Senha e Data de Nascimento são obrigatórios');
         }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            api_error('Email inválido');
+        }
+        if (strlen($senha) < 6) {
+            api_error('A senha deve ter no mínimo 6 caracteres');
+        }
+
+        $passHash = password_hash($senha, PASSWORD_DEFAULT);
+        $faixaParam = $faixa_id > 0 ? $faixa_id : null;
+
+        $stmt = mysqli_prepare($conn, "INSERT INTO usuarios (nome, email, senha_hash, nascimento, tipo, faixa_id, ativo) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "sssssii", $nome, $email, $passHash, $nascimento, $tipo, $faixaParam, $ativo);
+
+        if (mysqli_stmt_execute($stmt)) {
+            $newId = mysqli_insert_id($conn);
+            log_activity($conn, 'users_create', "Usuário '$nome' criado (ID $newId)");
+            echo json_encode(['success' => true, 'message' => 'Usuário cadastrado com sucesso!', 'id' => $newId]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar usuário')]);
+        }
+        break;
+
+    case 'PUT':
         if ($id <= 0) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'ID do usuário é necessário']);
-            exit;
+            api_error('ID do usuário é necessário');
         }
 
         $nome = trim($input['nome'] ?? '');
@@ -95,18 +116,24 @@ switch ($method) {
         $nova_senha = trim($input['nova_senha'] ?? '');
 
         if (empty($nome) || empty($email)) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Nome e Email são obrigatórios']);
-            exit;
+            api_error('Nome e Email são obrigatórios');
         }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            api_error('Email inválido');
+        }
+        if (!empty($nova_senha) && strlen($nova_senha) < 6) {
+            api_error('A nova senha deve ter no mínimo 6 caracteres');
+        }
+
+        $faixaParam = $faixa_id > 0 ? $faixa_id : null;
 
         if (!empty($nova_senha)) {
             $passHash = password_hash($nova_senha, PASSWORD_DEFAULT);
             $stmt = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, email = ?, tipo = ?, faixa_id = ?, ativo = ?, senha_hash = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssiisi", $nome, $email, $tipo, $faixa_id, $ativo, $passHash, $id);
+            mysqli_stmt_bind_param($stmt, "sssiisi", $nome, $email, $tipo, $faixaParam, $ativo, $passHash, $id);
         } else {
             $stmt = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, email = ?, tipo = ?, faixa_id = ?, ativo = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssiii", $nome, $email, $tipo, $faixa_id, $ativo, $id);
+            mysqli_stmt_bind_param($stmt, "sssiii", $nome, $email, $tipo, $faixaParam, $ativo, $id);
         }
 
         if (mysqli_stmt_execute($stmt)) {
@@ -114,24 +141,17 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Dados do usuário atualizados com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao atualizar usuário: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar usuário')]);
         }
         break;
 
     case 'DELETE':
-        if ($id <= 0 && isset($input['id'])) {
-            $id = intval($input['id']);
-        }
         if ($id <= 0) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'ID do usuário é necessário']);
-            exit;
+            api_error('ID do usuário é necessário');
         }
 
-        if ($id === $_SESSION['id']) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Você não pode excluir sua própria conta de administrador.']);
-            exit;
+        if ($id === intval($_SESSION['id'] ?? 0)) {
+            api_error('Você não pode excluir sua própria conta de administrador.');
         }
 
         $stmt = mysqli_prepare($conn, "DELETE FROM usuarios WHERE id = ?");
@@ -142,7 +162,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Usuário excluído com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao excluir usuário: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao excluir usuário')]);
         }
         break;
 

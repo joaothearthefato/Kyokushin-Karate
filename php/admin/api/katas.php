@@ -1,16 +1,6 @@
 <?php
 // admin/api/katas.php - REST API for Katas Management
-require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../auth_check.php';
-
-header('Content-Type: application/json; charset=utf-8');
-require_admin();
-
-$method = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-// Read JSON input body if present
-$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+require_once __DIR__ . '/bootstrap.php';
 
 switch ($method) {
     case 'GET':
@@ -90,7 +80,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Kata cadastrado com sucesso!', 'id' => $newId]);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao cadastrar Kata: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar Kata')]);
         }
         break;
 
@@ -120,7 +110,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Kata atualizado com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao atualizar Kata: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar Kata')]);
         }
         break;
 
@@ -142,12 +132,12 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Kata removido com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao excluir Kata: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao excluir Kata')]);
         }
         break;
 
     default:
-        http_response_code(45);
+        http_response_code(405);
         echo json_encode(['success' => false, 'error' => 'Método HTTP não suportado']);
         break;
 }

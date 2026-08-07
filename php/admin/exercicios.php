@@ -129,17 +129,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('exModalTitle');
 
     function loadExercicios() {
-        fetch('api/exercicios.php')
-            .then(res => res.json())
+        adminApi('api/exercicios.php')
             .then(res => {
-                if (res.success) {
-                    exData = res.data;
-                    renderExercicios();
-                } else {
-                    showNotification(res.error || 'Erro ao carregar Exercícios', 'error');
-                }
+                exData = res.data;
+                renderExercicios();
             })
-            .catch(() => showNotification('Erro na conexão com API de Exercícios', 'error'));
+            .catch(err => {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--admin-red);">${escapeHtml(err.message)}</td></tr>`;
+                showNotification(err.message, 'error');
+            });
     }
 
     function renderExercicios() {
@@ -229,36 +227,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const method = id > 0 ? 'PUT' : 'POST';
         const url = 'api/exercicios.php' + (id > 0 ? '?id=' + id : '');
 
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
+        adminApi(url, method, payload)
+            .then(res => {
                 showNotification(res.message || 'Exercício salvo com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadExercicios();
-            } else {
-                showNotification(res.error || 'Erro ao salvar Exercício', 'error');
-            }
+            })
+            .catch(err => showNotification(err.message, 'error'));
         });
     });
 
     window.deleteEx = function(id, nome) {
         if (!confirm(`Tem certeza que deseja excluir o Exercício "${nome}"?`)) return;
 
-        fetch('api/exercicios.php?id=' + id, { method: 'DELETE' })
-            .then(res => res.json())
+        adminApi('api/exercicios.php?id=' + id, 'DELETE')
             .then(res => {
-                if (res.success) {
-                    showNotification(res.message || 'Exercício excluído com sucesso!', 'success');
-                    loadExercicios();
-                } else {
-                    showNotification(res.error || 'Erro ao excluir Exercício', 'error');
-                }
-            });
+                showNotification(res.message || 'Exercício excluído com sucesso!', 'success');
+                loadExercicios();
+            })
+            .catch(err => showNotification(err.message, 'error'));
     };
 
     loadExercicios();

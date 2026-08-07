@@ -1,15 +1,6 @@
 <?php
 // admin/api/kihons.php - REST API for Kihons Management
-require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../auth_check.php';
-
-header('Content-Type: application/json; charset=utf-8');
-require_admin();
-
-$method = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+require_once __DIR__ . '/bootstrap.php';
 
 switch ($method) {
     case 'GET':
@@ -103,7 +94,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Kihon cadastrado com sucesso!', 'id' => $newId]);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao cadastrar Kihon: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar Kihon')]);
         }
         break;
 
@@ -134,7 +125,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Kihon atualizado com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao atualizar Kihon: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar Kihon')]);
         }
         break;
 
@@ -156,7 +147,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Kihon removido com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao excluir Kihon: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao excluir Kihon')]);
         }
         break;
 

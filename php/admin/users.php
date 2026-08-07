@@ -20,6 +20,10 @@ require_once 'header.php';
                 <option value="professor">Professor / Sensei</option>
                 <option value="admin">Administrador</option>
             </select>
+            <button class="btn-primary" id="btnOpenAddUser">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Cadastrar Usuário
+            </button>
         </div>
     </div>
 
@@ -67,6 +71,11 @@ require_once 'header.php';
                     <input type="email" id="userEmail" name="email" class="form-control" required>
                 </div>
 
+                <div class="form-group">
+                    <label for="userNascimento">Data de Nascimento *</label>
+                    <input type="date" id="userNascimento" name="nascimento" class="form-control" required>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="userTipo">Tipo de Conta / Nível de Acesso *</label>
@@ -93,14 +102,14 @@ require_once 'header.php';
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="userNovaSenha">Redefinir Senha (Opcional)</label>
-                        <input type="password" id="userNovaSenha" name="nova_senha" class="form-control" placeholder="Deixe em branco para manter">
+                        <label for="userNovaSenha" id="userSenhaLabel">Redefinir Senha (Opcional)</label>
+                        <input type="password" id="userNovaSenha" name="nova_senha" class="form-control" placeholder="Deixe em branco para manter" minlength="6">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" id="btnCancelUserModal">Cancelar</button>
-                <button type="submit" class="btn-primary">Salvar Alterações</button>
+                <button type="submit" class="btn-primary" id="btnSaveUser">Salvar Alterações</button>
             </div>
         </form>
     </div>
@@ -120,19 +129,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('userForm');
 
     function loadUsers() {
-        fetch('api/users.php')
-            .then(res => res.json())
+        adminApi('api/users.php')
             .then(res => {
-                if (res.success) {
-                    usersData = res.data;
-                    faixasData = res.faixas || [];
-                    populateFaixasDropdown();
-                    renderUsers();
-                } else {
-                    showNotification(res.error || 'Erro ao carregar Usuários', 'error');
-                }
+                usersData = res.data;
+                faixasData = res.faixas || [];
+                populateFaixasDropdown();
+                renderUsers();
             })
-            .catch(() => showNotification('Erro na conexão com API de Usuários', 'error'));
+            .catch(err => {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 40px; color: var(--admin-red);">${escapeHtml(err.message)}</td></tr>`;
+                showNotification(err.message, 'error');
+            });
     }
 
     function populateFaixasDropdown() {
@@ -194,6 +201,16 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', renderUsers);
     filterTipo.addEventListener('change', renderUsers);
 
+    document.getElementById('btnOpenAddUser').addEventListener('click', () => {
+        form.reset();
+        document.getElementById('userId').value = '0';
+        document.getElementById('userModalTitle').textContent = 'Cadastrar Novo Usuário';
+        document.getElementById('userSenhaLabel').textContent = 'Senha de Acesso * (mínimo 6 caracteres)';
+        document.getElementById('userNovaSenha').placeholder = 'Defina a senha inicial';
+        document.getElementById('userNovaSenha').required = true;
+        modal.classList.add('active');
+    });
+
     document.getElementById('btnCloseUserModal').addEventListener('click', () => modal.classList.remove('active'));
     document.getElementById('btnCancelUserModal').addEventListener('click', () => modal.classList.remove('active'));
 
@@ -207,7 +224,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('userTipo').value = u.tipo;
         document.getElementById('userFaixa').value = u.faixa_id || 0;
         document.getElementById('userAtivo').value = u.ativo;
+        document.getElementById('userNascimento').value = u.nascimento || '';
         document.getElementById('userNovaSenha').value = '';
+        document.getElementById('userNovaSenha').required = false;
+        document.getElementById('userNovaSenha').placeholder = 'Deixe em branco para manter';
+        document.getElementById('userModalTitle').textContent = 'Editar Usuário: ' + u.nome;
+        document.getElementById('userSenhaLabel').textContent = 'Redefinir Senha (Opcional)';
 
         modal.classList.add('active');
     };
@@ -219,42 +241,39 @@ document.addEventListener('DOMContentLoaded', function() {
             id: id,
             nome: document.getElementById('userNome').value,
             email: document.getElementById('userEmail').value,
+            nascimento: document.getElementById('userNascimento').value,
             tipo: document.getElementById('userTipo').value,
             faixa_id: document.getElementById('userFaixa').value,
-            ativo: document.getElementById('userAtivo').value,
-            nova_senha: document.getElementById('userNovaSenha').value
+            ativo: document.getElementById('userAtivo').value
         };
 
-        fetch('api/users.php?id=' + id, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
-                showNotification(res.message || 'Usuário atualizado com sucesso!', 'success');
+        const method = id > 0 ? 'PUT' : 'POST';
+        const url = 'api/users.php' + (id > 0 ? '?id=' + id : '');
+
+        if (id > 0) {
+            payload.nova_senha = document.getElementById('userNovaSenha').value;
+        } else {
+            payload.senha = document.getElementById('userNovaSenha').value;
+        }
+
+        adminApi(url, method, payload)
+            .then(res => {
+                showNotification(res.message || 'Usuário salvo com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadUsers();
-            } else {
-                showNotification(res.error || 'Erro ao atualizar Usuário', 'error');
-            }
-        });
+            })
+            .catch(err => showNotification(err.message, 'error'));
     });
 
     window.deleteUser = function(id, nome) {
         if (!confirm(`Tem certeza que deseja remover o Usuário "${nome}"?`)) return;
 
-        fetch('api/users.php?id=' + id, { method: 'DELETE' })
-            .then(res => res.json())
+        adminApi('api/users.php?id=' + id, 'DELETE')
             .then(res => {
-                if (res.success) {
-                    showNotification(res.message || 'Usuário excluído com sucesso!', 'success');
-                    loadUsers();
-                } else {
-                    showNotification(res.error || 'Erro ao excluir Usuário', 'error');
-                }
-            });
+                showNotification(res.message || 'Usuário excluído com sucesso!', 'success');
+                loadUsers();
+            })
+            .catch(err => showNotification(err.message, 'error'));
     };
 
     loadUsers();

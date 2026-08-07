@@ -276,7 +276,7 @@ body.light-mode .navbar-oh {
         </a>
 
         <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin'): ?>
-            <a href="<?= $currentDir === 'dashboard' ? '../admin/index.php' : 'admin/index.php' ?>"
+            <a href="<?= $currentDir === 'dashboard' ? '../php/admin/index.php' : 'admin/index.php' ?>"
                style="color: var(--gold, #d4af37); font-weight: 600;">
                Painel Admin
             </a>

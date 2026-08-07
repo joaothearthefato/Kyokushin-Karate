@@ -50,19 +50,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('progSearch');
 
     function loadProgress() {
-        fetch('api/progresso.php')
-            .then(res => res.json())
+        adminApi('api/progresso.php')
             .then(res => {
-                if (res.success) {
-                    progData = res.ranking || [];
-                    totalKatasDB = res.total_katas_db || 1;
-                    totalKihonsDB = res.total_kihons_db || 1;
-                    renderProgress();
-                } else {
-                    showNotification(res.error || 'Erro ao carregar Progresso', 'error');
-                }
+                progData = res.ranking || [];
+                totalKatasDB = res.total_katas_db || 1;
+                totalKihonsDB = res.total_kihons_db || 1;
+                renderProgress();
             })
-            .catch(() => showNotification('Erro na conexão com API de Progresso', 'error'));
+            .catch(err => {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 40px; color: var(--admin-red);">${err.message}</td></tr>`;
+                showNotification(err.message, 'error');
+            });
     }
 
     function renderProgress() {

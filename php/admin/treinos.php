@@ -123,17 +123,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadData() {
         Promise.all([
-            fetch('api/treinos.php').then(r => r.json()),
-            fetch('api/users.php').then(r => r.json())
+            adminApi('api/treinos.php'),
+            adminApi('api/users.php')
         ])
         .then(([resT, resU]) => {
-            if (resT.success) treinosData = resT.data;
-            if (resU.success) usersList = resU.data;
+            treinosData = resT.data;
+            usersList = resU.data;
 
-            selectUser.innerHTML = usersList.map(u => `<option value="${u.id}">${u.nome} (${u.email})</option>`).join('');
+            selectUser.innerHTML = usersList.map(u => `<option value="${u.id}">${escapeHtml(u.nome)} (${escapeHtml(u.email)})</option>`).join('');
             renderTreinos();
         })
-        .catch(() => showNotification('Erro na conexão com API de Treinos', 'error'));
+        .catch(err => {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 40px; color: var(--admin-red);">${escapeHtml(err.message)}</td></tr>`;
+            showNotification(err.message, 'error');
+        });
     }
 
     function renderTreinos() {
@@ -224,14 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const method = id > 0 ? 'PUT' : 'POST';
         const url = 'api/treinos.php' + (id > 0 ? '?id=' + id : '');
 
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
+        adminApi(url, method, payload)
+            .then(res => {
                 showNotification(res.message || 'Treino salvo com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadData();
@@ -244,16 +241,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.deleteTreino = function(id, nome) {
         if (!confirm(`Tem certeza que deseja excluir o Treino "${nome}"?`)) return;
 
-        fetch('api/treinos.php?id=' + id, { method: 'DELETE' })
-            .then(res => res.json())
+        adminApi('api/treinos.php?id=' + id, 'DELETE')
             .then(res => {
-                if (res.success) {
-                    showNotification(res.message || 'Treino excluído com sucesso!', 'success');
-                    loadData();
-                } else {
-                    showNotification(res.error || 'Erro ao excluir Treino', 'error');
-                }
-            });
+                showNotification(res.message || 'Treino excluído com sucesso!', 'success');
+                loadData();
+            })
+            .catch(err => showNotification(err.message, 'error'));
     };
 
     loadData();

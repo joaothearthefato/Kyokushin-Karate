@@ -92,12 +92,18 @@ function require_admin() {
  */
 function log_activity($conn, $acao, $detalhes = null) {
     if (!$conn) return;
-    $usuario_id = $_SESSION['id'] ?? 'NULL';
+
+    $usuario_id = isset($_SESSION['id']) ? intval($_SESSION['id']) : null;
     $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
-    $acaoEscaped = mysqli_real_escape_string($conn, $acao);
-    $detalhesEscaped = $detalhes ? "'" . mysqli_real_escape_string($conn, $detalhes) . "'" : "NULL";
-    
-    $sql = "INSERT INTO atividades (usuario_id, acao, detalhes, ip) VALUES ($usuario_id, '$acaoEscaped', $detalhesEscaped, '$ip')";
-    @mysqli_query($conn, $sql);
+
+    // O log é auxiliar: nenhuma falha aqui deve interromper a operação principal
+    try {
+        $stmt = mysqli_prepare($conn, "INSERT INTO atividades (usuario_id, acao, detalhes, ip) VALUES (?, ?, ?, ?)");
+        if (!$stmt) return;
+        mysqli_stmt_bind_param($stmt, "isss", $usuario_id, $acao, $detalhes, $ip);
+        mysqli_stmt_execute($stmt);
+    } catch (Throwable $e) {
+        // ignorado de propósito
+    }
 }
 ?>

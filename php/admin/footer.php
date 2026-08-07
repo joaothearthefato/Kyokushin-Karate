@@ -9,6 +9,46 @@
         localStorage.setItem('oyama-theme', isLight ? 'light' : 'dark');
     });
 
+    // Helper: Chamadas às APIs administrativas
+    // Centraliza o tratamento de HTTP/JSON para que qualquer falha gere uma
+    // mensagem visível, em vez de o painel simplesmente não reagir.
+    async function adminApi(url, method = 'GET', payload = null) {
+        const options = { method: method, headers: { 'Accept': 'application/json' } };
+
+        if (payload !== null) {
+            options.headers['Content-Type'] = 'application/json';
+            options.body = JSON.stringify(payload);
+        }
+
+        let res;
+        try {
+            res = await fetch(url, options);
+        } catch (err) {
+            throw new Error('Falha de conexão com o servidor. Verifique se o Apache/MySQL está ativo.');
+        }
+
+        const text = await res.text();
+        let data = null;
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch (err) {
+            data = null;
+        }
+
+        if (!data) {
+            if (res.status === 401 || res.status === 403) {
+                throw new Error('Sessão expirada ou sem permissão de administrador. Faça login novamente.');
+            }
+            throw new Error(`Resposta inválida do servidor (HTTP ${res.status}). Verifique o log de erros do PHP.`);
+        }
+
+        if (!res.ok || data.success === false) {
+            throw new Error(data.error || `Erro HTTP ${res.status}`);
+        }
+
+        return data;
+    }
+
     // Helper: Toast Notifications
     function showNotification(msg, type = 'success') {
         const toast = document.createElement('div');

@@ -1,14 +1,6 @@
 <?php
 // admin/api/faixas.php - REST API for Belts Management
-require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../auth_check.php';
-
-header('Content-Type: application/json; charset=utf-8');
-require_admin();
-
-$method = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+require_once __DIR__ . '/bootstrap.php';
 
 switch ($method) {
     case 'GET':
@@ -52,7 +44,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Faixa cadastrada com sucesso!', 'id' => $newId]);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao cadastrar Faixa: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar Faixa')]);
         }
         break;
 
@@ -79,7 +71,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Faixa atualizada com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao atualizar Faixa: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar Faixa')]);
         }
         break;
 
@@ -101,7 +93,7 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Faixa excluída com sucesso!']);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'error' => 'Erro ao excluir Faixa: ' . mysqli_error($conn)]);
+            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao excluir Faixa')]);
         }
         break;
 

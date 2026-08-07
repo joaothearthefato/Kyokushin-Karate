@@ -130,19 +130,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('kihonModalTitle');
 
     function loadKihons() {
-        fetch('api/kihons.php')
-            .then(res => res.json())
+        adminApi('api/kihons.php')
             .then(res => {
-                if (res.success) {
-                    kihonsData = res.data;
-                    categoriasData = res.categorias || [];
-                    populateCategoryDropdowns();
-                    renderKihons();
-                } else {
-                    showNotification(res.error || 'Erro ao carregar Kihons', 'error');
-                }
+                kihonsData = res.data;
+                categoriasData = res.categorias || [];
+                populateCategoryDropdowns();
+                renderKihons();
             })
-            .catch(() => showNotification('Erro na conexão com API de Kihons', 'error'));
+            .catch(err => {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 40px; color: var(--admin-red);">${escapeHtml(err.message)}</td></tr>`;
+                showNotification(err.message, 'error');
+            });
     }
 
     function populateCategoryDropdowns() {
@@ -243,36 +241,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const method = id > 0 ? 'PUT' : 'POST';
         const url = 'api/kihons.php' + (id > 0 ? '?id=' + id : '');
 
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
+        adminApi(url, method, payload)
+            .then(res => {
                 showNotification(res.message || 'Operação realizada com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadKihons();
-            } else {
-                showNotification(res.error || 'Erro ao salvar Kihon', 'error');
-            }
-        });
+            })
+            .catch(err => showNotification(err.message, 'error'));
     });
 
     window.deleteKihon = function(id, romaji) {
         if (!confirm(`Tem certeza que deseja excluir o Kihon "${romaji}"?`)) return;
 
-        fetch('api/kihons.php?id=' + id, { method: 'DELETE' })
-            .then(res => res.json())
+        adminApi('api/kihons.php?id=' + id, 'DELETE')
             .then(res => {
-                if (res.success) {
-                    showNotification(res.message || 'Kihon removido com sucesso!', 'success');
-                    loadKihons();
-                } else {
-                    showNotification(res.error || 'Erro ao excluir Kihon', 'error');
-                }
-            });
+                showNotification(res.message || 'Kihon removido com sucesso!', 'success');
+                loadKihons();
+            })
+            .catch(err => showNotification(err.message, 'error'));
     };
 
     loadKihons();

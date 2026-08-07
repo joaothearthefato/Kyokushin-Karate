@@ -88,17 +88,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('faixaModalTitle');
 
     function loadFaixas() {
-        fetch('api/faixas.php')
-            .then(res => res.json())
+        adminApi('api/faixas.php')
             .then(res => {
-                if (res.success) {
-                    faixasData = res.data;
-                    renderFaixas();
-                } else {
-                    showNotification(res.error || 'Erro ao carregar Faixas', 'error');
-                }
+                faixasData = res.data;
+                renderFaixas();
             })
-            .catch(() => showNotification('Erro na conexão com API de Faixas', 'error'));
+            .catch(err => {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--admin-red);">${escapeHtml(err.message)}</td></tr>`;
+                showNotification(err.message, 'error');
+            });
     }
 
     function renderFaixas() {
@@ -173,21 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const method = id > 0 ? 'PUT' : 'POST';
         const url = 'api/faixas.php' + (id > 0 ? '?id=' + id : '');
 
-        fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
+        adminApi(url, method, payload)
+            .then(res => {
                 showNotification(res.message || 'Faixa salva com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadFaixas();
-            } else {
-                showNotification(res.error || 'Erro ao salvar Faixa', 'error');
-            }
-        });
+            })
+            .catch(err => showNotification(err.message, 'error'));
     });
 
     window.deleteFaixa = function(id, nome) {
