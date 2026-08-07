@@ -1,7 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
---  OYAMA HUB — Schema v2.0
---  Ordem: sem FK quebrada, tipos enxutos, índices úteis,
---  video_url em kihons para o PHP consumir direto.
+--  OYAMA HUB — Schema v2.5 (Oyama Hub Full Architecture)
 -- ═══════════════════════════════════════════════════════════════
 
 CREATE DATABASE IF NOT EXISTS oyama_hub
@@ -11,28 +9,30 @@ CREATE DATABASE IF NOT EXISTS oyama_hub
 USE oyama_hub;
 
 -- ───────────────────────────────────────────────────────────────
--- 1. FAIXAS  (referenciada por usuarios → criada primeiro)
+-- 1. FAIXAS
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE faixas (
-    id     TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nome   VARCHAR(70)      NOT NULL,
-    ordem  TINYINT UNSIGNED NOT NULL UNIQUE   -- seq. sem duplicata
+CREATE TABLE IF NOT EXISTS faixas (
+    id         TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome       VARCHAR(70)      NOT NULL,
+    ordem      TINYINT UNSIGNED NOT NULL UNIQUE,
+    cor        VARCHAR(20)      NOT NULL DEFAULT '#d4af37',
+    requisitos TEXT             DEFAULT NULL
 );
 
 -- ───────────────────────────────────────────────────────────────
 -- 2. USUÁRIOS
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
     id          INT UNSIGNED    AUTO_INCREMENT PRIMARY KEY,
     nome        VARCHAR(100)    NOT NULL,
     email       VARCHAR(150)    NOT NULL UNIQUE,
     senha_hash  VARCHAR(255)    NOT NULL,        
     nascimento  DATE            NOT NULL,           
-    tipo        ENUM('aluno','professor','admin')
-                NOT NULL DEFAULT 'aluno',
-    faixa_id    TINYINT UNSIGNED            DEFAULT NULL,
-    ativo       BOOLEAN         NOT NULL    DEFAULT TRUE,
-    criado_em   TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    tipo        ENUM('aluno','professor','admin') NOT NULL DEFAULT 'aluno',
+    faixa_id    TINYINT UNSIGNED DEFAULT NULL,
+    ativo       BOOLEAN         NOT NULL DEFAULT TRUE,
+    foto_perfil VARCHAR(255)    DEFAULT 'default_avatar.png',
+    criado_em   TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (faixa_id) REFERENCES faixas(id)
         ON UPDATE CASCADE ON DELETE SET NULL,
@@ -42,31 +42,30 @@ CREATE TABLE usuarios (
 );
 
 -- ───────────────────────────────────────────────────────────────
--- 3. CATEGORIAS DE KIHON  (Tsuki, Geri, Uke, Dachi, Uchi)
+-- 3. CATEGORIAS DE KIHON
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE kihon_categorias (
+CREATE TABLE IF NOT EXISTS kihon_categorias (
     id     TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    slug   VARCHAR(20)      NOT NULL UNIQUE,  -- 'tsuki' | 'geri' | ...
-    nome   VARCHAR(60)      NOT NULL,          -- 'Socos'
-    kanji  VARCHAR(30)      NOT NULL,          -- '突き · Tsuki'
-    cor    VARCHAR(7)       NOT NULL,          -- hex accent do card
-    numero TINYINT UNSIGNED NOT NULL UNIQUE    -- 01..05 para exibição
+    slug   VARCHAR(20)      NOT NULL UNIQUE,
+    nome   VARCHAR(60)      NOT NULL,
+    kanji  VARCHAR(30)      NOT NULL,
+    cor    VARCHAR(7)       NOT NULL,
+    numero TINYINT UNSIGNED NOT NULL UNIQUE
 );
 
 -- ───────────────────────────────────────────────────────────────
 -- 4. KIHONS
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE kihons (
+CREATE TABLE IF NOT EXISTS kihons (
     id           SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     categoria_id TINYINT UNSIGNED  NOT NULL,
-    nome         VARCHAR(100)      NOT NULL,          -- 'Soco Direto'
-    romaji       VARCHAR(100)      NOT NULL,          -- 'Seiken Tsuki'
-    kana         VARCHAR(30)       NOT NULL,          -- '正拳'
+    nome         VARCHAR(100)      NOT NULL,
+    romaji       VARCHAR(100)      NOT NULL,
+    kana         VARCHAR(30)       NOT NULL,
     descricao    TEXT              NOT NULL,
-    video_url    VARCHAR(255)      DEFAULT NULL,       -- URL completa do YouTube
-    nivel        ENUM('iniciante','intermediario','avancado')
-                 NOT NULL DEFAULT 'iniciante',
-    ordem        TINYINT UNSIGNED  NOT NULL DEFAULT 0, -- ordem no grid
+    video_url    VARCHAR(255)      DEFAULT NULL,
+    nivel        ENUM('iniciante','intermediario','avancado') NOT NULL DEFAULT 'iniciante',
+    ordem        TINYINT UNSIGNED  NOT NULL DEFAULT 0,
 
     FOREIGN KEY (categoria_id) REFERENCES kihon_categorias(id)
         ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -78,21 +77,26 @@ CREATE TABLE kihons (
 -- ───────────────────────────────────────────────────────────────
 -- 5. KATAS
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE katas (
-    id        SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nome      VARCHAR(100) NOT NULL,
-    descricao TEXT         NOT NULL,
-    video_url VARCHAR(255) DEFAULT NULL,
-    nivel     ENUM('iniciante','intermediario','avancado') NOT NULL,
-    ordem     TINYINT UNSIGNED NOT NULL DEFAULT 0
+CREATE TABLE IF NOT EXISTS katas (
+    id         SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome       VARCHAR(100) NOT NULL,
+    descricao  TEXT         NOT NULL,
+    video_url  VARCHAR(255) DEFAULT NULL,
+    imagem_url VARCHAR(255) DEFAULT NULL,
+    categoria  VARCHAR(50)  NOT NULL DEFAULT 'Norte (Shotokan)',
+    nivel      ENUM('iniciante','intermediario','avancado') NOT NULL DEFAULT 'iniciante',
+    ordem      TINYINT UNSIGNED NOT NULL DEFAULT 0
 );
 
 -- ───────────────────────────────────────────────────────────────
 -- 6. TREINOS REGISTRADOS
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE treinos (
+CREATE TABLE IF NOT EXISTS treinos (
     id           INT UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
     usuario_id   INT UNSIGNED  NOT NULL,
+    nome         VARCHAR(100)  NOT NULL DEFAULT 'Treino Kyokushin',
+    descricao    TEXT          DEFAULT NULL,
+    nivel        ENUM('iniciante','intermediario','avancado') DEFAULT 'iniciante',
     duracao_min  SMALLINT UNSIGNED NOT NULL,
     observacoes  TEXT          DEFAULT NULL,
     data_treino  DATE          NOT NULL,
@@ -104,29 +108,29 @@ CREATE TABLE treinos (
     INDEX idx_usuario_data (usuario_id, data_treino)
 );
 
--- treinos ↔ exercícios (relação N:N, substitui a coluna VARCHAR genérica)
-CREATE TABLE treino_exercicios (
-    treino_id    INT UNSIGNED    NOT NULL,
-    descricao    VARCHAR(255)    NOT NULL,
-    series       TINYINT UNSIGNED,
-    repeticoes   TINYINT UNSIGNED,
+-- treinos ↔ exercícios
+CREATE TABLE IF NOT EXISTS treino_exercicios (
+    id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    treino_id    INT UNSIGNED NOT NULL,
+    exercicio_id INT DEFAULT NULL,
+    descricao    VARCHAR(255) NOT NULL,
+    series       TINYINT UNSIGNED DEFAULT 3,
+    repeticoes   TINYINT UNSIGNED DEFAULT 15,
 
-    PRIMARY KEY (treino_id, descricao(100)),
     FOREIGN KEY (treino_id) REFERENCES treinos(id)
         ON DELETE CASCADE
 );
 
 -- ───────────────────────────────────────────────────────────────
--- 7. PROGRESSO (katas e kihons unificados em uma tabela)
+-- 7. PROGRESSO
 -- ───────────────────────────────────────────────────────────────
-CREATE TABLE progresso (
-    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    usuario_id  INT UNSIGNED     NOT NULL,
-    tipo        ENUM('kata','kihon') NOT NULL,
-    referencia_id SMALLINT UNSIGNED NOT NULL,   -- kata.id ou kihon.id
-    concluido   BOOLEAN          NOT NULL DEFAULT FALSE,
-    atualizado  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
-                ON UPDATE CURRENT_TIMESTAMP,
+CREATE TABLE IF NOT EXISTS progresso (
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    usuario_id    INT UNSIGNED     NOT NULL,
+    tipo          ENUM('kata','kihon') NOT NULL,
+    referencia_id SMALLINT UNSIGNED NOT NULL,
+    concluido     BOOLEAN          NOT NULL DEFAULT FALSE,
+    atualizado    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE KEY uq_progresso (usuario_id, tipo, referencia_id),
 
@@ -134,12 +138,40 @@ CREATE TABLE progresso (
         ON DELETE CASCADE
 );
 
+-- ───────────────────────────────────────────────────────────────
+-- 8. EXERCÍCIOS KYOKUSHIN
+-- ───────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS exercicios_kyokushin (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    nome       VARCHAR(100) NOT NULL,
+    categoria  VARCHAR(50)  NOT NULL,
+    tipo       ENUM('Força','Resistência','Técnica','Mobilidade','Soco','Chute','Defesa','Cotovelada','Joelhada') DEFAULT 'Técnica',
+    descricao  TEXT         DEFAULT NULL,
+    quantidade VARCHAR(50)  DEFAULT NULL,
+    video_url  VARCHAR(255) DEFAULT NULL
+);
+
+-- ───────────────────────────────────────────────────────────────
+-- 9. LOGS DE ATIVIDADE DO SISTEMA
+-- ───────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS atividades (
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT UNSIGNED DEFAULT NULL,
+    acao       VARCHAR(255) NOT NULL,
+    detalhes   TEXT         DEFAULT NULL,
+    ip         VARCHAR(45)  DEFAULT NULL,
+    criado_em  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        ON DELETE SET NULL
+);
+
 -- ═══════════════════════════════════════════════════════════════
 --  SEED DATA
 -- ═══════════════════════════════════════════════════════════════
 
 -- Faixas
-INSERT INTO faixas (nome, ordem) VALUES
+INSERT IGNORE INTO faixas (nome, ordem) VALUES
 ('Branca (Iniciante)',              1),
 ('Laranja (10º Kyu)',               2),
 ('Azul (8º Kyu)',                   3),
@@ -150,7 +182,7 @@ INSERT INTO faixas (nome, ordem) VALUES
 ('Preta (1º Dan)',                  8);
 
 -- Categorias de Kihon
-INSERT INTO kihon_categorias (slug, nome, kanji, cor, numero) VALUES
+INSERT IGNORE INTO kihon_categorias (slug, nome, kanji, cor, numero) VALUES
 ('tsuki', 'Socos',           '突き · Tsuki', '#c0392b', 1),
 ('geri',  'Chutes',          '蹴り · Geri',  '#d4af37', 2),
 ('uke',   'Bloqueios',       '受け · Uke',   '#2980b9', 3),
@@ -158,8 +190,7 @@ INSERT INTO kihon_categorias (slug, nome, kanji, cor, numero) VALUES
 ('uchi',  'Golpes Especiais','打ち · Uchi',  '#8e44ad', 5);
 
 -- ── TSUKI ──────────────────────────────────────────────────────
--- video_url: troque pelos IDs reais quando tiver. Formato: https://www.youtube.com/watch?v=VIDEO_ID
-INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
+INSERT IGNORE INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
 (1, 'Soco Direto',        'Seiken Tsuki', '正拳',   'Soco básico com os dois primeiros nós dos dedos. O punho gira no final do movimento para potencializar o impacto. Base de todos os socos do Kyokushin.',                                                          'https://www.youtube.com/watch?v=C88wANMHb0Q&pp=ygUVc2Vpa2VuIHRzdWtpIHR1dG9yaWFs',  'iniciante',     1),
 (1, 'Soco Reverso',       'Gyaku Tsuki',  '逆突き',  'Soco com a mão oposta à perna da frente. Usa a rotação completa do quadril — o golpe de maior potência no karate. Muito usado em kumite.',                                                                       'https://www.youtube.com/watch?v=DBzOc2_ETEA&pp=ygULZ3lha3UgdHN1a2nSBwkJ2goBhyohjO8%3D',   'iniciante',     2),
 (1, 'Soco com Avanço',    'Oi Tsuki',     '追い突き', 'Soco executado enquanto se avança um passo. A perna da frente lidera o movimento e o soco é desferido com a mão do mesmo lado.',                                                                                'https://www.youtube.com/watch?v=43iXcMfl5aE&pp=ygUIb2kgdHN1a2k%3D',      'iniciante',     3),
@@ -206,10 +237,8 @@ INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nive
 (5, 'Soco Um Nó',           'Ippon Ken',   '一本拳',  'Soco com o nó do dedo indicador projetado à frente. Penetra em alvos pequenos e pontos de pressão como têmpora, philtrum ou costelas. Exige condicionamento dos dedos.',                                        'https://www.youtube.com/watch?v=0mT37QYsRyg&pp=ygUJaXBwb24ga2Vu',   'avancado',      5),
 (5, 'Golpe Dorso do Punho', 'Uraken Uchi', '裏拳打ち', 'Golpe com o dorso (costas) do punho fechado. Movimento rápido de chicote lateral ou circular. Eficiente para atingir a têmpora com velocidade surpreendente.',                                                'https://www.youtube.com/watch?v=sHyfuXHtpyQ&pp=ygULdXJha2VuIHVjaGk%3D',  'intermediario', 6);
 
--- Limpa a tabela antes de recriar
-TRUNCATE TABLE katas;
-
-INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
+-- GERENCIAMENTO DE KATAS E EXERCICIOS
+INSERT IGNORE INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
 
 -- ══════════════════════════════════════════
 -- KATAS NORTE (origem Shotokan)
@@ -299,13 +328,13 @@ INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
  'Nome significa "dragão reclinado" — o pseudônimo de Mas Oyama. Um grande homem que mantém sua força em reserva. Kata criado pelo próprio Oyama, simbolizando humildade e potência contida.',
  'https://www.youtube.com/watch?v=f4QQzJACKOo', 'avancado', 20);
 
-CREATE TABLE exercicios_kyokushin (
+CREATE TABLE IF NOT EXISTS exercicios_kyokushin (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     categoria VARCHAR(50) NOT NULL
 );
 
-INSERT INTO exercicios_kyokushin (nome,categoria) VALUES
+INSERT IGNORE INTO exercicios_kyokushin (nome,categoria) VALUES
 
 -- SOCOS
 ('Seiken Choku Tsuki','Soco'),

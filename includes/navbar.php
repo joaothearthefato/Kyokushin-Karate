@@ -275,6 +275,13 @@ body.light-mode .navbar-oh {
            Perfil
         </a>
 
+        <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin'): ?>
+            <a href="<?= $currentDir === 'dashboard' ? '../admin/index.php' : 'admin/index.php' ?>"
+               style="color: var(--gold, #d4af37); font-weight: 600;">
+               Painel Admin
+            </a>
+        <?php endif; ?>
+
     </div>
 
     <div class="navbar-oh-right">

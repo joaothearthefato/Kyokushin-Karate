@@ -1,0 +1,15 @@
+# Oyama Hub Apache Rewrite Rules for REST API & Clean Admin URLs
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Kyokushin-Karate/
+
+    # Direct REST API Endpoints routing
+    RewriteRule ^admin/katas(?:/([0-9]+))?$ admin/api/katas.php?id=$1 [QSA,L]
+    RewriteRule ^admin/kihons(?:/([0-9]+))?$ admin/api/kihons.php?id=$1 [QSA,L]
+    RewriteRule ^admin/users(?:/([0-9]+))?$ admin/api/users.php?id=$1 [QSA,L]
+    RewriteRule ^admin/faixas(?:/([0-9]+))?$ admin/api/faixas.php?id=$1 [QSA,L]
+    RewriteRule ^admin/exercicios(?:/([0-9]+))?$ admin/api/exercicios.php?id=$1 [QSA,L]
+    RewriteRule ^admin/treinos(?:/([0-9]+))?$ admin/api/treinos.php?id=$1 [QSA,L]
+    RewriteRule ^admin/progresso(?:/([0-9]+))?$ admin/api/progresso.php?id=$1 [QSA,L]
+    RewriteRule ^admin/stats$ admin/api/stats.php [QSA,L]
+</IfModule>

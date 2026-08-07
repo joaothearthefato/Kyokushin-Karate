@@ -1,0 +1,174 @@
+<?php
+// admin/api/treinos.php - REST API for Workouts Management
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../auth_check.php';
+
+header('Content-Type: application/json; charset=utf-8');
+require_admin();
+
+$method = $_SERVER['REQUEST_METHOD'];
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+
+switch ($method) {
+    case 'GET':
+        if ($id > 0) {
+            $stmt = mysqli_prepare($conn, "SELECT t.*, u.nome AS usuario_nome 
+                                           FROM treinos t 
+                                           JOIN usuarios u ON t.usuario_id = u.id 
+                                           WHERE t.id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            $treino = mysqli_fetch_assoc($res);
+            if ($treino) {
+                // Get linked exercises
+                $resEx = mysqli_query($conn, "SELECT * FROM treino_exercicios WHERE treino_id = $id");
+                $treino['exercicios'] = mysqli_fetch_all($resEx, MYSQLI_ASSOC);
+                echo json_encode(['success' => true, 'data' => $treino]);
+            } else {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'error' => 'Treino não encontrado']);
+            }
+        } else {
+            $q = trim($_GET['q'] ?? '');
+            $nivel = trim($_GET['nivel'] ?? '');
+            $usuario_id = intval($_GET['usuario_id'] ?? 0);
+
+            $where = ["1=1"];
+            $params = [];
+            $types = "";
+
+            if (!empty($q)) {
+                $where[] = "(t.nome LIKE ? OR u.nome LIKE ? OR t.observacoes LIKE ?)";
+                $paramQ = "%$q%";
+                $params[] = $paramQ;
+                $params[] = $paramQ;
+                $params[] = $paramQ;
+                $types .= "sss";
+            }
+            if (!empty($nivel)) {
+                $where[] = "t.nivel = ?";
+                $params[] = $nivel;
+                $types .= "s";
+            }
+            if ($usuario_id > 0) {
+                $where[] = "t.usuario_id = ?";
+                $params[] = $usuario_id;
+                $types .= "i";
+            }
+
+            $sql = "SELECT t.*, u.nome AS usuario_nome, f.nome AS faixa_nome 
+                    FROM treinos t 
+                    JOIN usuarios u ON t.usuario_id = u.id 
+                    LEFT JOIN faixas f ON u.faixa_id = f.id 
+                    WHERE " . implode(" AND ", $where) . " 
+                    ORDER BY t.data_treino DESC, t.id DESC";
+
+            $stmt = mysqli_prepare($conn, $sql);
+            if (!empty($params)) {
+                mysqli_stmt_bind_param($stmt, $types, ...$params);
+            }
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            $treinos = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+            echo json_encode(['success' => true, 'count' => count($treinos), 'data' => $treinos]);
+        }
+        break;
+
+    case 'POST':
+        $usuario_id = intval($input['usuario_id'] ?? $_SESSION['id']);
+        $nome = trim($input['nome'] ?? 'Treino Kyokushin');
+        $descricao = trim($input['descricao'] ?? '');
+        $nivel = trim($input['nivel'] ?? 'iniciante');
+        $duracao_min = intval($input['duracao_min'] ?? 60);
+        $observacoes = trim($input['observacoes'] ?? '');
+        $data_treino = trim($input['data_treino'] ?? date('Y-m-d'));
+        $exercicios = $input['exercicios'] ?? [];
+
+        $stmt = mysqli_prepare($conn, "INSERT INTO treinos (usuario_id, nome, descricao, nivel, duracao_min, observacoes, data_treino) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "isssiss", $usuario_id, $nome, $descricao, $nivel, $duracao_min, $observacoes, $data_treino);
+
+        if (mysqli_stmt_execute($stmt)) {
+            $treinoId = mysqli_insert_id($conn);
+            
+            if (is_array($exercicios)) {
+                foreach ($exercicios as $ex) {
+                    $exDesc = is_array($ex) ? trim($ex['descricao'] ?? '') : trim($ex);
+                    $series = is_array($ex) ? intval($ex['series'] ?? 3) : 3;
+                    $repeticoes = is_array($ex) ? intval($ex['repeticoes'] ?? 15) : 15;
+
+                    if (!empty($exDesc)) {
+                        $stmtEx = mysqli_prepare($conn, "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes) VALUES (?, ?, ?, ?)");
+                        mysqli_stmt_bind_param($stmtEx, "isii", $treinoId, $exDesc, $series, $repeticoes);
+                        mysqli_stmt_execute($stmtEx);
+                    }
+                }
+            }
+
+            log_activity($conn, 'treinos_create', "Treino '$nome' cadastrado (ID $treinoId)");
+            echo json_encode(['success' => true, 'message' => 'Treino criado com sucesso!', 'id' => $treinoId]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Erro ao cadastrar Treino: ' . mysqli_error($conn)]);
+        }
+        break;
+
+    case 'PUT':
+        if ($id <= 0 && isset($input['id'])) {
+            $id = intval($input['id']);
+        }
+        if ($id <= 0) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'ID do Treino é necessário']);
+            exit;
+        }
+
+        $nome = trim($input['nome'] ?? 'Treino Kyokushin');
+        $descricao = trim($input['descricao'] ?? '');
+        $nivel = trim($input['nivel'] ?? 'iniciante');
+        $duracao_min = intval($input['duracao_min'] ?? 60);
+        $observacoes = trim($input['observacoes'] ?? '');
+        $data_treino = trim($input['data_treino'] ?? date('Y-m-d'));
+
+        $stmt = mysqli_prepare($conn, "UPDATE treinos SET nome = ?, descricao = ?, nivel = ?, duracao_min = ?, observacoes = ?, data_treino = ? WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "sssissi", $nome, $descricao, $nivel, $duracao_min, $observacoes, $data_treino, $id);
+
+        if (mysqli_stmt_execute($stmt)) {
+            log_activity($conn, 'treinos_update', "Treino '$nome' atualizado (ID $id)");
+            echo json_encode(['success' => true, 'message' => 'Treino atualizado com sucesso!']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Erro ao atualizar Treino: ' . mysqli_error($conn)]);
+        }
+        break;
+
+    case 'DELETE':
+        if ($id <= 0 && isset($input['id'])) {
+            $id = intval($input['id']);
+        }
+        if ($id <= 0) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'ID do Treino é necessário']);
+            exit;
+        }
+
+        $stmt = mysqli_prepare($conn, "DELETE FROM treinos WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $id);
+
+        if (mysqli_stmt_execute($stmt)) {
+            log_activity($conn, 'treinos_delete', "Treino ID $id excluído");
+            echo json_encode(['success' => true, 'message' => 'Treino excluído com sucesso!']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Erro ao excluir Treino: ' . mysqli_error($conn)]);
+        }
+        break;
+
+    default:
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'Método HTTP não suportado']);
+        break;
+}
+?>
