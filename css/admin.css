@@ -828,3 +828,673 @@ textarea.form-control {
   .admin-topbar { padding: 0 24px; }
   .admin-content { padding: 32px 24px; }
 }
+
+/* ==========================================================================
+   PILL TABS — Quick filter buttons
+   ========================================================================== */
+.pill-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pill-tab {
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-muted);
+  padding: 6px 16px;
+  font-family: var(--admin-font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.pill-tab:hover {
+  border-color: var(--admin-text-muted);
+  color: var(--admin-text-main);
+}
+
+.pill-tab.active {
+  background: var(--admin-red);
+  border-color: var(--admin-red);
+  color: #fff;
+  box-shadow: var(--admin-red-glow);
+}
+
+.pill-tab.active-gold {
+  background: var(--admin-gold);
+  border-color: var(--admin-gold);
+  color: #0a0a0a;
+}
+
+/* ==========================================================================
+   RESULTS COUNTER — Animated counter badge in panel header
+   ========================================================================== */
+.results-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--admin-font-body);
+  font-size: 0.9rem;
+  color: var(--admin-text-muted);
+  letter-spacing: 1px;
+}
+
+.results-counter strong {
+  font-family: var(--admin-font-heading);
+  font-size: 1.5rem;
+  color: var(--admin-text-main);
+  transition: color 0.3s;
+}
+
+/* ==========================================================================
+   SKELETON LOADING — Animated placeholder rows
+   ========================================================================== */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.skeleton-row td {
+  padding: 20px 32px;
+}
+
+.skeleton-cell {
+  height: 14px;
+  background: linear-gradient(90deg, var(--admin-surface) 25%, var(--admin-surface-hover) 50%, var(--admin-surface) 75%);
+  background-size: 400% 100%;
+  animation: skeletonShimmer 1.6s ease infinite, skeletonPulse 2s ease infinite;
+  border-radius: 2px;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.skeleton-cell.short { width: 40%; }
+.skeleton-cell.medium { width: 65%; }
+.skeleton-cell.long { width: 90%; }
+
+/* ==========================================================================
+   EXPANDABLE ROWS — Click to reveal description
+   ========================================================================== */
+.data-table tbody tr.expandable-row {
+  cursor: pointer;
+  position: relative;
+}
+
+.data-table tbody tr.expandable-row td:first-child::before {
+  content: '›';
+  display: inline-block;
+  margin-right: 8px;
+  color: var(--admin-text-dim);
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.data-table tbody tr.expandable-row.expanded td:first-child::before {
+  transform: rotate(90deg);
+  color: var(--admin-gold);
+}
+
+.data-table tbody tr.expandable-row:hover td:first-child::before {
+  color: var(--admin-text-muted);
+}
+
+tr.detail-row td {
+  padding: 0 !important;
+  border-bottom: 2px solid rgba(200, 0, 10, 0.2) !important;
+}
+
+tr.detail-row .detail-inner {
+  padding: 20px 32px 24px 64px;
+  background: linear-gradient(to right, rgba(200, 0, 10, 0.04), transparent);
+  animation: detailExpand 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+
+@keyframes detailExpand {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-inner .detail-text {
+  font-size: 1rem;
+  color: var(--admin-text-muted);
+  line-height: 1.7;
+  font-family: var(--admin-font-body);
+  letter-spacing: 0.3px;
+}
+
+.detail-inner .detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--admin-text-dim);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.detail-video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--admin-red);
+  color: var(--admin-red);
+  font-family: var(--admin-font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.detail-video-link:hover {
+  background: var(--admin-red);
+  color: #fff;
+}
+
+/* ==========================================================================
+   DELETE CONFIRMATION MODAL — Custom overlay (no browser confirm())
+   ========================================================================== */
+.delete-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.delete-confirm-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.delete-confirm-box {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-top: 4px solid var(--admin-danger);
+  max-width: 440px;
+  width: 100%;
+  padding: 0;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.95);
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.delete-confirm-overlay.active .delete-confirm-box {
+  transform: scale(1) translateY(0);
+}
+
+.delete-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 32px 16px;
+}
+
+.delete-confirm-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke: var(--admin-danger);
+  animation: warningPulse 1.5s ease infinite;
+}
+
+@keyframes warningPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.95); }
+}
+
+.delete-confirm-body {
+  padding: 0 32px 12px;
+  text-align: center;
+}
+
+.delete-confirm-body h4 {
+  font-family: var(--admin-font-heading);
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  color: var(--admin-text-main);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.delete-confirm-body p {
+  font-family: var(--admin-font-body);
+  font-size: 1rem;
+  color: var(--admin-text-muted);
+  line-height: 1.6;
+}
+
+.delete-confirm-body p strong {
+  color: var(--admin-red);
+}
+
+.delete-confirm-footer {
+  display: flex;
+  gap: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid var(--admin-border);
+  margin-top: 12px;
+}
+
+.delete-confirm-footer .btn-cancel-delete {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-muted);
+  padding: 12px;
+  font-family: var(--admin-font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.delete-confirm-footer .btn-cancel-delete:hover {
+  border-color: var(--admin-text-muted);
+  color: var(--admin-text-main);
+}
+
+.delete-confirm-footer .btn-confirm-delete {
+  flex: 1;
+  background: var(--admin-danger);
+  border: 1px solid var(--admin-danger);
+  color: #fff;
+  padding: 12px;
+  font-family: var(--admin-font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.delete-confirm-footer .btn-confirm-delete:hover {
+  background: #dc2626;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   VIDEO PREVIEW — YouTube embed inside modal
+   ========================================================================== */
+.video-preview-container {
+  margin-top: 12px;
+  border: 1px solid var(--admin-border);
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  display: none;
+}
+
+.video-preview-container.visible {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.video-preview-container iframe {
+  width: 100%;
+  height: 200px;
+  border: none;
+  display: block;
+}
+
+.video-preview-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(200, 0, 10, 0.9);
+  color: #fff;
+  font-family: var(--admin-font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+
+/* ==========================================================================
+   IMAGE PREVIEW — Inside modal for katas
+   ========================================================================== */
+.image-preview-container {
+  margin-top: 12px;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-bg);
+  overflow: hidden;
+  display: none;
+  max-height: 160px;
+}
+
+.image-preview-container.visible {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+.image-preview-container img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================================================================
+   TABLE THUMBNAIL — Mini image in kata rows
+   ========================================================================== */
+.table-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid var(--admin-border);
+  display: block;
+}
+
+.table-thumb-placeholder {
+  width: 40px;
+  height: 40px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-thumb-placeholder svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--admin-text-dim);
+}
+
+/* ==========================================================================
+   FORM IMPROVEMENTS — Hints, char counter, required indicator
+   ========================================================================== */
+.form-hint {
+  font-family: var(--admin-font-body);
+  font-size: 0.85rem;
+  color: var(--admin-text-dim);
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+.form-required {
+  color: var(--admin-red);
+  margin-left: 3px;
+}
+
+.form-group label .form-required {
+  font-size: 1rem;
+}
+
+.char-counter {
+  float: right;
+  font-size: 0.8rem;
+  color: var(--admin-text-dim);
+  letter-spacing: 0;
+  font-family: var(--admin-font-body);
+  transition: color 0.2s;
+}
+
+.char-counter.near-limit { color: var(--admin-warning); }
+.char-counter.at-limit { color: var(--admin-danger); }
+
+/* ==========================================================================
+   BUTTON LOADING STATE
+   ========================================================================== */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpin 0.7s linear infinite;
+}
+
+@keyframes btnSpin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS — Premium (moved from inline style)
+   ========================================================================== */
+.admin-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 999999;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 0;
+  border-radius: 4px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  font-family: var(--admin-font-body);
+}
+
+.admin-toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.admin-toast.hide {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+}
+
+.admin-toast-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+}
+
+.admin-toast-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-toast-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.admin-toast-msg {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.admin-toast-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.admin-toast-close:hover { opacity: 1; }
+
+.admin-toast-close svg {
+  width: 14px;
+  height: 14px;
+}
+
+.admin-toast-progress {
+  height: 3px;
+  width: 100%;
+  transform-origin: left;
+  animation: toastProgress var(--toast-duration, 3.5s) linear forwards;
+}
+
+@keyframes toastProgress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* Success Toast */
+.admin-toast-success {
+  background: #0d1f18;
+  border-left: 4px solid var(--admin-success);
+}
+.admin-toast-success .admin-toast-icon { background: rgba(16, 185, 129, 0.15); color: var(--admin-success); }
+.admin-toast-success .admin-toast-msg { color: #a7f3d0; }
+.admin-toast-success .admin-toast-close { color: #a7f3d0; }
+.admin-toast-success .admin-toast-progress { background: var(--admin-success); }
+
+/* Error Toast */
+.admin-toast-error {
+  background: #1f0d0d;
+  border-left: 4px solid var(--admin-danger);
+}
+.admin-toast-error .admin-toast-icon { background: rgba(239, 68, 68, 0.15); color: var(--admin-danger); }
+.admin-toast-error .admin-toast-msg { color: #fca5a5; }
+.admin-toast-error .admin-toast-close { color: #fca5a5; }
+.admin-toast-error .admin-toast-progress { background: var(--admin-danger); }
+
+/* Warning Toast */
+.admin-toast-warning {
+  background: #1f190d;
+  border-left: 4px solid var(--admin-warning);
+}
+.admin-toast-warning .admin-toast-icon { background: rgba(245, 158, 11, 0.15); color: var(--admin-warning); }
+.admin-toast-warning .admin-toast-msg { color: #fcd34d; }
+.admin-toast-warning .admin-toast-close { color: #fcd34d; }
+.admin-toast-warning .admin-toast-progress { background: var(--admin-warning); }
+
+/* Light mode adjustments */
+html.light-mode .admin-toast-success { background: #f0fdf4; }
+html.light-mode .admin-toast-error { background: #fef2f2; }
+html.light-mode .admin-toast-warning { background: #fffbeb; }
+html.light-mode .admin-toast-success .admin-toast-msg { color: #065f46; }
+html.light-mode .admin-toast-error .admin-toast-msg { color: #991b1b; }
+html.light-mode .admin-toast-warning .admin-toast-msg { color: #92400e; }
+html.light-mode .admin-toast-success .admin-toast-close,
+html.light-mode .admin-toast-error .admin-toast-close,
+html.light-mode .admin-toast-warning .admin-toast-close { color: inherit; }
+
+/* ==========================================================================
+   MODAL IMPROVEMENTS — Wider, smoother
+   ========================================================================== */
+.modal-content.modal-lg {
+  max-width: 740px;
+}
+
+.modal-content.modal-sm {
+  max-width: 480px;
+}
+
+/* ==========================================================================
+   PANEL HEADER EXTENDED — With sub-info row
+   ========================================================================== */
+.panel-subheader {
+  padding: 14px 32px;
+  border-bottom: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: rgba(255,255,255,0.01);
+}
+
+.panel-subheader .pill-tabs {
+  gap: 4px;
+}
+
+/* ==========================================================================
+   TIPO BADGES — Colored by exercise type
+   ========================================================================== */
+.badge-tipo-forca      { background: rgba(239, 68, 68, 0.12); color: #f87171; border-left: 3px solid #ef4444; }
+.badge-tipo-resistencia{ background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-left: 3px solid #f59e0b; }
+.badge-tipo-tecnica    { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border-left: 3px solid #3b82f6; }
+.badge-tipo-mobilidade { background: rgba(16, 185, 129, 0.12); color: #34d399; border-left: 3px solid #10b981; }
+.badge-tipo-soco       { background: rgba(200, 0, 10, 0.12); color: #f87171; border-left: 3px solid var(--admin-red); }
+.badge-tipo-chute      { background: rgba(139, 92, 246, 0.12); color: #a78bfa; border-left: 3px solid #8b5cf6; }
+.badge-tipo-defesa     { background: rgba(20, 184, 166, 0.12); color: #2dd4bf; border-left: 3px solid #14b8a6; }
+.badge-tipo-cotovelada { background: rgba(249, 115, 22, 0.12); color: #fb923c; border-left: 3px solid #f97316; }
+.badge-tipo-joelhada   { background: rgba(234, 179, 8, 0.12); color: #facc15; border-left: 3px solid #eab308; }
+
+/* ==========================================================================
+   EMPTY STATE — Beautiful empty table message
+   ========================================================================== */
+.empty-state {
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.empty-state svg {
+  width: 48px;
+  height: 48px;
+  stroke: var(--admin-text-dim);
+  margin-bottom: 16px;
+}
+
+.empty-state h4 {
+  font-family: var(--admin-font-heading);
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: var(--admin-text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: var(--admin-text-dim);
+  font-family: var(--admin-font-body);
+}
+
