@@ -20,7 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $nova_senha = $_POST['nova_senha'] ?? '';
     $conf_senha = $_POST['confirmar_senha'] ?? '';
 
-    if (empty($nome) || empty($nascimento)) {
+    $dataNascimento = DateTime::createFromFormat('!Y-m-d', $nascimento);
+
+    if (empty($nome) || empty($nascimento) || !$dataNascimento || $dataNascimento->format('Y-m-d') !== $nascimento || $dataNascimento > new DateTime('today')) {
         $msg_erro = 'Preencha todos os campos obrigatórios.';
     } elseif (!empty($nova_senha) && $nova_senha !== $conf_senha) {
         $msg_erro = 'As senhas não coincidem.';
@@ -41,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // RF06 – Buscar dados do usuário
-$sql_user = "SELECT u.nome, u.email, u.nascimento, u.tipo, u.criado_em,
+$sql_user = "SELECT u.nome, u.email, u.nascimento, u.tipo, u.criado_em, u.foto_perfil,
                     f.nome AS faixa_nome, f.ordem AS faixa_ordem, f.id AS faixa_id
              FROM usuarios u
              LEFT JOIN faixas f ON u.faixa_id = f.id
@@ -112,14 +114,56 @@ mysqli_close($conn);
 
     <!-- ── Header ── -->
     <section class="perfil-hero">
-        <div class="perfil-avatar">
-            <span><?= strtoupper(substr($usuario['nome'], 0, 1)) ?></span>
-        </div>
+        <button type="button" class="perfil-avatar perfil-avatar-button" id="openProfilePhotoModal" aria-label="Alterar foto de perfil" title="Alterar foto de perfil">
+            <?php if (!empty($usuario['foto_perfil']) && $usuario['foto_perfil'] !== 'default_avatar.png'): ?>
+                <img src="../<?= htmlspecialchars($usuario['foto_perfil']) ?>" alt="Foto de perfil">
+            <?php else: ?>
+                <span><?= strtoupper(substr($usuario['nome'], 0, 1)) ?></span>
+            <?php endif; ?>
+        </button>
         <div class="perfil-hero-info">
             <h1><?= htmlspecialchars($usuario['nome']) ?></h1>
             <p class="perfil-tipo"><?= ucfirst($usuario['tipo'] ?? 'Aluno') ?> · <?= htmlspecialchars($usuario['faixa_nome'] ?? 'Sem faixa') ?></p>
             <p class="perfil-meta">Membro há <strong><?= $membro_dias ?></strong> dias · <?= $idade ?> anos</p>
         </div>
+    </section>
+
+    <section class="perfil-card profile-photo-card profile-photo-modal" id="profilePhotoModal" aria-hidden="true">
+        <div class="perfil-card-header">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <h2>FOTO DE PERFIL</h2>
+            <button type="button" class="profile-photo-close" id="closeProfilePhotoModal" aria-label="Fechar">&times;</button>
+        </div>
+        <div class="profile-photo-layout">
+            <div class="profile-photo-preview" aria-hidden="true">
+                <?php if (!empty($usuario['foto_perfil']) && $usuario['foto_perfil'] !== 'default_avatar.png'): ?>
+                    <img src="../<?= htmlspecialchars($usuario['foto_perfil']) ?>" alt="">
+                <?php else: ?>
+                    <span><?= strtoupper(substr($usuario['nome'], 0, 1)) ?></span>
+                <?php endif; ?>
+            </div>
+            <div class="profile-photo-content">
+                <p>Personalize seu perfil com uma foto. Ela será exibida na sua área de aluno.</p>
+                <form method="POST" action="foto_perfil.php" enctype="multipart/form-data" class="profile-photo-form">
+                    <label class="profile-photo-picker" for="foto_perfil">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 16V4"/><path d="m8 8 4-4 4 4"/><path d="M4 14v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg>
+                        <span>Escolher nova foto</span>
+                        <input type="file" id="foto_perfil" name="foto_perfil" accept="image/jpeg,image/png,image/webp" required>
+                    </label>
+                    <span class="profile-photo-file" id="profilePhotoFile">Nenhum arquivo selecionado</span>
+                    <div class="profile-photo-actions">
+                        <button type="submit" class="btn-salvar-perfil">Salvar foto</button>
+                        <?php if (!empty($usuario['foto_perfil']) && $usuario['foto_perfil'] !== 'default_avatar.png'): ?>
+                            <button type="submit" class="profile-photo-remove" form="removeProfilePhoto">Remover</button>
+                        <?php endif; ?>
+                    </div>
+                </form>
+                <small class="profile-photo-help">Formatos aceitos: JPG, PNG ou WEBP · Tamanho máximo: 5 MB.</small>
+            </div>
+        </div>
+        <?php if (!empty($usuario['foto_perfil']) && $usuario['foto_perfil'] !== 'default_avatar.png'): ?>
+            <form method="POST" action="foto_perfil.php" id="removeProfilePhoto"><input type="hidden" name="remover" value="1"></form>
+        <?php endif; ?>
     </section>
 
     <!-- ── Mensagens ── -->
@@ -186,7 +230,7 @@ mysqli_close($conn);
 
                     <div class="form-group">
                         <label for="p-nascimento">Data de Nascimento</label>
-                        <input type="date" id="p-nascimento" name="nascimento" value="<?= $usuario['nascimento'] ?>" required>
+                        <input type="date" id="p-nascimento" name="nascimento" value="<?= $usuario['nascimento'] ?>" max="<?= date('Y-m-d') ?>" required>
                     </div>
 
                     <div class="form-group">
@@ -319,5 +363,25 @@ mysqli_close($conn);
     </div>
 
 </main>
+<script>
+document.getElementById('foto_perfil')?.addEventListener('change', function () {
+    document.getElementById('profilePhotoFile').textContent = this.files[0]?.name || 'Nenhum arquivo selecionado';
+});
+
+const profilePhotoModal = document.getElementById('profilePhotoModal');
+const closeProfilePhotoModal = () => {
+    profilePhotoModal.classList.remove('open');
+    profilePhotoModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+};
+document.getElementById('openProfilePhotoModal')?.addEventListener('click', () => {
+    profilePhotoModal.classList.add('open');
+    profilePhotoModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+});
+document.getElementById('closeProfilePhotoModal')?.addEventListener('click', closeProfilePhotoModal);
+profilePhotoModal?.addEventListener('click', event => { if (event.target === profilePhotoModal) closeProfilePhotoModal(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && profilePhotoModal?.classList.contains('open')) closeProfilePhotoModal(); });
+</script>
 </body>
 </html>

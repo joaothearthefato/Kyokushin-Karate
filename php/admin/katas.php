@@ -160,6 +160,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('kataModalTitle');
     const btnSave    = document.getElementById('btnSaveKata');
 
+    // O conteúdo administrativo é animado com transform; fora dele, o fixed
+    // do modal fica corretamente ancorado à viewport.
+    document.body.appendChild(modal);
+
     // --- LOAD ---
     function loadKatas() {
         renderSkeleton(tbody, 7, 5);

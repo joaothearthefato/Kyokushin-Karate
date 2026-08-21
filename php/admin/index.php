@@ -10,11 +10,28 @@ $totalKihons = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM ki
 $totalExercicios = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM exercicios_kyokushin"))['c'] ?? 0;
 $totalFaixas = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM faixas"))['c'] ?? 0;
 
-// Fetch last 8 activity logs
-$resAct = mysqli_query($conn, "SELECT a.*, u.nome AS usuario_nome 
-                               FROM atividades a 
-                               LEFT JOIN usuarios u ON a.usuario_id = u.id 
-                               ORDER BY a.id DESC LIMIT 8");
+// Logs podem ser filtrados por um dia completo no timezone da aplicação.
+$logDate = trim($_GET['log_date'] ?? '');
+$logDateObj = DateTime::createFromFormat('!Y-m-d', $logDate);
+if (!$logDateObj || $logDateObj->format('Y-m-d') !== $logDate) {
+    $logDate = '';
+}
+
+$sqlLogs = "SELECT a.*, u.nome AS usuario_nome
+            FROM atividades a
+            LEFT JOIN usuarios u ON a.usuario_id = u.id";
+if ($logDate !== '') {
+    $inicioDia = $logDateObj->format('Y-m-d 00:00:00');
+    $fimDia = (clone $logDateObj)->modify('+1 day')->format('Y-m-d 00:00:00');
+    $sqlLogs .= " WHERE a.criado_em >= ? AND a.criado_em < ?";
+}
+$sqlLogs .= " ORDER BY a.id DESC LIMIT 100";
+$stmtLogs = mysqli_prepare($conn, $sqlLogs);
+if ($logDate !== '') {
+    mysqli_stmt_bind_param($stmtLogs, 'ss', $inicioDia, $fimDia);
+}
+mysqli_stmt_execute($stmtLogs);
+$resAct = mysqli_stmt_get_result($stmtLogs);
 $atividades = $resAct ? mysqli_fetch_all($resAct, MYSQLI_ASSOC) : [];
 ?>
 
@@ -69,6 +86,13 @@ $atividades = $resAct ? mysqli_fetch_all($resAct, MYSQLI_ASSOC) : [];
             <h3>Últimas Atividades & Logs de Acesso</h3>
         </div>
         <div class="panel-controls">
+            <form method="get" style="display:flex; align-items:center; gap:8px;">
+                <input type="date" name="log_date" class="form-control" value="<?= htmlspecialchars($logDate) ?>" aria-label="Filtrar logs por dia">
+                <button type="submit" class="btn-secondary">Filtrar</button>
+                <?php if ($logDate !== ''): ?>
+                    <a href="index.php" class="btn-secondary" style="text-decoration:none;">Limpar</a>
+                <?php endif; ?>
+            </form>
             <span class="badge badge-iniciante"><?= count($atividades) ?> registros recentes</span>
         </div>
     </div>

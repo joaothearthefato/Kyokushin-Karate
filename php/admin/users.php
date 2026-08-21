@@ -73,7 +73,7 @@ require_once 'header.php';
 
                 <div class="form-group">
                     <label for="userNascimento">Data de Nascimento *</label>
-                    <input type="date" id="userNascimento" name="nascimento" class="form-control" required>
+                    <input type="date" id="userNascimento" name="nascimento" class="form-control" max="<?= date('Y-m-d') ?>" required>
                 </div>
 
                 <div class="form-row">

@@ -119,6 +119,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('treinoForm');
     const modalTitle = document.getElementById('treinoModalTitle');
 
+    document.body.appendChild(modal);
+
     document.getElementById('treinoData').value = new Date().toISOString().split('T')[0];
 
     function loadData() {
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
             treinosData = resT.data;
             usersList = resU.data;
 
-            selectUser.innerHTML = usersList.map(u => `<option value="${u.id}">${escapeHtml(u.nome)} (${escapeHtml(u.email)})</option>`).join('');
+            selectUser.innerHTML = '<option value="0">Usuário logado</option>' + usersList.map(u => `<option value="${u.id}">${escapeHtml(u.nome)} (${escapeHtml(u.email)})</option>`).join('');
             renderTreinos();
         })
         .catch(err => {
@@ -232,10 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification(res.message || 'Treino salvo com sucesso!', 'success');
                 modal.classList.remove('active');
                 loadData();
-            } else {
-                showNotification(res.error || 'Erro ao salvar Treino', 'error');
-            }
-        });
+            })
+            .catch(err => showNotification(err.message || 'Erro ao salvar Treino', 'error'));
     });
 
     window.deleteTreino = function(id, nome) {

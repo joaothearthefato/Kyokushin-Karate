@@ -22,6 +22,12 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
+$dataNascimento = DateTime::createFromFormat('!Y-m-d', $nascimento);
+if (!$dataNascimento || $dataNascimento->format('Y-m-d') !== $nascimento || $dataNascimento > new DateTime('today')) {
+    header("Location: registro.php?status=erro&msg=data_nascimento_invalida");
+    exit();
+}
+
 $nome_esc = mysqli_real_escape_string($conn, $nome);
 $email_esc = mysqli_real_escape_string($conn, $email);
 $nascimento_esc = mysqli_real_escape_string($conn, $nascimento);

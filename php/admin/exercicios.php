@@ -159,6 +159,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('exModalTitle');
     const btnSave    = document.getElementById('btnSaveEx');
 
+    // O conteúdo administrativo é animado com transform; fora dele, o fixed
+    // do modal fica corretamente ancorado à viewport.
+    document.body.appendChild(modal);
+
     // --- LOAD ---
     function loadExercicios() {
         renderSkeleton(tbody, 7, 6);

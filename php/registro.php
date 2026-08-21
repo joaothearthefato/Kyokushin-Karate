@@ -4,6 +4,7 @@ include("config.php");
 $status = $_GET['status'] ?? '';
 $msgKey = $_GET['msg'] ?? '';
 $messages = [
+    'data_nascimento_invalida' => 'A data de nascimento nao pode ser futura.',
     'email_cadastrado' => 'Este e-mail já está cadastrado.',
     'db_error' => 'Erro ao salvar seus dados. Tente novamente mais tarde.',
     'campos_obrigatorios' => 'Por favor, preencha todos os campos obrigatórios.',
@@ -77,7 +78,7 @@ mysqli_close($conn);
   
       <div class="input-group">
         <label for="nascimento">Data de Nascimento</label>
-        <input type="date" id="nascimento" name="nascimento" required>
+        <input type="date" id="nascimento" name="nascimento" max="<?= date('Y-m-d') ?>" required>
       </div>
       <div class="input-group">
         <label for="faixa_id">Sua Faixa Atual</label>

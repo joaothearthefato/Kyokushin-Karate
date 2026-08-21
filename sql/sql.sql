@@ -1,7 +1,6 @@
 -- ═══════════════════════════════════════════════════════════════
 --  OYAMA HUB — Schema v2.5 (Oyama Hub Full Architecture)
 -- ═══════════════════════════════════════════════════════════════
-
 CREATE DATABASE IF NOT EXISTS oyama_hub
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
@@ -172,8 +171,8 @@ CREATE TABLE IF NOT EXISTS atividades (
 
 -- Faixas
 INSERT IGNORE INTO faixas (nome, ordem) VALUES
-('Branca (Iniciante)',              1),
-('Laranja (10º Kyu)',               2),
+('Branca (10º Kyu)',              1),
+('Laranja (9º Kyu)',               2),
 ('Azul (8º Kyu)',                   3),
 ('Amarela (6º Kyu)',                4),
 ('Verde (4º Kyu)',                  5),
@@ -391,3 +390,7 @@ INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
 UPDATE kihons
 SET video_url = 'https://www.youtube.com/watch?v=yPROqoPx3z8&pp=ygUIbWFlIGdlcmk%3D'
 WHERE romaji = 'Mae Geri';
+
+
+select * from usuarios;
+

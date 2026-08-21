@@ -52,21 +52,8 @@ if (!mysqli_query($conn, $sql_treino)) {
 $treino_id = mysqli_insert_id($conn);
 
 // Garantir que a tabela treino_exercicios exista antes de inserir os exercícios
-$sql_cria_exercicios = "CREATE TABLE IF NOT EXISTS treino_exercicios (
-    treino_id INT UNSIGNED NOT NULL,
-    descricao VARCHAR(255) NOT NULL,
-    series TINYINT UNSIGNED,
-    repeticoes TINYINT UNSIGNED,
-    PRIMARY KEY (treino_id, descricao(100)),
-    FOREIGN KEY (treino_id) REFERENCES treinos(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+// Table 'treino_exercicios' defined in database/schema.sql; creation omitted here.
 
-if (!mysqli_query($conn, $sql_cria_exercicios)) {
-    error_log("Erro ao criar tabela treino_exercicios: " . mysqli_error($conn));
-    header("Location: treinos.php?erro=banco_dados");
-    exit();
-}
 
 $total_exercicios = 0;
 

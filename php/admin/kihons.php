@@ -172,6 +172,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalTitle = document.getElementById('kihonModalTitle');
     const btnSave    = document.getElementById('btnSaveKihon');
 
+    // O conteúdo administrativo é animado com transform; fora dele, o fixed
+    // do modal fica corretamente ancorado à viewport.
+    document.body.appendChild(modal);
+
     // --- LOAD ---
     function loadKihons() {
         renderSkeleton(tbody, 7, 6);

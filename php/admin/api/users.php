@@ -2,6 +2,11 @@
 // admin/api/users.php - REST API for User Management
 require_once __DIR__ . '/bootstrap.php';
 
+function nascimento_valido($nascimento) {
+    $data = DateTime::createFromFormat('!Y-m-d', $nascimento);
+    return $data && $data->format('Y-m-d') === $nascimento && $data <= new DateTime('today');
+}
+
 switch ($method) {
     case 'GET':
         if ($id > 0) {
@@ -87,6 +92,10 @@ switch ($method) {
             api_error('A senha deve ter no mínimo 6 caracteres');
         }
 
+        if (!nascimento_valido($nascimento)) {
+            api_error('A data de nascimento não pode ser futura.');
+        }
+
         $passHash = password_hash($senha, PASSWORD_DEFAULT);
         $faixaParam = $faixa_id > 0 ? $faixa_id : null;
 
@@ -110,6 +119,7 @@ switch ($method) {
 
         $nome = trim($input['nome'] ?? '');
         $email = trim($input['email'] ?? '');
+        $nascimento = trim($input['nascimento'] ?? '');
         $tipo = trim($input['tipo'] ?? 'aluno');
         $faixa_id = intval($input['faixa_id'] ?? 0);
         $ativo = isset($input['ativo']) ? (intval($input['ativo']) ? 1 : 0) : 1;
@@ -125,15 +135,19 @@ switch ($method) {
             api_error('A nova senha deve ter no mínimo 6 caracteres');
         }
 
+        if (!nascimento_valido($nascimento)) {
+            api_error('Data de nascimento inválida ou futura.');
+        }
+
         $faixaParam = $faixa_id > 0 ? $faixa_id : null;
 
         if (!empty($nova_senha)) {
             $passHash = password_hash($nova_senha, PASSWORD_DEFAULT);
-            $stmt = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, email = ?, tipo = ?, faixa_id = ?, ativo = ?, senha_hash = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssiisi", $nome, $email, $tipo, $faixaParam, $ativo, $passHash, $id);
+            $stmt = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, email = ?, nascimento = ?, tipo = ?, faixa_id = ?, ativo = ?, senha_hash = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "ssssiisi", $nome, $email, $nascimento, $tipo, $faixaParam, $ativo, $passHash, $id);
         } else {
-            $stmt = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, email = ?, tipo = ?, faixa_id = ?, ativo = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssiii", $nome, $email, $tipo, $faixaParam, $ativo, $id);
+            $stmt = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, email = ?, nascimento = ?, tipo = ?, faixa_id = ?, ativo = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "ssssiii", $nome, $email, $nascimento, $tipo, $faixaParam, $ativo, $id);
         }
 
         if (mysqli_stmt_execute($stmt)) {

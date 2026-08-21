@@ -36,12 +36,48 @@
     box-shadow: 0 0 0 3px rgba(200, 0, 10, 0.25), 0 8px 24px rgba(0,0,0,0.3);
 }
 
+.perfil-avatar-button { padding: 0; border: 0; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.perfil-avatar-button:hover, .perfil-avatar-button:focus-visible { transform: translateY(-2px) scale(1.04); box-shadow: 0 0 0 5px rgba(200, 0, 10, 0.28), 0 12px 28px rgba(0,0,0,0.38); outline: none; }
+
 .perfil-avatar span {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 36px;
     color: #fff;
     line-height: 1;
 }
+
+.perfil-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* ── FOTO DE PERFIL ── */
+.profile-photo-card { margin-bottom: 28px; background: linear-gradient(135deg, var(--surface), rgba(200, 0, 10, 0.045)); }
+.profile-photo-modal { position: fixed; inset: 0; z-index: 1000; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; width: auto; margin: 0; padding: 24px; border: 0; border-radius: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.22s ease; }
+.profile-photo-modal.open { opacity: 1; pointer-events: auto; }
+.profile-photo-modal > .perfil-card-header, .profile-photo-modal > .profile-photo-layout, .profile-photo-modal > form { width: min(100%, 620px); }
+.profile-photo-modal > .perfil-card-header { position: relative; display: flex; align-items: center; margin: 0; padding: 24px 28px 16px; border: 1px solid var(--border); border-bottom: 0; border-radius: 12px 12px 0 0; background: var(--surface); }
+.profile-photo-modal > .profile-photo-layout { box-sizing: border-box; padding: 20px 28px 28px; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 12px 12px; background: linear-gradient(135deg, var(--surface), rgba(200, 0, 10, 0.06)); box-shadow: 0 28px 70px rgba(0,0,0,0.5); }
+.profile-photo-close { position: absolute; top: 16px; right: 18px; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--muted); font-size: 24px; line-height: 1; cursor: pointer; transition: 0.2s ease; }
+.profile-photo-close:hover { border-color: var(--red); background: var(--red); color: #fff; }
+.profile-photo-layout { display: flex; align-items: center; gap: 24px; }
+.profile-photo-preview { width: 104px; height: 104px; flex: 0 0 104px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--red); border-radius: 50%; background: linear-gradient(135deg, var(--red), #780008); box-shadow: 0 0 0 6px rgba(200, 0, 10, 0.09), 0 12px 28px rgba(0,0,0,0.28); }
+.profile-photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.profile-photo-preview span { color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 48px; }
+.profile-photo-content { flex: 1; min-width: 0; }
+.profile-photo-content > p { margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.profile-photo-form { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.profile-photo-picker { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid rgba(200, 0, 10, 0.5); border-radius: 6px; color: var(--white); background: rgba(200, 0, 10, 0.1); font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.2s ease; }
+.profile-photo-picker:hover { background: var(--red); border-color: var(--red); }
+.profile-photo-picker input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.profile-photo-file { max-width: 180px; overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.profile-photo-actions { display: flex; gap: 8px; margin-left: auto; }
+.profile-photo-actions .btn-salvar-perfil { margin: 0; padding: 10px 16px; font-size: 12px; }
+.profile-photo-remove { padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--muted); font: 600 12px 'Barlow Condensed', sans-serif; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.2s ease; }
+.profile-photo-remove:hover { color: #fff; border-color: var(--red); background: rgba(200, 0, 10, 0.14); }
+.profile-photo-help { display: block; margin-top: 12px; color: var(--muted); font-size: 11px; letter-spacing: 0.3px; }
 
 .perfil-hero-info h1 {
     font-family: 'Barlow Condensed', sans-serif;
@@ -463,4 +499,12 @@ html.light .perfil-avatar {
     .progresso-stats {
         grid-template-columns: 1fr;
     }
+    .profile-photo-layout { align-items: flex-start; }
+    .profile-photo-actions { width: 100%; margin-left: 0; }
+}
+
+@media (max-width: 540px) {
+    .profile-photo-card { padding: 22px; }
+    .profile-photo-layout { flex-direction: column; align-items: center; text-align: center; }
+    .profile-photo-form, .profile-photo-actions { justify-content: center; }
 }
