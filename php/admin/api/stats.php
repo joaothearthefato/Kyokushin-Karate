@@ -29,8 +29,7 @@ for ($i = 5; $i >= 0; $i--) {
     ];
 }
 
-echo json_encode([
-    'success' => true,
+api_success([
     'kpis' => [
         'users' => $totalUsers,
         'treinos' => $totalTreinos,
@@ -41,5 +40,5 @@ echo json_encode([
     ],
     'chart' => $chartData,
     'atividades' => $atividades
-]);
+], 'Estatísticas carregadas com sucesso');
 ?>

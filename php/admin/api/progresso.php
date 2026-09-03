@@ -19,10 +19,9 @@ $progresso = mysqli_fetch_all($res, MYSQLI_ASSOC);
 $totalKatas = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM katas"))['c'] ?? 0;
 $totalKihons = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM kihons"))['c'] ?? 0;
 
-echo json_encode([
-    'success' => true,
+api_success([
     'total_katas_db' => $totalKatas,
     'total_kihons_db' => $totalKihons,
     'ranking' => $progresso
-]);
+], 'Progresso global carregado com sucesso');
 ?>

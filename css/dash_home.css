@@ -482,7 +482,13 @@ html.light .mini-bar { background: var(--red); }
 }
 
 @media (max-width: 480px) {
+    .dash-main { padding: 80px 14px 40px; }
+    .dash-hero-text h1 { font-size: clamp(34px, 10vw, 50px); }
+    .dash-hero-cta { width: 100%; justify-content: center; }
     .dash-kpis { grid-template-columns: 1fr 1fr; gap: 2px; }
     .quick-links { grid-template-columns: 1fr; }
     .kpi-val { font-size: 28px; }
+    .ultimo-treino { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .ultimo-data { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 10px; width: 100%; flex-direction: row; gap: 10px; align-items: baseline; }
 }
+

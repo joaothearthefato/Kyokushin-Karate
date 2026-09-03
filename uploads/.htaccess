@@ -1,0 +1,27 @@
+# Proteção contra execução de scripts na pasta de uploads
+# Oyama Hub — uploads/.htaccess
+
+# Desabilitar listagem de diretórios
+Options -Indexes -ExecCGI
+
+# Bloquear execução de qualquer script interpretável pelo servidor
+<FilesMatch "(?i)\.(php\d*|phtml|phar|pl|py|rb|cgi|exe|sh|bash|htaccess|htpasswd)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Forçar os arquivos a serem apenas lidos como dados
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Restringir Content-Type apenas a imagens válidas
+<FilesMatch "(?i)\.(jpg|jpeg|png|gif|webp|svg)$">
+    Header set X-Content-Type-Options "nosniff"
+</FilesMatch>

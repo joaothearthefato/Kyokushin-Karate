@@ -374,3 +374,11 @@
     .anot-hero { flex-direction: column; align-items: flex-start; gap: 16px; }
     .anot-grid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 480px) {
+    .anot-container { padding: 80px 12px 48px; }
+    .anot-search { padding: 0 12px; }
+    .anot-card { padding: 16px; }
+    .anot-vazio { padding: 40px 20px; }
+    .anot-vazio span { font-size: 36px; }
+}

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../php/config.php';
+require_once '../php/csrf.php';
 
 // RNF04 – Validação de Sessão
 if (!isset($_SESSION['id'])) {
@@ -8,7 +9,7 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-$usuario_id = $_SESSION['id'];
+$usuario_id = intval($_SESSION['id']);
 $usuario_nome = $_SESSION['nome'] ?? 'Praticante';
 $treino_id = intval($_GET['id'] ?? 0);
 
@@ -18,11 +19,11 @@ if ($treino_id <= 0) {
     exit();
 }
 
-// Buscar dados do treino
-$sql_treino = "SELECT id, data_treino, duracao_min, observacoes 
-               FROM treinos 
-               WHERE id = '$treino_id' AND usuario_id = '$usuario_id'";
-$result_treino = mysqli_query($conn, $sql_treino);
+// Buscar dados do treino com prepared statement
+$stmt_treino = mysqli_prepare($conn, "SELECT id, data_treino, duracao_min, observacoes FROM treinos WHERE id = ? AND usuario_id = ?");
+mysqli_stmt_bind_param($stmt_treino, "ii", $treino_id, $usuario_id);
+mysqli_stmt_execute($stmt_treino);
+$result_treino = mysqli_stmt_get_result($stmt_treino);
 $treino = mysqli_fetch_assoc($result_treino);
 
 if (!$treino) {
@@ -30,11 +31,11 @@ if (!$treino) {
     exit();
 }
 
-// Buscar exercícios do treino
-$sql_exercicios_treino = "SELECT descricao, series, repeticoes 
-                          FROM treino_exercicios 
-                          WHERE treino_id = '$treino_id'";
-$result_exercicios_treino = mysqli_query($conn, $sql_exercicios_treino);
+// Buscar exercícios do treino com prepared statement
+$stmt_ex_treino = mysqli_prepare($conn, "SELECT descricao, series, repeticoes FROM treino_exercicios WHERE treino_id = ?");
+mysqli_stmt_bind_param($stmt_ex_treino, "i", $treino_id);
+mysqli_stmt_execute($stmt_ex_treino);
+$result_exercicios_treino = mysqli_stmt_get_result($stmt_ex_treino);
 $exercicios_do_treino = [];
 while ($ex = mysqli_fetch_assoc($result_exercicios_treino)) {
     $exercicios_do_treino[] = $ex;
@@ -66,24 +67,20 @@ mysqli_close($conn);
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/treinos.css">
+    <script>
+        (function () {
+            const t = localStorage.getItem('oyama-theme');
+            if (t === 'light') {
+                document.documentElement.classList.add('light');
+                document.body && document.body.classList.add('light-mode');
+            }
+        })();
+    </script>
 </head>
 <body>
 
 <!-- ── Navbar ── -->
-<section class="navbarArea">
-    <div class="header">
-        <a href="../php/dashboard.php">Início</a>
-        <a href="progresso.php">Progresso</a>
-        <a href="katas.php">Katas</a>
-        <a href="kihon.php">Kihon</a>
-        <a href="treinos.php" class="active">Treinos</a>
-        <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
-            <span class="theme-icon">🌙</span>
-            <span class="theme-label">Modo Escuro</span>
-        </button>
-        <a href="../php/logout.php"><button class="logout-btn">Logout</button></a>
-    </div>
-</section>
+<?php include '../includes/navbar.php'; ?>
 
 <!-- ── Main Content ── -->
 <main class="treinos-container">
@@ -98,6 +95,7 @@ mysqli_close($conn);
         <h2>EDITAR TREINO</h2>
         <form method="POST" action="atualizar_treino.php" class="form-treino" id="formTreino">
             <input type="hidden" name="treino_id" value="<?php echo $treino['id']; ?>">
+            <?= campo_csrf(); ?>
 
             <div class="form-group">
                 <label for="data-treino">Data do Treino</label>
@@ -230,36 +228,6 @@ mysqli_close($conn);
 
         return true;
     }
-
-    // ── Theme Toggle ──
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = themeToggle.querySelector('.theme-icon');
-    const themeLabel = themeToggle.querySelector('.theme-label');
-    const html = document.documentElement;
-
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        html.classList.add('light');
-        themeIcon.textContent = '☀️';
-        themeLabel.textContent = 'Modo Claro';
-    }
-
-    // Toggle theme
-    themeToggle.addEventListener('click', () => {
-        html.classList.toggle('light');
-        const isLight = html.classList.contains('light');
-        
-        if (isLight) {
-            themeIcon.textContent = '☀️';
-            themeLabel.textContent = 'Modo Claro';
-            localStorage.setItem('theme', 'light');
-        } else {
-            themeIcon.textContent = '🌙';
-            themeLabel.textContent = 'Modo Escuro';
-            localStorage.setItem('theme', 'dark');
-        }
-    });
 </script>
 
 </body>

@@ -11,15 +11,14 @@ switch ($method) {
             $res = mysqli_stmt_get_result($stmt);
             $faixa = mysqli_fetch_assoc($res);
             if ($faixa) {
-                echo json_encode(['success' => true, 'data' => $faixa]);
+                api_success($faixa, 'Faixa carregada com sucesso');
             } else {
-                http_response_code(404);
-                echo json_encode(['success' => false, 'error' => 'Faixa não encontrada']);
+                api_error('Faixa não encontrada', 404);
             }
         } else {
             $res = mysqli_query($conn, "SELECT f.*, (SELECT COUNT(*) FROM usuarios u WHERE u.faixa_id = f.id) AS total_alunos FROM faixas f ORDER BY f.ordem ASC");
             $faixas = mysqli_fetch_all($res, MYSQLI_ASSOC);
-            echo json_encode(['success' => true, 'count' => count($faixas), 'data' => $faixas]);
+            api_success($faixas, 'Faixas listadas com sucesso');
         }
         break;
 
@@ -30,9 +29,7 @@ switch ($method) {
         $requisitos = trim($input['requisitos'] ?? '');
 
         if (empty($nome)) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Nome da faixa é obrigatório']);
-            exit;
+            api_error('Nome da faixa é obrigatório', 400);
         }
 
         $stmt = mysqli_prepare($conn, "INSERT INTO faixas (nome, ordem, cor, requisitos) VALUES (?, ?, ?, ?)");
@@ -41,10 +38,9 @@ switch ($method) {
         if (mysqli_stmt_execute($stmt)) {
             $newId = mysqli_insert_id($conn);
             log_activity($conn, 'faixas_create', "Faixa '$nome' cadastrada (ID $newId)");
-            echo json_encode(['success' => true, 'message' => 'Faixa cadastrada com sucesso!', 'id' => $newId]);
+            api_success(['id' => $newId], 'Faixa cadastrada com sucesso!', 201);
         } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar Faixa')]);
+            api_error(db_error($conn, 'Erro ao cadastrar Faixa'), 500);
         }
         break;
 
@@ -53,9 +49,7 @@ switch ($method) {
             $id = intval($input['id']);
         }
         if ($id <= 0) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'ID da Faixa é necessário']);
-            exit;
+            api_error('ID da Faixa é necessário', 400);
         }
 
         $nome = trim($input['nome'] ?? '');
@@ -68,10 +62,9 @@ switch ($method) {
 
         if (mysqli_stmt_execute($stmt)) {
             log_activity($conn, 'faixas_update', "Faixa '$nome' atualizada (ID $id)");
-            echo json_encode(['success' => true, 'message' => 'Faixa atualizada com sucesso!']);
+            api_success(['id' => $id], 'Faixa atualizada com sucesso!');
         } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar Faixa')]);
+            api_error(db_error($conn, 'Erro ao atualizar Faixa'), 500);
         }
         break;
 
@@ -80,9 +73,7 @@ switch ($method) {
             $id = intval($input['id']);
         }
         if ($id <= 0) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'ID da Faixa é necessário']);
-            exit;
+            api_error('ID da Faixa é necessário', 400);
         }
 
         $stmt = mysqli_prepare($conn, "DELETE FROM faixas WHERE id = ?");
@@ -90,16 +81,14 @@ switch ($method) {
 
         if (mysqli_stmt_execute($stmt)) {
             log_activity($conn, 'faixas_delete', "Faixa ID $id removida");
-            echo json_encode(['success' => true, 'message' => 'Faixa excluída com sucesso!']);
+            api_success(['id' => $id], 'Faixa excluída com sucesso!');
         } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao excluir Faixa')]);
+            api_error(db_error($conn, 'Erro ao excluir Faixa'), 500);
         }
         break;
 
     default:
-        http_response_code(405);
-        echo json_encode(['success' => false, 'error' => 'Método HTTP não suportado']);
+        api_error('Método HTTP não suportado', 405);
         break;
 }
 ?>

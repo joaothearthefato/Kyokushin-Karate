@@ -11,10 +11,9 @@ switch ($method) {
             $res = mysqli_stmt_get_result($stmt);
             $kata = mysqli_fetch_assoc($res);
             if ($kata) {
-                echo json_encode(['success' => true, 'data' => $kata]);
+                api_success($kata, 'Kata carregado com sucesso');
             } else {
-                http_response_code(404);
-                echo json_encode(['success' => false, 'error' => 'Kata não encontrado']);
+                api_error('Kata não encontrado', 404);
             }
         } else {
             $q = trim($_GET['q'] ?? '');
@@ -52,7 +51,7 @@ switch ($method) {
             $res = mysqli_stmt_get_result($stmt);
             $katas = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-            echo json_encode(['success' => true, 'count' => count($katas), 'data' => $katas]);
+            api_success($katas, 'Katas listados com sucesso');
         }
         break;
 
@@ -66,9 +65,7 @@ switch ($method) {
         $ordem = intval($input['ordem'] ?? 0);
 
         if (empty($nome) || empty($descricao)) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Nome e Descrição são obrigatórios']);
-            exit;
+            api_error('Nome e Descrição são obrigatórios', 400);
         }
 
         $stmt = mysqli_prepare($conn, "INSERT INTO katas (nome, descricao, video_url, imagem_url, categoria, nivel, ordem) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -77,10 +74,9 @@ switch ($method) {
         if (mysqli_stmt_execute($stmt)) {
             $newId = mysqli_insert_id($conn);
             log_activity($conn, 'katas_create', "Kata '$nome' criado (ID $newId)");
-            echo json_encode(['success' => true, 'message' => 'Kata cadastrado com sucesso!', 'id' => $newId]);
+            api_success(['id' => $newId], 'Kata cadastrado com sucesso!', 201);
         } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar Kata')]);
+            api_error(db_error($conn, 'Erro ao cadastrar Kata'), 500);
         }
         break;
 
@@ -89,9 +85,7 @@ switch ($method) {
             $id = intval($input['id']);
         }
         if ($id <= 0) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'ID do Kata é necessário']);
-            exit;
+            api_error('ID do Kata é necessário', 400);
         }
 
         $nome = trim($input['nome'] ?? '');
@@ -107,10 +101,9 @@ switch ($method) {
 
         if (mysqli_stmt_execute($stmt)) {
             log_activity($conn, 'katas_update', "Kata '$nome' atualizado (ID $id)");
-            echo json_encode(['success' => true, 'message' => 'Kata atualizado com sucesso!']);
+            api_success(['id' => $id], 'Kata atualizado com sucesso!');
         } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar Kata')]);
+            api_error(db_error($conn, 'Erro ao atualizar Kata'), 500);
         }
         break;
 
@@ -119,9 +112,7 @@ switch ($method) {
             $id = intval($input['id']);
         }
         if ($id <= 0) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'ID do Kata é necessário']);
-            exit;
+            api_error('ID do Kata é necessário', 400);
         }
 
         $stmt = mysqli_prepare($conn, "DELETE FROM katas WHERE id = ?");
@@ -129,16 +120,14 @@ switch ($method) {
 
         if (mysqli_stmt_execute($stmt)) {
             log_activity($conn, 'katas_delete', "Kata ID $id removido");
-            echo json_encode(['success' => true, 'message' => 'Kata removido com sucesso!']);
+            api_success(['id' => $id], 'Kata removido com sucesso!');
         } else {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao excluir Kata')]);
+            api_error(db_error($conn, 'Erro ao excluir Kata'), 500);
         }
         break;
 
     default:
-        http_response_code(405);
-        echo json_encode(['success' => false, 'error' => 'Método HTTP não suportado']);
+        api_error('Método HTTP não suportado', 405);
         break;
 }
 ?>

@@ -7,12 +7,17 @@
 
 session_start();
 require '../php/config.php';
+require_once '../php/csrf.php';
+require_once '../php/auth_check.php';
 
 // RNF04 – Validação de Sessão
 if (!isset($_SESSION['id'])) {
     header("Location: ../php/login.php");
     exit();
 }
+
+// Validar CSRF em todas as submissões POST
+validar_csrf();
 
 // RF06 – Associar ao usuário logado
 $usuario_id = $_SESSION['id'];
@@ -35,15 +40,11 @@ if (empty($data_treino) || $duracao_min < 5 || empty($observacoes)) {
     exit();
 }
 
-// Sanitizar dados
-$data_treino = mysqli_real_escape_string($conn, $data_treino);
-$observacoes = mysqli_real_escape_string($conn, $observacoes);
+// Sanitizar e inserir com prepared statement
+$stmt_treino = mysqli_prepare($conn, "INSERT INTO treinos (usuario_id, data_treino, duracao_min, observacoes) VALUES (?, ?, ?, ?)");
+mysqli_stmt_bind_param($stmt_treino, "isis", $usuario_id, $data_treino, $duracao_min, $observacoes);
 
-// RF01 – Inserir novo treino no banco
-$sql_treino = "INSERT INTO treinos (usuario_id, data_treino, duracao_min, observacoes)
-               VALUES ('$usuario_id', '$data_treino', '$duracao_min', '$observacoes')";
-
-if (!mysqli_query($conn, $sql_treino)) {
+if (!mysqli_stmt_execute($stmt_treino)) {
     error_log("Erro ao inserir treino: " . mysqli_error($conn));
     header("Location: treinos.php?erro=banco_dados");
     exit();
@@ -51,28 +52,19 @@ if (!mysqli_query($conn, $sql_treino)) {
 
 $treino_id = mysqli_insert_id($conn);
 
-// Garantir que a tabela treino_exercicios exista antes de inserir os exercícios
-// Table 'treino_exercicios' defined in database/schema.sql; creation omitted here.
-
-
 $total_exercicios = 0;
 
-// RF02 e RF03 – Processar exercícios
+// RF02 e RF03 – Processar exercícios com prepared statements
 if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
+    $stmt_ex = mysqli_prepare($conn, "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes) VALUES (?, ?, ?, ?)");
     foreach ($_POST['exercicios'] as $exercicio) {
-        $descricao = trim($exercicio['descricao'] ?? '');
-        $series = intval($exercicio['series'] ?? 0);
+        $descricao  = trim($exercicio['descricao'] ?? '');
+        $series     = intval($exercicio['series'] ?? 0);
         $repeticoes = intval($exercicio['repeticoes'] ?? 0);
 
-        // Validar que pelo menos descricao existe
         if (!empty($descricao)) {
-            $descricao = mysqli_real_escape_string($conn, $descricao);
-
-            // Inserir exercício na tabela treino_exercicios
-            $sql_exercicio = "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes)
-                              VALUES ('$treino_id', '$descricao', '$series', '$repeticoes')";
-
-            if (mysqli_query($conn, $sql_exercicio)) {
+            mysqli_stmt_bind_param($stmt_ex, "isii", $treino_id, $descricao, $series, $repeticoes);
+            if (mysqli_stmt_execute($stmt_ex)) {
                 $total_exercicios++;
             } else {
                 error_log("Erro ao inserir exercício: " . mysqli_error($conn));
@@ -83,9 +75,10 @@ if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
 
 // Validação: deve ter pelo menos 1 exercício
 if ($total_exercicios === 0) {
-    // Deletar o treino já inserido
-    $sql_delete = "DELETE FROM treinos WHERE id = '$treino_id'";
-    mysqli_query($conn, $sql_delete);
+    // Deletar o treino já inserido (prepared)
+    $stmt_del = mysqli_prepare($conn, "DELETE FROM treinos WHERE id = ?");
+    mysqli_stmt_bind_param($stmt_del, "i", $treino_id);
+    mysqli_stmt_execute($stmt_del);
     header("Location: treinos.php?erro=sem_exercicios");
     exit();
 }

@@ -1,20 +1,22 @@
 <?php
 /**
  * DELETAR_TREINO.PHP
- * Handler para deletar um treino registrado
+ * Handler seguro para deletar um treino registrado
  */
 
 session_start();
 require '../php/config.php';
+require_once '../php/auth_check.php';
+require_once '../php/csrf.php';
 
 // Validar autenticação
-if (!isset($_SESSION['id'])) {
+if (!is_logged_in()) {
     header("Location: ../php/login.php");
     exit();
 }
 
-$usuario_id = $_SESSION['id'];
-$treino_id = intval($_GET['id'] ?? 0);
+$usuario_id = intval($_SESSION['id']);
+$treino_id  = intval($_GET['id'] ?? ($_POST['id'] ?? 0));
 
 // Validar ID do treino
 if ($treino_id <= 0) {
@@ -22,29 +24,39 @@ if ($treino_id <= 0) {
     exit();
 }
 
-// Verificar se o treino pertence ao usuário
-$sql_check = "SELECT id FROM treinos WHERE id = '$treino_id' AND usuario_id = '$usuario_id'";
-$result_check = mysqli_query($conn, $sql_check);
+// Se for POST, validar CSRF
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    validar_csrf();
+}
+
+// Verificar se o treino pertence ao usuário usando prepared statement
+$stmt_check = mysqli_prepare($conn, "SELECT id FROM treinos WHERE id = ? AND usuario_id = ?");
+mysqli_stmt_bind_param($stmt_check, "ii", $treino_id, $usuario_id);
+mysqli_stmt_execute($stmt_check);
+$result_check = mysqli_stmt_get_result($stmt_check);
 
 if (!$result_check || mysqli_num_rows($result_check) === 0) {
     header("Location: treinos.php?erro=acesso_negado");
     exit();
 }
 
-// Deletar exercícios do treino (cascata)
-$sql_delete_exercicios = "DELETE FROM treino_exercicios WHERE treino_id = '$treino_id'";
-mysqli_query($conn, $sql_delete_exercicios);
+// Deletar exercícios do treino (prepared)
+$stmt_del_ex = mysqli_prepare($conn, "DELETE FROM treino_exercicios WHERE treino_id = ?");
+mysqli_stmt_bind_param($stmt_del_ex, "i", $treino_id);
+mysqli_stmt_execute($stmt_del_ex);
 
-// Deletar o treino
-$sql_delete_treino = "DELETE FROM treinos WHERE id = '$treino_id'";
+// Deletar o treino (prepared)
+$stmt_del = mysqli_prepare($conn, "DELETE FROM treinos WHERE id = ? AND usuario_id = ?");
+mysqli_stmt_bind_param($stmt_del, "ii", $treino_id, $usuario_id);
 
-if (mysqli_query($conn, $sql_delete_treino)) {
+if (mysqli_stmt_execute($stmt_del)) {
+    log_activity($conn, 'treino_deletado', "Treino ID $treino_id excluído pelo usuário ID $usuario_id");
     mysqli_close($conn);
     header("Location: treinos.php?sucesso=treino_deletado");
     exit();
 } else {
     error_log("Erro ao deletar treino: " . mysqli_error($conn));
+    mysqli_close($conn);
     header("Location: treinos.php?erro=banco_dados");
     exit();
 }
-?>

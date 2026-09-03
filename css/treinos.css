@@ -950,6 +950,13 @@ html.light .filtro-group select { background: #f0f0f0; color: #111; }
 }
 
 /* Responsivo para exercícios */
+@media (max-width: 1024px) {
+    .treinos-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
 @media (max-width: 768px) {
     .exercicio-row {
         grid-template-columns: 1fr;
@@ -964,5 +971,26 @@ html.light .filtro-group select { background: #f0f0f0; color: #111; }
     .exercicio-row {
         padding: 12px;
         gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .treinos-container {
+        padding: 80px 12px 48px;
+    }
+
+    .paginacao {
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .busca-treinos {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .busca-treinos input {
+        width: 100%;
     }
 }

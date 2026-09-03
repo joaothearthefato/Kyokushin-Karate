@@ -19,8 +19,13 @@ if ($conn) {
     mysqli_query($conn, "SET time_zone = '-03:00'");
 }
 
-// Verificar conexão
+// Verificar conexão mysqli
 if (!$conn) {
     die("Falha na conexão: " . mysqli_connect_error());
 }
+
+// Inicializar Singleton PDO (Disponibiliza $pdo para toda a aplicação)
+require_once __DIR__ . '/Database.php';
+Database::configure($host, $banco, $usuario, $senha);
+$pdo = Database::getConnection();
 ?>

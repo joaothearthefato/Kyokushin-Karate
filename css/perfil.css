@@ -508,3 +508,34 @@ html.light .perfil-avatar {
     .profile-photo-layout { flex-direction: column; align-items: center; text-align: center; }
     .profile-photo-form, .profile-photo-actions { justify-content: center; }
 }
+
+@media (max-width: 480px) {
+    .perfil-container {
+        padding: 80px 14px 40px;
+    }
+    .perfil-hero {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+    .perfil-card {
+        padding: 20px 14px;
+    }
+    .profile-photo-modal {
+        padding: 10px;
+    }
+    .profile-photo-modal > .perfil-card-header,
+    .profile-photo-modal > .profile-photo-layout {
+        padding: 16px 14px;
+    }
+    .faixas-tracker {
+        justify-content: center;
+    }
+    .faixa-connector {
+        width: 10px;
+    }
+    .faixa-belt {
+        width: 30px;
+        height: 30px;
+    }
+}

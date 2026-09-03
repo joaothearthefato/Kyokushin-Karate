@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'config.php';
+require_once '../includes/icons.php';
 
 if (!isset($_SESSION['id'])) {
     header('Location: login.php');
@@ -10,31 +11,40 @@ if (!isset($_SESSION['id'])) {
 $uid  = $_SESSION['id'];
 $nome = $_SESSION['nome'] ?? 'Praticante';
 
+// Helper para Prepared Statements
+function query_prep($conn, $query, $types, ...$params) {
+    $stmt = mysqli_prepare($conn, $query);
+    if (!$stmt) return false;
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    mysqli_stmt_execute($stmt);
+    return mysqli_stmt_get_result($stmt);
+}
+
 // ── KPIs reais ───────────────────────────────────────────────────
-$r1 = mysqli_query($conn, "SELECT COUNT(*) c, COALESCE(SUM(duracao_min),0) m FROM treinos WHERE usuario_id=$uid");
+$r1 = query_prep($conn, "SELECT COUNT(*) c, COALESCE(SUM(duracao_min),0) m FROM treinos WHERE usuario_id=?", "i", $uid);
 $kpi = mysqli_fetch_assoc($r1);
 $total_treinos  = $kpi['c'];
 $total_horas    = floor($kpi['m'] / 60);
 $total_min_rest = $kpi['m'] % 60;
 
 // Treinos esta semana
-$r2 = mysqli_query($conn, "SELECT COUNT(*) c FROM treinos WHERE usuario_id=$uid AND YEARWEEK(data_treino,1)=YEARWEEK(CURDATE(),1)");
+$r2 = query_prep($conn, "SELECT COUNT(*) c FROM treinos WHERE usuario_id=? AND YEARWEEK(data_treino,1)=YEARWEEK(CURDATE(),1)", "i", $uid);
 $semana = mysqli_fetch_assoc($r2)['c'] ?? 0;
 
 // Treinos este mês
-$r3 = mysqli_query($conn, "SELECT COUNT(*) c FROM treinos WHERE usuario_id=$uid AND MONTH(data_treino)=MONTH(CURDATE()) AND YEAR(data_treino)=YEAR(CURDATE())");
+$r3 = query_prep($conn, "SELECT COUNT(*) c FROM treinos WHERE usuario_id=? AND MONTH(data_treino)=MONTH(CURDATE()) AND YEAR(data_treino)=YEAR(CURDATE())", "i", $uid);
 $mes = mysqli_fetch_assoc($r3)['c'] ?? 0;
 
 // Último treino
-$r4 = mysqli_query($conn, "SELECT data_treino, duracao_min, observacoes FROM treinos WHERE usuario_id=$uid ORDER BY data_treino DESC LIMIT 1");
+$r4 = query_prep($conn, "SELECT data_treino, duracao_min, observacoes FROM treinos WHERE usuario_id=? ORDER BY data_treino DESC LIMIT 1", "i", $uid);
 $ultimo = $r4 ? mysqli_fetch_assoc($r4) : null;
 
 // Faixa atual
-$r5 = mysqli_query($conn, "SELECT f.nome FROM usuarios u LEFT JOIN faixas f ON u.faixa_id=f.id WHERE u.id=$uid");
+$r5 = query_prep($conn, "SELECT f.nome FROM usuarios u LEFT JOIN faixas f ON u.faixa_id=f.id WHERE u.id=?", "i", $uid);
 $faixa_nome = mysqli_fetch_assoc($r5)['nome'] ?? 'Sem faixa';
 
 // Katas e kihons concluídos
-$r6 = mysqli_query($conn, "SELECT tipo, COUNT(*) c FROM progresso WHERE usuario_id=$uid AND concluido=1 GROUP BY tipo");
+$r6 = query_prep($conn, "SELECT tipo, COUNT(*) c FROM progresso WHERE usuario_id=? AND concluido=1 GROUP BY tipo", "i", $uid);
 $concluidos = ['kata' => 0, 'kihon' => 0];
 if ($r6) while ($row = mysqli_fetch_assoc($r6)) $concluidos[$row['tipo']] = $row['c'];
 
@@ -45,7 +55,7 @@ for ($i = 5; $i >= 0; $i--) {
     $mes_num  = intval(date('m', strtotime("-$i months")));
     $mes_ano  = date('Y', strtotime("-$i months"));
     $meses_pt = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    $r = mysqli_query($conn, "SELECT COUNT(*) c FROM treinos WHERE usuario_id=$uid AND DATE_FORMAT(data_treino,'%Y-%m')='$mes_key'");
+    $r = query_prep($conn, "SELECT COUNT(*) c FROM treinos WHERE usuario_id=? AND DATE_FORMAT(data_treino,'%Y-%m')=?", "is", $uid, $mes_key);
     $freq[] = [
         'label' => $meses_pt[$mes_num - 1],
         'valor' => mysqli_fetch_assoc($r)['c'] ?? 0,
@@ -94,7 +104,7 @@ nel principal no Oyama Hub — Kyokushin Karate.">
             </p>
         </div>
         <a href="../dashboard/treinos.php" class="dash-hero-cta">
-            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <?= render_icon('plus', 18) ?>
             Registrar Treino
         </a>
     </section>
@@ -102,28 +112,28 @@ nel principal no Oyama Hub — Kyokushin Karate.">
     <!-- ── KPIs ── -->
     <section class="dash-kpis">
         <div class="dash-kpi">
-            <div class="kpi-ico red"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="kpi-ico red"><?= render_icon('treinos', 22) ?></div>
             <div>
                 <span class="kpi-val"><?= $total_treinos ?></span>
                 <span class="kpi-lbl">Total de Treinos</span>
             </div>
         </div>
         <div class="dash-kpi">
-            <div class="kpi-ico gold"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="kpi-ico gold"><?= render_icon('horas', 22) ?></div>
             <div>
                 <span class="kpi-val"><?= $total_horas ?><small>h</small><?= $total_min_rest ?><small>m</small></span>
                 <span class="kpi-lbl">Horas Treinadas</span>
             </div>
         </div>
         <div class="dash-kpi">
-            <div class="kpi-ico green"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="kpi-ico green"><?= render_icon('atividade', 22) ?></div>
             <div>
                 <span class="kpi-val"><?= $semana ?></span>
                 <span class="kpi-lbl">Treinos Esta Semana</span>
             </div>
         </div>
         <div class="dash-kpi">
-            <div class="kpi-ico blue"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <div class="kpi-ico blue"><?= render_icon('zap', 22) ?></div>
             <div>
                 <span class="kpi-val"><?= $mes ?></span>
                 <span class="kpi-lbl">Treinos Este Mês</span>
@@ -195,63 +205,63 @@ nel principal no Oyama Hub — Kyokushin Karate.">
             <div class="quick-links">
                 <a href="../dashboard/treinos.php" class="quick-link">
                     <div class="quick-icon red-bg">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <?= render_icon('treinos', 20) ?>
                     </div>
                     <div>
                         <strong>Treinos</strong>
                         <span>Registrar e historiar</span>
                     </div>
-                    <svg class="quick-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    <?= render_icon('arrow-right', 16, 'quick-arrow') ?>
                 </a>
                 <a href="../dashboard/katas.php" class="quick-link">
                     <div class="quick-icon gold-bg">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                        <?= render_icon('katas', 20) ?>
                     </div>
                     <div>
                         <strong>Katas</strong>
                         <span>Formas codificadas</span>
                     </div>
-                    <svg class="quick-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    <?= render_icon('arrow-right', 16, 'quick-arrow') ?>
                 </a>
                 <a href="../dashboard/kihons.php" class="quick-link">
                     <div class="quick-icon green-bg">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+                        <?= render_icon('kihons', 20) ?>
                     </div>
                     <div>
                         <strong>Kihons</strong>
                         <span>Fundamentos técnicos</span>
                     </div>
-                    <svg class="quick-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    <?= render_icon('arrow-right', 16, 'quick-arrow') ?>
                 </a>
                 <a href="../dashboard/progresso.php" class="quick-link">
                     <div class="quick-icon blue-bg">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        <?= render_icon('progresso', 20) ?>
                     </div>
                     <div>
                         <strong>Progresso</strong>
                         <span>Estatísticas e conquistas</span>
                     </div>
-                    <svg class="quick-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    <?= render_icon('arrow-right', 16, 'quick-arrow') ?>
                 </a>
                 <a href="../dashboard/anotacoes.php" class="quick-link">
                     <div class="quick-icon purple-bg">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <?= render_icon('anotacoes', 20) ?>
                     </div>
                     <div>
                         <strong>Anotações</strong>
                         <span>Notas pessoais</span>
                     </div>
-                    <svg class="quick-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    <?= render_icon('arrow-right', 16, 'quick-arrow') ?>
                 </a>
                 <a href="../dashboard/perfil.php" class="quick-link">
                     <div class="quick-icon gray-bg">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <?= render_icon('perfil', 20) ?>
                     </div>
                     <div>
                         <strong>Perfil</strong>
                         <span>Dados e configurações</span>
                     </div>
-                    <svg class="quick-arrow" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"/></svg>
+                    <?= render_icon('arrow-right', 16, 'quick-arrow') ?>
                 </a>
             </div>
         </section>
@@ -281,5 +291,6 @@ nel principal no Oyama Hub — Kyokushin Karate.">
 
     </div>
 </main>
+<?php include '../includes/toast.php'; ?>
 </body>
 </html>

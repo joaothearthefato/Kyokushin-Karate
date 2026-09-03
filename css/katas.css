@@ -343,3 +343,16 @@ body {
   .modal-body { padding: 1.5rem; }
   .modal-kata-name { font-size: 1.8rem; }
 }
+
+@media (max-width: 480px) {
+  .kata-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem 3rem;
+  }
+  .controls {
+    padding: 0 1rem 1.5rem;
+  }
+  .page-hero {
+    padding: 4rem 1rem 2.5rem;
+  }
+}

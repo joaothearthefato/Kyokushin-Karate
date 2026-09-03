@@ -26,16 +26,16 @@ Estética: Dark Kyokushin Editorial
 }
 
 html.light {
-  --black: #f5f0eb;
+  --black: #f8f6f2;
   --dark: #ece7e1;
-  --surface: #e2ddd8;
-  --surface2: #d6d0cb;
-  --border: rgba(0, 0, 0, 0.10);
+  --surface: #ffffff;
+  --surface2: #e4dfd8;
+  --border: rgba(0, 0, 0, 0.12);
   --red-glow: rgba(200, 0, 10, 0.15);
   --gold: #8a6f20;
   --white: #1a1614;
-  --muted: #7a7570;
-  --text: #c8000a;
+  --muted: #5a5550;
+  --text: #1f1c1a;
 }
 
 /* ========= RESET ========= */
@@ -60,7 +60,7 @@ body {
   align-items: center;
   justify-content: center;
 
-  padding: 40px;
+  padding: 40px 20px;
 
 }
 
@@ -68,7 +68,8 @@ body {
 
 .register-box {
 
-  width: 420px;
+  width: 100%;
+  max-width: 420px;
 
   background: var(--surface);
 
@@ -615,24 +616,34 @@ html.light .forgot-password-btn:hover {
 
 /* ========= RESPONSIVO ========= */
 
-@media(max-width:500px) {
+@media (max-width: 500px) {
 
   body {
-    padding: 20px;
+    padding: 20px 16px;
   }
 
   .register-box {
-
-    width: 100%;
-
-    padding: 40px 30px;
-
+    padding: 36px 24px;
   }
 
   .register-box h2 {
-
     font-size: 38px;
+  }
 
+}
+
+@media (max-width: 360px) {
+
+  body {
+    padding: 16px 12px;
+  }
+
+  .register-box {
+    padding: 28px 18px;
+  }
+
+  .register-box h2 {
+    font-size: 32px;
   }
 
 }

@@ -1,5 +1,6 @@
 <?php
 include("config.php");
+require_once("csrf.php");
 
 $status = $_GET['status'] ?? '';
 $msgKey = $_GET['msg'] ?? '';
@@ -33,11 +34,17 @@ mysqli_close($conn);
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro - Kyokushin Dojo</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="icon" href="../img/kyokushinicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://vlibras.gov.br">
   <link rel="stylesheet" href="../css/registerlogin.css">
-
+  <script>
+    if (localStorage.getItem('oyama-theme') === 'light' || localStorage.getItem('theme') === 'light') {
+      document.documentElement.classList.add('light');
+    }
+  </script>
 </head>
 
 <body>
@@ -52,6 +59,7 @@ mysqli_close($conn);
         <div class="form-feedback"><?php echo htmlspecialchars($feedback); ?></div>
     <?php endif; ?>
     <form action="registrar_aluno.php" method="POST">
+      <?= csrf_input() ?>
       <div class="input-group">
         <label for="nome">Nome Completo</label>
         <input type="text" id="nome" name="nome" required placeholder="Seu nome">
@@ -65,17 +73,6 @@ mysqli_close($conn);
         <input type="password" id="senha" name="senha" required placeholder="Mínimo 6 caracteres" minlength="6">
       </div>
 
-       <div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-      <div class="vw-plugin-top-wrapper"></div>
-    </div>
-  </div>
-  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-  <script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-  </script>
-  
       <div class="input-group">
         <label for="nascimento">Data de Nascimento</label>
         <input type="date" id="nascimento" name="nascimento" max="<?= date('Y-m-d') ?>" required>
@@ -94,39 +91,17 @@ mysqli_close($conn);
     <a href="login.php" class="login-link">Já tem cadastro? Faça o login</a>
   </div>
 
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
   <script>
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = themeToggle.querySelector('.theme-icon');
-    const html = document.documentElement;
-
-    // Check for saved theme preference or default to dark mode
-    const currentTheme = localStorage.getItem('theme') || 'dark';
-    if (currentTheme === 'light') {
-      html.classList.add('light');
-      themeIcon.textContent = '🌙';
-    }
-
-    themeToggle.addEventListener('click', () => {
-      html.classList.toggle('light');
-      const isLight = html.classList.contains('light');
-
-      // Update button appearance with animation
-      if (isLight) {
-        themeIcon.textContent = '🌙';
-        localStorage.setItem('theme', 'light');
-      } else {
-        themeIcon.textContent = '☀️';
-        localStorage.setItem('theme', 'dark');
-      }
-
-      // Add click animation
-      themeToggle.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        themeToggle.style.transform = '';
-      }, 150);
-    });
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
   </script>
-
+  <script src="../js/theme.js" defer></script>
 </body>
 
 </html>

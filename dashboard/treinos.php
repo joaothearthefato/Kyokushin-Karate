@@ -1,6 +1,8 @@
 <?php
 session_start();
 require '../php/config.php';
+require_once '../php/csrf.php';
+require_once '../includes/icons.php';
 
 // RNF04 – Validação de Sessão
 if (!isset($_SESSION['id'])) {
@@ -8,21 +10,19 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-$usuario_id = $_SESSION['id'];
+$usuario_id   = intval($_SESSION['id']);
 $usuario_nome = $_SESSION['nome'] ?? 'Praticante';
 
-// Buscar dados do usuário
-$sql_user = "SELECT u.nome, f.nome AS faixa_nome, f.ordem AS faixa_ordem 
-             FROM usuarios u 
-             LEFT JOIN faixas f ON u.faixa_id = f.id 
-             WHERE u.id = '$usuario_id'";
-$result_user = mysqli_query($conn, $sql_user);
-if ($result_user) {
-    $usuario = mysqli_fetch_assoc($result_user);
-    $faixa_ordem = $usuario['faixa_ordem'] ?? 1;
-} else {
-    $faixa_ordem = 1;
-}
+// Buscar dados do usuário (prepared statement)
+$stmt_user = mysqli_prepare($conn, "SELECT u.nome, f.nome AS faixa_nome, f.ordem AS faixa_ordem 
+                                     FROM usuarios u 
+                                     LEFT JOIN faixas f ON u.faixa_id = f.id 
+                                     WHERE u.id = ?");
+mysqli_stmt_bind_param($stmt_user, "i", $usuario_id);
+mysqli_stmt_execute($stmt_user);
+$result_user = mysqli_stmt_get_result($stmt_user);
+$usuario     = $result_user ? mysqli_fetch_assoc($result_user) : null;
+$faixa_ordem = $usuario['faixa_ordem'] ?? 1;
 
 // RF03 – Listar Exercícios agrupados por categoria
 $sql_exercicios = "SELECT id, nome, categoria FROM exercicios_kyokushin ORDER BY categoria, nome";
@@ -69,23 +69,61 @@ if (isset($_GET['sucesso']) && $_GET['sucesso'] === 'treino_registrado') {
     }
 }
 
-// Filtro de data
+// Filtros e Paginação
 $filtro_mes = intval($_GET['mes'] ?? 0);
 $filtro_ano = intval($_GET['ano'] ?? 0);
+$busca      = trim($_GET['busca'] ?? '');
+$pagina     = max(1, intval($_GET['pagina'] ?? 1));
+$limite     = 6; // Treinos por página
+$offset     = ($pagina - 1) * $limite;
 
-$where_filtro = "WHERE usuario_id = '$usuario_id'";
+$where_parts = ["usuario_id = ?"];
+$params_filtro = [$usuario_id];
+$types_filtro = "i";
+
 if ($filtro_mes > 0 && $filtro_mes <= 12) {
-    $where_filtro .= " AND MONTH(data_treino) = $filtro_mes";
+    $where_parts[] = "MONTH(data_treino) = ?";
+    $params_filtro[] = $filtro_mes;
+    $types_filtro .= "i";
 }
 if ($filtro_ano > 0) {
-    $where_filtro .= " AND YEAR(data_treino) = $filtro_ano";
+    $where_parts[] = "YEAR(data_treino) = ?";
+    $params_filtro[] = $filtro_ano;
+    $types_filtro .= "i";
+}
+if ($busca !== '') {
+    $where_parts[] = "observacoes LIKE ?";
+    $params_filtro[] = "%" . $busca . "%";
+    $types_filtro .= "s";
 }
 
+$where_sql = implode(" AND ", $where_parts);
+
+// Contar total de registros
+$stmt_count = mysqli_prepare($conn, "SELECT COUNT(*) c FROM treinos WHERE $where_sql");
+mysqli_stmt_bind_param($stmt_count, $types_filtro, ...$params_filtro);
+mysqli_stmt_execute($stmt_count);
+$res_count = mysqli_stmt_get_result($stmt_count);
+$total_treinos_count = ($res_count && $rowC = mysqli_fetch_assoc($res_count)) ? intval($rowC['c']) : 0;
+$total_paginas = max(1, (int)ceil($total_treinos_count / $limite));
+
+// Buscar registros paginados
 $sql_treinos = "SELECT id, duracao_min, observacoes, data_treino, criado_em 
                 FROM treinos 
-                $where_filtro 
-                ORDER BY data_treino DESC, criado_em DESC";
-$result_treinos = mysqli_query($conn, $sql_treinos);
+                WHERE $where_sql 
+                ORDER BY data_treino DESC, criado_em DESC 
+                LIMIT ? OFFSET ?";
+
+$params_treinos = $params_filtro;
+$params_treinos[] = $limite;
+$params_treinos[] = $offset;
+$types_treinos = $types_filtro . "ii";
+
+$stmt_treinos = mysqli_prepare($conn, $sql_treinos);
+mysqli_stmt_bind_param($stmt_treinos, $types_treinos, ...$params_treinos);
+mysqli_stmt_execute($stmt_treinos);
+$result_treinos = mysqli_stmt_get_result($stmt_treinos);
+
 $treinos_list = [];
 if ($result_treinos) {
     while ($row = mysqli_fetch_assoc($result_treinos)) {
@@ -240,7 +278,22 @@ mysqli_close($conn);
 
             <!-- Histórico -->
             <section class="treinos-historico">
-                <h2>HISTÓRICO (Últimos 10)</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+                    <h2 style="margin: 0;">HISTÓRICO (<?= $total_treinos_count ?> total)</h2>
+                    
+                    <!-- Busca rápida por texto -->
+                    <form method="GET" action="treinos.php" style="display: flex; gap: 6px; align-items: center;">
+                        <?php if ($filtro_mes): ?><input type="hidden" name="mes" value="<?= $filtro_mes ?>"><?php endif; ?>
+                        <?php if ($filtro_ano): ?><input type="hidden" name="ano" value="<?= $filtro_ano ?>"><?php endif; ?>
+                        <input type="text" name="busca" value="<?= htmlspecialchars($busca) ?>" placeholder="Buscar treino..." 
+                               style="padding: 6px 12px; background: var(--surface, #181818); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--white, #fff); font-family: inherit; font-size: 13px; border-radius: 3px;">
+                        <button type="submit" style="padding: 6px 12px; background: var(--red, #c8000a); border: none; color: #fff; cursor: pointer; font-family: inherit; font-size: 13px; border-radius: 3px;">Buscar</button>
+                        <?php if ($busca !== '' || $filtro_mes > 0 || $filtro_ano > 0): ?>
+                            <a href="treinos.php" style="color: var(--muted, #888); font-size: 12px; text-decoration: none; padding: 4px;">Limpar</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
+
                 <?php if (count($treinos_list) > 0): ?>
                     <div class="historico-list">
                         <?php foreach ($treinos_list as $t): ?>
@@ -265,6 +318,32 @@ mysqli_close($conn);
                             </article>
                         <?php endforeach; ?>
                     </div>
+
+                    <!-- Paginação -->
+                    <?php if ($total_paginas > 1): ?>
+                        <nav aria-label="Navegação de treinos" style="display: flex; justify-content: center; gap: 8px; margin-top: 24px; align-items: center; flex-wrap: wrap;">
+                            <?php
+                            $queryParams = $_GET;
+                            $linkPage = function($p) use ($queryParams) {
+                                $queryParams['pagina'] = $p;
+                                return '?' . http_build_query($queryParams);
+                            };
+                            ?>
+
+                            <?php if ($pagina > 1): ?>
+                                <a href="<?= $linkPage($pagina - 1) ?>" style="padding: 6px 14px; background: var(--surface, #181818); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--white, #fff); text-decoration: none; border-radius: 3px; font-size: 13px;">← Anterior</a>
+                            <?php endif; ?>
+
+                            <span style="font-size: 13px; color: var(--muted, #888); padding: 0 8px;">
+                                Página <?= $pagina ?> de <?= $total_paginas ?>
+                            </span>
+
+                            <?php if ($pagina < $total_paginas): ?>
+                                <a href="<?= $linkPage($pagina + 1) ?>" style="padding: 6px 14px; background: var(--surface, #181818); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--white, #fff); text-decoration: none; border-radius: 3px; font-size: 13px;">Próxima →</a>
+                            <?php endif; ?>
+                        </nav>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <div class="vazio">
                         <p>Nenhum treino registrado ainda.</p>
@@ -279,6 +358,7 @@ mysqli_close($conn);
             <section class="registrar-treino-section">
                 <h2>REGISTRAR UM TREINO</h2>
                 <form method="POST" action="registrar_treino.php" class="form-treino" id="formTreino">
+                    <?= csrf_input() ?>
                     <div class="form-group">
                         <label for="data-treino">Data do Treino</label>
                         <input type="date" id="data-treino" name="data_treino" value="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d'); ?>" required>
@@ -433,5 +513,6 @@ mysqli_close($conn);
     // não precisamos duplicar a lógica aqui e causar erros.
 </script>
 
+<?php include '../includes/toast.php'; ?>
 </body>
 </html>

@@ -1,20 +1,24 @@
 <?php
 /**
  * ATUALIZAR_TREINO.PHP
- * Handler para atualizar treinos registrados
+ * Handler seguro para atualizar treinos registrados
  */
 
 session_start();
 require '../php/config.php';
+require_once '../php/auth_check.php';
+require_once '../php/csrf.php';
 
 // RNF04 – Validação de Sessão
-if (!isset($_SESSION['id'])) {
+if (!is_logged_in() || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../php/login.php");
     exit();
 }
 
-$usuario_id = $_SESSION['id'];
-$treino_id = intval($_POST['treino_id'] ?? 0);
+validar_csrf();
+
+$usuario_id  = intval($_SESSION['id']);
+$treino_id   = intval($_POST['treino_id'] ?? 0);
 $data_treino = trim($_POST['data_treino'] ?? '');
 $duracao_min = intval($_POST['duracao_min'] ?? 0);
 $observacoes = trim($_POST['observacoes'] ?? '');
@@ -25,9 +29,11 @@ if ($treino_id <= 0) {
     exit();
 }
 
-// Verificar se o treino pertence ao usuário
-$sql_check = "SELECT id FROM treinos WHERE id = '$treino_id' AND usuario_id = '$usuario_id'";
-$result_check = mysqli_query($conn, $sql_check);
+// Verificar se o treino pertence ao usuário usando prepared statement
+$stmt_check = mysqli_prepare($conn, "SELECT id FROM treinos WHERE id = ? AND usuario_id = ?");
+mysqli_stmt_bind_param($stmt_check, "ii", $treino_id, $usuario_id);
+mysqli_stmt_execute($stmt_check);
+$result_check = mysqli_stmt_get_result($stmt_check);
 
 if (!$result_check || mysqli_num_rows($result_check) === 0) {
     header("Location: treinos.php?erro=acesso_negado");
@@ -46,46 +52,35 @@ if (empty($data_treino) || $duracao_min < 5 || empty($observacoes)) {
     exit();
 }
 
-// Sanitizar dados
-$data_treino = mysqli_real_escape_string($conn, $data_treino);
-$observacoes = mysqli_real_escape_string($conn, $observacoes);
+// Atualizar treino com prepared statement
+$stmt_update = mysqli_prepare($conn, "UPDATE treinos SET data_treino = ?, duracao_min = ?, observacoes = ? WHERE id = ? AND usuario_id = ?");
+mysqli_stmt_bind_param($stmt_update, "sisii", $data_treino, $duracao_min, $observacoes, $treino_id, $usuario_id);
 
-// Atualizar treino
-$sql_update = "UPDATE treinos 
-               SET data_treino = '$data_treino', 
-                   duracao_min = '$duracao_min', 
-                   observacoes = '$observacoes'
-               WHERE id = '$treino_id'";
-
-if (!mysqli_query($conn, $sql_update)) {
+if (!mysqli_stmt_execute($stmt_update)) {
     error_log("Erro ao atualizar treino: " . mysqli_error($conn));
     header("Location: editar_treino.php?id=$treino_id&erro=banco_dados");
     exit();
 }
 
-// Deletar exercícios antigos
-$sql_delete_exercicios = "DELETE FROM treino_exercicios WHERE treino_id = '$treino_id'";
-mysqli_query($conn, $sql_delete_exercicios);
+// Deletar exercícios antigos (prepared)
+$stmt_del_ex = mysqli_prepare($conn, "DELETE FROM treino_exercicios WHERE treino_id = ?");
+mysqli_stmt_bind_param($stmt_del_ex, "i", $treino_id);
+mysqli_stmt_execute($stmt_del_ex);
 
 $total_exercicios = 0;
 
-// Inserir novos exercícios
+// Inserir novos exercícios com prepared statement
 if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
+    $stmt_in_ex = mysqli_prepare($conn, "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes) VALUES (?, ?, ?, ?)");
     foreach ($_POST['exercicios'] as $exercicio) {
-        $descricao = trim($exercicio['descricao'] ?? '');
-        $series = intval($exercicio['series'] ?? 0);
+        $descricao  = trim($exercicio['descricao'] ?? '');
+        $series     = intval($exercicio['series'] ?? 0);
         $repeticoes = intval($exercicio['repeticoes'] ?? 0);
 
         if (!empty($descricao)) {
-            $descricao = mysqli_real_escape_string($conn, $descricao);
-
-            $sql_exercicio = "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes)
-                              VALUES ('$treino_id', '$descricao', '$series', '$repeticoes')";
-
-            if (mysqli_query($conn, $sql_exercicio)) {
+            mysqli_stmt_bind_param($stmt_in_ex, "isii", $treino_id, $descricao, $series, $repeticoes);
+            if (mysqli_stmt_execute($stmt_in_ex)) {
                 $total_exercicios++;
-            } else {
-                error_log("Erro ao inserir exercício: " . mysqli_error($conn));
             }
         }
     }
@@ -93,16 +88,17 @@ if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
 
 // Validação: deve ter pelo menos 1 exercício
 if ($total_exercicios === 0) {
-    // Deletar o treino para manter consistência
-    $sql_delete = "DELETE FROM treinos WHERE id = '$treino_id'";
-    mysqli_query($conn, $sql_delete);
+    $stmt_del = mysqli_prepare($conn, "DELETE FROM treinos WHERE id = ? AND usuario_id = ?");
+    mysqli_stmt_bind_param($stmt_del, "ii", $treino_id, $usuario_id);
+    mysqli_stmt_execute($stmt_del);
     header("Location: treinos.php?erro=sem_exercicios");
     exit();
 }
+
+log_activity($conn, 'treino_atualizado', "Treino ID $treino_id atualizado pelo usuário ID $usuario_id");
 
 mysqli_close($conn);
 
 // Mensagem de confirmação
 header("Location: treinos.php?sucesso=treino_atualizado");
 exit();
-?>
