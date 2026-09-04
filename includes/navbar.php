@@ -466,3 +466,13 @@ if (hamburger && navLinks) {
 }
 
 </script>
+
+<script>
+    // Injeção do Script Global de Acessibilidade
+    (function() {
+        var s = document.createElement('script');
+        s.src = '<?= $currentDir === "dashboard" ? "../js/acessibilidade.js" : "js/acessibilidade.js" ?>';
+        s.defer = true;
+        document.body.appendChild(s);
+    })();
+</script>

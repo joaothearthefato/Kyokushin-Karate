@@ -102,6 +102,9 @@ mysqli_close($conn);
     new window.VLibras.Widget('https://vlibras.gov.br/app');
   </script>
   <script src="../js/theme.js" defer></script>
+
+  <!-- Script A11Y Global -->
+  <script src="../js/acessibilidade.js" defer></script>
 </body>
 
 </html>

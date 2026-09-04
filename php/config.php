@@ -21,7 +21,7 @@ if ($conn) {
 
 // Verificar conexão mysqli
 if (!$conn) {
-    die("Falha na conexão: " . mysqli_connect_error());
+    die("Serviço temporariamente indisponível. Por favor, tente novamente mais tarde.");
 }
 
 // Inicializar Singleton PDO (Disponibiliza $pdo para toda a aplicação)

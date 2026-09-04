@@ -59,7 +59,7 @@ if (isset($_POST["email"])) {
 
   <div class="register-box">
     <button id="theme-toggle" class="theme-btn-icon" aria-label="Alternar tema">
-      <span class="theme-icon">☀️</span>
+      <span class="theme-icon" aria-hidden="true">☀️</span>
     </button>
     
     <h2>LOGIN <span>Oyama-HUB</span></h2>
@@ -67,13 +67,13 @@ if (isset($_POST["email"])) {
     <form method="POST">
       <?= csrf_input() ?>
       <div class="input-group">
-        <label>Email</label>
-        <input type="email" name="email" required
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required
                value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
       </div>
       <div class="input-group">
-        <label>Senha</label>
-        <input type="password" name="senha" required>
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required>
       </div>
       <button class="btn-submit" type="submit">ENTRAR</button>
     </form>
@@ -86,7 +86,7 @@ if (isset($_POST["email"])) {
   <!-- Modal de erro -->
   <div class="modal-overlay" id="modal-erro">
     <div class="modal-box">
-      <div class="modal-icon">⚠️</div>    
+      <div class="modal-icon" aria-hidden="true">⚠️</div>    
       <div class="modal-title">Erro ao tentar entrar</div>
       <p class="modal-msg"><?= $erro ?? '' ?></p>
       <button class="modal-btn" onclick="fecharModal()">Tentar Novamente</button>
@@ -96,7 +96,7 @@ if (isset($_POST["email"])) {
   <!-- Modal de recuperação de senha -->
   <div class="modal-overlay" id="modal-forgot-password">
     <div class="modal-box">
-      <div class="modal-icon">🔐</div>
+      <div class="modal-icon" aria-hidden="true">🔐</div>
       <div class="modal-title">Recuperar Senha</div>
       <p class="modal-msg">Digite seu email para receber instruções de recuperação de senha.</p>
       
@@ -209,5 +209,7 @@ if (isset($_POST["email"])) {
     });
   </script>
 
+  <!-- Script A11Y Global -->
+  <script src="../js/acessibilidade.js" defer></script>
 </body>
 </html>

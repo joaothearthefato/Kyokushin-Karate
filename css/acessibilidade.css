@@ -1,0 +1,159 @@
+/* ==========================================================================
+   ACESSIBILIDADE - WIDGET E CLASSES GLOBAIS (WCAG 2.2)
+   ========================================================================== */
+
+/* ── 1. WIDGET FLUTUANTE ── */
+#a11y-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--red, #c8000a);
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+#a11y-toggle-btn:hover, #a11y-toggle-btn:focus-visible {
+  transform: scale(1.1);
+  background-color: var(--red2, #e8230e);
+  outline: 3px solid #fff;
+}
+
+#a11y-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 320px;
+  background: var(--surface, #181818);
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 9998;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text, #d8d3cc);
+  font-family: 'Inter', sans-serif;
+}
+
+#a11y-panel.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#a11y-panel h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #fff;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.1));
+  padding-bottom: 10px;
+}
+
+.a11y-control-group {
+  margin-bottom: 15px;
+}
+
+.a11y-control-group span {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted, #888);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.a11y-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  background: transparent;
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  color: var(--text, #d8d3cc);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.a11y-btn:hover, .a11y-btn:focus-visible {
+  background: rgba(255,255,255,0.05);
+  border-color: var(--red, #c8000a);
+}
+
+.a11y-btn.active {
+  background: rgba(200, 0, 10, 0.15);
+  border-color: var(--red, #c8000a);
+  color: #fff;
+  font-weight: bold;
+}
+
+#a11y-reset {
+  background: var(--red, #c8000a);
+  color: #fff;
+  border: none;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#a11y-reset:hover {
+  background: var(--red2, #e8230e);
+}
+
+/* ── 2. CLASSES DE ESTADO (A11Y) ── */
+
+/* Aumentar Fonte */
+html.a11y-text-large { font-size: 110% !important; }
+html.a11y-text-xl { font-size: 125% !important; }
+
+/* Alto Contraste */
+html.a11y-high-contrast {
+  --black: #000 !important;
+  --dark: #000 !important;
+  --surface: #000 !important;
+  --surface2: #000 !important;
+  --text: #FFFF00 !important; /* Amarelo puro para legibilidade máxima */
+  --muted: #FFFFFF !important;
+  --red: #FF0000 !important;
+  --red2: #FF0000 !important;
+  --border: #FFFF00 !important;
+  background-color: #000 !important;
+  color: #FFFF00 !important;
+}
+
+html.a11y-high-contrast *:focus-visible {
+  outline: 4px solid #00FFFF !important; /* Ciano no contraste */
+}
+
+html.a11y-high-contrast img, 
+html.a11y-high-contrast iframe {
+  filter: contrast(1.2) !important;
+}
+
+/* Reduzir Animações */
+html.a11y-reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
