@@ -11,6 +11,7 @@ mysqli_report(MYSQLI_REPORT_OFF);
 
 // 1. Execute SQL schema file
 $sqlFile = __DIR__ . '/../database/schema.sql';
+if (file_exists($sqlFile)) {
     $sqlContent = file_get_contents($sqlFile);
     $statements = array_filter(array_map('trim', explode(';', $sqlContent)));
     

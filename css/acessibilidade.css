@@ -1,159 +1,317 @@
-/* ==========================================================================
-   ACESSIBILIDADE - WIDGET E CLASSES GLOBAIS (WCAG 2.2)
-   ========================================================================== */
+/* ================================================================
+   ACESSIBILIDADE.CSS — Painel Flutuante de Acessibilidade
+   Segue o Design System Oyama Hub (tokens.css)
+   Reescrito para integração total com o design system.
+   ================================================================ */
 
-/* ── 1. WIDGET FLUTUANTE ── */
+/* ── BOTÃO FLUTUANTE ── */
 #a11y-toggle-btn {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
+  bottom: 28px;
+  left: 28px;
+  z-index: 9000;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background-color: var(--red, #c8000a);
-  color: #fff;
-  border: 2px solid #fff;
-  font-size: 24px;
+  background: var(--color-surface-2, #1e1e23);
+  border: 1px solid var(--color-border-2, rgba(255, 255, 255, 0.12));
+  color: var(--color-text, #e6e3df);
+  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  transition: transform 0.2s, background-color 0.2s;
+  transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  line-height: 1;
+  padding: 0;
 }
 
-#a11y-toggle-btn:hover, #a11y-toggle-btn:focus-visible {
-  transform: scale(1.1);
-  background-color: var(--red2, #e8230e);
-  outline: 3px solid #fff;
+#a11y-toggle-btn:hover {
+  background: var(--color-surface-3, #27272d);
+  border-color: var(--color-accent, #c8000a);
+  transform: scale(1.08);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5),
+              0 0 0 3px var(--color-accent-dim, rgba(200, 0, 10, 0.10));
 }
 
+#a11y-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-accent, #c8000a);
+  outline-offset: 3px;
+}
+
+/* ── PAINEL ── */
 #a11y-panel {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 320px;
-  background: var(--surface, #181818);
-  border: 1px solid var(--border, rgba(255,255,255,0.1));
-  border-radius: 8px;
+  bottom: 90px;
+  left: 28px;
+  z-index: 9001;
+  width: 280px;
+  background: var(--color-surface, #17171b);
+  border: 1px solid var(--color-border-2, rgba(255, 255, 255, 0.12));
+  border-radius: 12px;
   padding: 20px;
-  z-index: 9998;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  transform: translateY(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  /* Estado fechado */
   opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.97);
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  color: var(--text, #d8d3cc);
-  font-family: 'Inter', sans-serif;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: bottom left;
 }
 
 #a11y-panel.open {
-  transform: translateY(0);
   opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
+/* Título */
 #a11y-panel h3 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 24px;
-  letter-spacing: 2px;
-  margin-bottom: 15px;
-  text-align: center;
-  color: #fff;
-  border-bottom: 1px solid var(--border, rgba(255,255,255,0.1));
-  padding-bottom: 10px;
-}
-
-.a11y-control-group {
-  margin-bottom: 15px;
-}
-
-.a11y-control-group span {
-  display: block;
-  font-size: 12px;
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted, #888);
-  margin-bottom: 8px;
-  letter-spacing: 1px;
+  color: var(--color-text-3, #6a6763);
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.07));
 }
 
-.a11y-btn {
+/* ── GRUPOS DE CONTROLE ── */
+.a11y-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.a11y-control-group > span {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-2, #9c9893);
+  margin-bottom: 2px;
   display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 5px;
-  background: transparent;
-  border: 1px solid var(--border, rgba(255,255,255,0.1));
-  color: var(--text, #d8d3cc);
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: left;
-  font-size: 14px;
-  transition: background 0.2s;
+}
+
+/* ── BOTÕES DO PAINEL ── */
+.a11y-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  margin-bottom: 0;
+  background: var(--color-surface-2, #1e1e23);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.07));
+  border-radius: 6px;
+  color: var(--color-text-2, #9c9893);
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms, border-color 150ms, color 150ms;
+  line-height: 1.2;
 }
 
-.a11y-btn:hover, .a11y-btn:focus-visible {
-  background: rgba(255,255,255,0.05);
-  border-color: var(--red, #c8000a);
+.a11y-btn:hover {
+  background: var(--color-surface-3, #27272d);
+  border-color: var(--color-border-2, rgba(255, 255, 255, 0.12));
+  color: var(--color-text, #e6e3df);
+}
+
+.a11y-btn:focus-visible {
+  outline: 2px solid var(--color-accent, #c8000a);
+  outline-offset: 2px;
 }
 
 .a11y-btn.active {
-  background: rgba(200, 0, 10, 0.15);
-  border-color: var(--red, #c8000a);
-  color: #fff;
-  font-weight: bold;
+  background: var(--color-accent-dim, rgba(200, 0, 10, 0.10));
+  border-color: var(--color-accent, #c8000a);
+  color: var(--color-text, #e6e3df);
+  font-weight: 600;
 }
 
+/* Botão de reset */
 #a11y-reset {
-  background: var(--red, #c8000a);
-  color: #fff;
-  border: none;
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-3, #6a6763);
+  font-size: 11px;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 4px;
 }
 
 #a11y-reset:hover {
-  background: var(--red2, #e8230e);
+  color: var(--color-text-2, #9c9893);
+  border-color: var(--color-border, rgba(255, 255, 255, 0.07));
+  background: var(--color-surface-2, #1e1e23);
 }
 
-/* ── 2. CLASSES DE ESTADO (A11Y) ── */
+/* ── CLASSES GLOBAIS APLICADAS AO <HTML> ── */
 
-/* Aumentar Fonte */
-html.a11y-text-large { font-size: 110% !important; }
-html.a11y-text-xl { font-size: 125% !important; }
+/*
+  Os tokens usam px fixo (ex: --text-sm: 13px), então mudar font-size
+  em % no <html> não surte efeito. A solução correta é sobrescrever
+  as variáveis CSS diretamente — elas cascateiam para todo o projeto.
+*/
 
-/* Alto Contraste */
+/* Tamanho de Texto: Grande (110%) */
+html.a11y-text-large {
+  --text-xs:      12px;
+  --text-sm:      14px;
+  --text-base:    16px;
+  --text-lg:      19px;
+  --text-xl:      22px;
+  --text-2xl:     26px;
+  --text-3xl:     33px;
+  --text-4xl:     40px;
+  --text-5xl:     53px;
+  --text-display: clamp(44px, 6.6vw, 70px);
+}
+
+/* Tamanho de Texto: Extra Grande (125%) */
+html.a11y-text-xl {
+  --text-xs:      14px;
+  --text-sm:      16px;
+  --text-base:    19px;
+  --text-lg:      21px;
+  --text-xl:      25px;
+  --text-2xl:     30px;
+  --text-3xl:     38px;
+  --text-4xl:     45px;
+  --text-5xl:     60px;
+  --text-display: clamp(50px, 7.5vw, 80px);
+}
+
+/* Alto Contraste — sobrescreve tokens */
 html.a11y-high-contrast {
-  --black: #000 !important;
-  --dark: #000 !important;
-  --surface: #000 !important;
-  --surface2: #000 !important;
-  --text: #FFFF00 !important; /* Amarelo puro para legibilidade máxima */
-  --muted: #FFFFFF !important;
-  --red: #FF0000 !important;
-  --red2: #FF0000 !important;
-  --border: #FFFF00 !important;
-  background-color: #000 !important;
-  color: #FFFF00 !important;
+  --color-bg:          #000000;
+  --color-bg-raised:   #0a0a0a;
+  --color-surface:     #111111;
+  --color-surface-2:   #1a1a1a;
+  --color-surface-3:   #222222;
+  --color-border:      rgba(255, 255, 255, 0.30);
+  --color-border-2:    rgba(255, 255, 255, 0.50);
+  --color-text:        #ffffff;
+  --color-text-2:      #cccccc;
+  --color-text-3:      #aaaaaa;
+  --color-accent:      #ff2233;
+  --color-accent-2:    #ff4455;
+  --color-accent-dim:  rgba(255, 34, 51, 0.20);
+  --color-gold:        #ffcc00;
+  --color-gold-dim:    rgba(255, 204, 0, 0.15);
+}
+
+html.light.a11y-high-contrast {
+  --color-bg:          #ffffff;
+  --color-bg-raised:   #f5f5f5;
+  --color-surface:     #ffffff;
+  --color-surface-2:   #eeeeee;
+  --color-surface-3:   #dddddd;
+  --color-border:      rgba(0, 0, 0, 0.35);
+  --color-border-2:    rgba(0, 0, 0, 0.55);
+  --color-text:        #000000;
+  --color-text-2:      #111111;
+  --color-text-3:      #333333;
+  --color-accent:      #cc0000;
+  --color-accent-2:    #ee0000;
+  --color-gold:        #8a6500;
 }
 
 html.a11y-high-contrast *:focus-visible {
-  outline: 4px solid #00FFFF !important; /* Ciano no contraste */
-}
-
-html.a11y-high-contrast img, 
-html.a11y-high-contrast iframe {
-  filter: contrast(1.2) !important;
+  outline: 3px solid yellow;
+  outline-offset: 3px;
 }
 
 /* Reduzir Animações */
-html.a11y-reduced-motion * {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
+html.a11y-reduced-motion *,
+html.a11y-reduced-motion *::before,
+html.a11y-reduced-motion *::after {
+  animation-duration: 0.01ms;
+  animation-iteration-count: 1;
+  transition-duration: 0.01ms;
+  scroll-behavior: auto;
+}
+
+/* Destacar Links */
+html.a11y-highlight-links a,
+html.a11y-highlight-links [role="link"] {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--color-accent, #c8000a);
+  color: var(--color-accent, #c8000a);
+  font-weight: 600;
+}
+
+/* Espaçamento Extra de Linhas */
+html.a11y-extra-spacing body,
+html.a11y-extra-spacing p,
+html.a11y-extra-spacing li,
+html.a11y-extra-spacing td,
+html.a11y-extra-spacing span,
+html.a11y-extra-spacing div {
+  line-height: 2.0;
+  letter-spacing: 0.02em;
+  word-spacing: 0.1em;
+}
+
+/* ── LIGHT MODE ADAPTAÇÕES ── */
+html.light #a11y-toggle-btn {
+  background: var(--color-surface, #ffffff);
+  border-color: var(--color-border-2, rgba(0, 0, 0, 0.14));
+  color: var(--color-text, #1a1917);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+html.light #a11y-panel {
+  background: var(--color-surface, #ffffff);
+  border-color: var(--color-border-2, rgba(0, 0, 0, 0.14));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+html.light .a11y-btn {
+  background: var(--color-surface-2, #e9e7e3);
+  border-color: var(--color-border, rgba(0, 0, 0, 0.08));
+  color: var(--color-text-2, #5c5a57);
+}
+
+html.light .a11y-btn:hover {
+  background: var(--color-surface-3, #dedad5);
+  color: var(--color-text, #1a1917);
+}
+
+/* ── RESPONSIVIDADE ── */
+@media (max-width: 480px) {
+  #a11y-toggle-btn {
+    bottom: 20px;
+    left: 16px;
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+  }
+
+  #a11y-panel {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    bottom: 76px;
+  }
 }

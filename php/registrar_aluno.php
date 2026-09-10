@@ -1,5 +1,7 @@
 <?php
+
 include("config.php");
+
 require_once("csrf.php");
 require_once("auth_check.php");
 
@@ -27,37 +29,144 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 $dataNascimento = DateTime::createFromFormat('!Y-m-d', $nascimento);
-if (!$dataNascimento || $dataNascimento->format('Y-m-d') !== $nascimento || $dataNascimento > new DateTime('today')) {
+
+if (
+    !$dataNascimento ||
+    $dataNascimento->format('Y-m-d') !== $nascimento ||
+    $dataNascimento > new DateTime('today')
+) {
     header("Location: registro.php?status=erro&msg=data_nascimento_invalida");
     exit();
 }
 
 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
-$faixa_id_sql = ($faixa_id === "") ? null : (int) $faixa_id;
 
-$stmt = mysqli_prepare($conn, "SELECT id FROM usuarios WHERE email = ?");
+/*
+ * Verifica se o e-mail já existe
+ */
+$stmt = mysqli_prepare(
+    $conn,
+    "SELECT id FROM usuarios WHERE email = ?"
+);
+
+if (!$stmt) {
+    error_log("Erro ao preparar SELECT: " . mysqli_error($conn));
+    header("Location: registro.php?status=erro&msg=db_error");
+    exit();
+}
+
 mysqli_stmt_bind_param($stmt, "s", $email);
-mysqli_stmt_execute($stmt);
+
+if (!mysqli_stmt_execute($stmt)) {
+    error_log("Erro ao executar SELECT: " . mysqli_stmt_error($stmt));
+    mysqli_stmt_close($stmt);
+
+    header("Location: registro.php?status=erro&msg=db_error");
+    exit();
+}
+
 $result = mysqli_stmt_get_result($stmt);
 
 if ($result && mysqli_num_rows($result) > 0) {
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
+
     header("Location: registro.php?status=erro&msg=email_cadastrado");
     exit();
 }
 
-$stmt_insert = mysqli_prepare($conn, "INSERT INTO usuarios (nome, email, senha_hash, nascimento, tipo, faixa_id) VALUES (?, ?, ?, ?, 'aluno', ?)");
-mysqli_stmt_bind_param($stmt_insert, "sssss", $nome, $email, $senha_hash, $nascimento, $faixa_id_sql);
+mysqli_stmt_close($stmt);
 
+/*
+ * Prepara INSERT
+ */
+if ($faixa_id === "") {
+
+    $stmt_insert = mysqli_prepare(
+        $conn,
+        "INSERT INTO usuarios
+        (nome, email, senha_hash, nascimento, tipo, faixa_id)
+        VALUES (?, ?, ?, ?, 'aluno', NULL)"
+    );
+
+    if (!$stmt_insert) {
+        error_log("Erro ao preparar INSERT: " . mysqli_error($conn));
+        mysqli_close($conn);
+
+        header("Location: registro.php?status=erro&msg=db_error");
+        exit();
+    }
+
+    mysqli_stmt_bind_param(
+        $stmt_insert,
+        "ssss",
+        $nome,
+        $email,
+        $senha_hash,
+        $nascimento
+    );
+
+} else {
+
+    $faixa_id_sql = (int) $faixa_id;
+
+    $stmt_insert = mysqli_prepare(
+        $conn,
+        "INSERT INTO usuarios
+        (nome, email, senha_hash, nascimento, tipo, faixa_id)
+        VALUES (?, ?, ?, ?, 'aluno', ?)"
+    );
+
+    if (!$stmt_insert) {
+        error_log("Erro ao preparar INSERT: " . mysqli_error($conn));
+        mysqli_close($conn);
+
+        header("Location: registro.php?status=erro&msg=db_error");
+        exit();
+    }
+
+    mysqli_stmt_bind_param(
+        $stmt_insert,
+        "ssssi",
+        $nome,
+        $email,
+        $senha_hash,
+        $nascimento,
+        $faixa_id_sql
+    );
+}
+
+/*
+ * Executa INSERT
+ */
 if (mysqli_stmt_execute($stmt_insert)) {
-    mysqli_close($conn);
-    // Registrar novo cadastro no log de atividades
+
     $novo_id = mysqli_insert_id($conn);
-    log_activity($conn, 'registro_aluno', "Novo aluno registrado: '{$nome}' (email: {$email})");
+
+    log_activity(
+        $conn,
+        'registro_aluno',
+        "Novo aluno registrado: '{$nome}' (ID: {$novo_id}, email: {$email})"
+    );
+
+    mysqli_stmt_close($stmt_insert);
+    mysqli_close($conn);
+
     header("Location: login.php?status=sucesso_registro");
     exit();
 }
 
+/*
+ * Erro no INSERT
+ */
+$erro = mysqli_stmt_error($stmt_insert);
+
+error_log("Erro ao inserir usuário: " . $erro);
+
+mysqli_stmt_close($stmt_insert);
 mysqli_close($conn);
+
 header("Location: registro.php?status=erro&msg=db_error");
 exit();
+
 ?>

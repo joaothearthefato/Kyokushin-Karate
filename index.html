@@ -4,11 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oyama Hub | Karate Kyokushin</title>
+  <title>Oyama Hub | Karate Kyokushin Dojo</title>
   <link rel="icon" href="./img/kyokushinicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://vlibras.gov.br">
+  <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="Treine Karate Kyokushin e desenvolva força, disciplina e superação.">
+  <meta name="description" content="Oyama Hub — A plataforma definitiva para praticantes de Karate Kyokushin. Registre treinos, domine katas, explore técnicas e evolua rumo à Faixa Preta.">
   <script>
     if (localStorage.getItem('oyama-theme') === 'light' || localStorage.getItem('theme') === 'light') {
       document.documentElement.classList.add('light');
@@ -17,11 +21,16 @@
 </head>
 
 <body>
+  <!-- ── HEADER / NAVBAR ── -->
   <header>
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Navegação Principal">
 
       <div class="nav-left">
-        <img src="./img/kyokushinicon.png" class="logo" alt="Kyokushin Logo">
+        <a href="#home" class="nav-logo" aria-label="Ir ao início">
+          <img src="./img/kyokushinicon.png" class="logo" alt="Kyokushin Kanku Logo">
+          <span class="logo-text">OYAMA <span>HUB</span></span>
+        </a>
+
         <button id="theme-toggle" class="theme-btn" aria-label="Alternar tema">
           <span class="theme-icon" aria-hidden="true">☀️</span>
           <span class="theme-label">Light</span>
@@ -29,17 +38,19 @@
       </div>
 
       <div class="nav-links" id="navLinks">
-        <a href="#home">Home</a>
-        <a href="#about">Sobre</a>
-        <a href="#techniques">Técnicas</a>
-        <a href="#training">Equipamento</a>
-        <a href="#testimonials">Depoimentos</a>
-        <a href="#faixas">Faixas</a>
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">Sobre</a>
+        <a href="#techniques" class="nav-link">Técnicas</a>
+        <a href="#faixas" class="nav-link">Faixas</a>
+        <a href="#training" class="nav-link">Equipamento</a>
+        <a href="#dojokun" class="nav-link">Dojo Kun</a>
+        <a href="#testimonials" class="nav-link">Depoimentos</a>
       </div>
 
       <div class="nav-right">
-        <a href="./php/login.php" id="login">Login</a>
-        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+        <a href="./php/login.php" id="login" class="nav-btn-login">Entrar</a>
+        <a href="./php/registro.php" class="nav-btn-register">Registrar</a>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu de navegação" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -49,197 +60,594 @@
 
   <main>
 
-    <section id="home" class="hero">
-      <div class="hero-content">
+    <!-- ── HERO SECTION ── -->
+    <section id="home" class="hero-section">
+      <div class="hero-ambient-glow" aria-hidden="true"></div>
 
-        <h1>DOMINE O <br>KYOKUSHIN</h1>
+      <div class="hero-container container">
+        <div class="hero-content">
 
-        <p>O caminho da verdade. Disciplina, força e superação.</p>
+          <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            <span>DOJO DIGITAL KYOKUSHIN · ARTE DA VERDADE</span>
+          </div>
 
-        <div class="button-group">
-          <a href="./php/registro.php" class="btn-primary">Registrar</a>
-          <a href="https://www.youtube.com/watch?v=viLy-JlkTCw&pp=ygUdZG9jdW1lbnRhcmlvIGthcmF0ZSBreW9rdXNoaW4%3D"
-            class="btn-secondary" target="_blank" rel="noopener noreferrer">Saiba mais</a>
-        </div>
+          <h1 class="hero-title">
+            DOMINE A FORÇA DO<br>
+            <span class="text-accent">KYOKUSHIN</span>
+          </h1>
 
-      </div>
-    </section>
-
-
-    <section id="about" class="about container">
-
-      <h2 class="section-title">Sobre o Kyokushin</h2>
-
-      <div class="about-content">
-
-        <p>
-          Arte marcial full-contact criada por <strong>Masutatsu Oyama</strong>.
-          O Kyokushin desenvolve disciplina mental, resistência física e
-          combate real.
-        </p>
-
-        <div class="placeholder-image">
-          <img src="./img/oyama.jpg" alt="Treinamento rigoroso de Karate Kyokushin" loading="lazy">
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <section id="techniques" class="techniques container">
-
-      <h2 class="section-title">Técnicas</h2>
-
-      <div class="technique-grid">
-
-        <article class="technique-card">
-          <h3>Mae Geri</h3>
-          <p>Chute frontal rápido usado para manter distância e atingir o abdômen.</p>
-        </article>
-
-        <article class="technique-card">
-          <h3>Gedan Mawashi Geri</h3>
-          <p>Low kick na perna para enfraquecer a base e mobilidade do adversário.</p>
-        </article>
-
-        <article class="technique-card">
-          <h3>Gyaku Zuki</h3>
-          <p>Soco reverso forte, principal golpe de potência do karate.</p>
-        </article>
-
-        <article class="technique-card">
-          <h3>Mawashi Geri</h3>
-          <p>Chute circular usado para atingir costelas ou cabeça.</p>
-        </article>
-
-        <article class="technique-card">
-          <h3>Hiza Geri</h3>
-          <p>Joelhada de curta distância, muito forte no combate próximo.</p>
-        </article>
-
-        <article class="technique-card">
-          <h3>Tsuki</h3>
-          <p>Sequência de socos no corpo para pressionar e cansar o adversário.</p>
-        </article>
-
-        <article class="technique-card">
-          <h3>Sabaki</h3>
-          <p>Movimento de esquiva e ângulo para sair da linha do ataque e contra-atacar.</p>
-        </article>
-
-      </div>
-
-    </section>
-
-
-    <section id="training" class="training container">
-
-      <h2 class="section-title">Equipamento</h2>
-
-      <div class="training-grid">
-
-        <div class="training-card">
-          <h3>Karategi</h3>
-          <p>Um roupão longo em formato de "T", com mangas largas e retas, que envolve o corpo</p>
-          <img src="img/kimono-Photoroom.png" alt="Kimono branco padrão (Karategi) usado no Kyokushin" loading="lazy">
-        </div>
-
-        <div class="training-card">
-          <h3 id="faixa-title">Faixa</h3>
-          <p>
-            As faixas no Karate Kyokushin representam a evolução técnica, física e espiritual do praticante
-            <img src="img/faixakarate.png" alt="Faixas do Karate Kyokushin empilhadas" loading="lazy">
+          <p class="hero-subtitle">
+            O caminho do combate real e da superação diária. Registre seus treinos, aperfeiçoe katas milenares e construa sua jornada da Faixa Branca à Faixa Preta.
           </p>
+
+          <div class="hero-cta-group">
+            <a href="./php/registro.php" class="btn-primary hero-btn">
+              <span>Iniciar Jornada</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="https://www.youtube.com/watch?v=viLy-JlkTCw" class="btn-secondary hero-btn" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>Ver Documentário</span>
+            </a>
+          </div>
+
+          <!-- Mini KPIs no Hero -->
+          <div class="hero-stats">
+            <div class="hero-stat-item">
+              <span class="stat-number">100%</span>
+              <span class="stat-label">Full-Contact Real</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <span class="stat-number">15+</span>
+              <span class="stat-label">Katas Catalogados</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <span class="stat-number">11 Kyu</span>
+              <span class="stat-label">Graduações Guiadas</span>
+            </div>
+          </div>
+
         </div>
+
+        <!-- Hero Visual / Card Interativo -->
+        <div class="hero-visual">
+          <div class="hero-card-frame">
+            <img src="./img/hero_karateka.jpg" alt="Mestre de Karate Kyokushin em postura de guarda no Dojo" class="hero-karateka-img">
+            <div class="hero-card-overlay"></div>
+
+            <!-- Chips Flutuantes Interativos -->
+            <div class="floating-chip chip-top">
+              <div class="chip-icon">🥋</div>
+              <div class="chip-text">
+                <strong>Faixa Preta 1º Dan</strong>
+                <span>Yudansha · Mente Firme</span>
+              </div>
+            </div>
+
+            <div class="floating-chip chip-bottom">
+              <div class="chip-icon">🔥</div>
+              <div class="chip-text">
+                <strong>Espírito do 100-Man Kumite</strong>
+                <span>Perseverança Além dos Limites</span>
+              </div>
+            </div>
+
+            <div class="hero-kanji-watermark" aria-hidden="true">極真</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ── SEÇÃO SOBRE (BENTO GRID) ── -->
+    <section id="about" class="about-section container">
+
+      <div class="section-header-center">
+        <span class="section-eyebrow">HISTÓRIA & FILOSOFIA</span>
+        <h2 class="section-title">O Legado de Masutatsu Oyama</h2>
+        <p class="section-desc">Criado em 1953, o Kyokushin ("A Associação da Verdade Suprema") transformou as artes marciais com seu combate sem luvas, rigor inabalável e respeito profundo.</p>
+      </div>
+
+      <div class="about-bento-grid">
+
+        <!-- Card Mestre Oyama -->
+        <div class="bento-card bento-founder">
+          <div class="bento-founder-media">
+            <img src="./img/oyama.jpg" alt="Sosai Masutatsu Oyama, fundador do Kyokushin Karate" loading="lazy">
+          </div>
+          <div class="bento-founder-info">
+            <span class="tag-gold">SOSAI · FUNDADOR</span>
+            <h3>Masutatsu Oyama (1923–1994)</h3>
+            <blockquote class="founder-quote">
+              "Mil dias de treino para forjar um guerreiro; dez mil dias para polir a maestria."
+            </blockquote>
+            <p>
+              Oyama testou os limites humanos ao isolar-se nas montanhas de Chiba e enfrentar touros com as mãos desnudas, provando que o karate deve ser funcional, resistente e leal ao combate real.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 Pilares -->
+        <div class="bento-card bento-pillar">
+          <div class="pillar-icon">👊</div>
+          <span class="pillar-tag">PILAR 01</span>
+          <h4>Kihon (基本)</h4>
+          <p>Técnicas fundamentais repetidas à exaustão para que o corpo reaja instintivamente com precisão milimétrica e força devastadora.</p>
+        </div>
+
+        <div class="bento-card bento-pillar">
+          <div class="pillar-icon">🥋</div>
+          <span class="pillar-tag">PILAR 02</span>
+          <h4>Kata (型)</h4>
+          <p>Formas codificadas de combate ancestral. Uma meditação dinâmica onde respiração (Ibuki), foco e movimentação se fundem em harmonia.</p>
+        </div>
+
+        <div class="bento-card bento-pillar">
+          <div class="pillar-icon">⚡</div>
+          <span class="pillar-tag">PILAR 03</span>
+          <h4>Kumite (組手)</h4>
+          <p>O teste de fogo do Kyokushin. Luta com contato pleno sem luvas, forjando resiliência física e um espírito inquebrável diante da dor.</p>
+        </div>
+
+      </div>
 
     </section>
 
 
-    <section id="testimonials" class="testimonials container">
+    <!-- ── SEÇÃO TÉCNICAS INTERATIVAS ── -->
+    <section id="techniques" class="techniques-section container">
 
-      <h2 class="section-title">Depoimentos</h2>
+      <div class="section-header-center">
+        <span class="section-eyebrow">ARSENAL DO KYOKUSHIN</span>
+        <h2 class="section-title">Técnicas de Alta Precisão</h2>
+        <p class="section-desc">Explore os golpes essenciais do estilo. Filtre por categoria e descubra a aplicação prática de cada movimento.</p>
+      </div>
+
+      <!-- Filtros de Técnicas -->
+      <div class="tech-filter-bar" role="tablist" aria-label="Filtro de categorias de técnicas">
+        <button class="tech-filter-btn active" data-category="todos" role="tab" aria-selected="true">Todas</button>
+        <button class="tech-filter-btn" data-category="chute" role="tab" aria-selected="false">Chutes (Geri)</button>
+        <button class="tech-filter-btn" data-category="soco" role="tab" aria-selected="false">Socos (Tsuki)</button>
+        <button class="tech-filter-btn" data-category="joelho-defesa" role="tab" aria-selected="false">Joelhos & Defesas</button>
+        <button class="tech-filter-btn" data-category="esquiva" role="tab" aria-selected="false">Esquivas (Sabaki)</button>
+      </div>
+
+      <!-- Grid de Técnicas -->
+      <div class="technique-grid" id="techGrid">
+
+        <article class="technique-card" data-cat="chute">
+          <div class="tech-card-header">
+            <span class="tech-kanji">前蹴り</span>
+            <span class="tech-zone chudan">Chudan</span>
+          </div>
+          <h3 class="tech-title">Mae Geri</h3>
+          <span class="tech-subtitle">Chute Frontal Penetrante</span>
+          <p class="tech-desc">Golpe frontal rápido com a ponta dos metatarsos (Chusoku) projetado contra o plexo ou abdômen do adversário.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Eleve o joelho alto antes de estender a perna para disfarçar o ângulo de ataque.</p>
+          </div>
+        </article>
+
+        <article class="technique-card" data-cat="chute">
+          <div class="tech-card-header">
+            <span class="tech-kanji">下段回蹴</span>
+            <span class="tech-zone gedan">Gedan</span>
+          </div>
+          <h3 class="tech-title">Gedan Mawashi Geri</h3>
+          <span class="tech-subtitle">O Lendário Low Kick</span>
+          <p class="tech-desc">Chute circular desferido na coxa com a tíbia (Sune). A marca registrada do Kyokushin para minar a base e encerrar combates.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Gire o quadril e o pé de apoio em 90° para transferir toda a massa corporal no impacto.</p>
+          </div>
+        </article>
+
+        <article class="technique-card" data-cat="soco">
+          <div class="tech-card-header">
+            <span class="tech-kanji">逆突き</span>
+            <span class="tech-zone chudan">Chudan</span>
+          </div>
+          <h3 class="tech-title">Gyaku Zuki</h3>
+          <span class="tech-subtitle">Soco Reverso com Quadril</span>
+          <p class="tech-desc">Soco com o punho oposto à perna avançada. Transmite a força do solo passando pela rotação de quadril até os nós dos dedos.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Mantenha o calcanhar traseiro firme no chão no instante do impacto para máxima solidez.</p>
+          </div>
+        </article>
+
+        <article class="technique-card" data-cat="chute">
+          <div class="tech-card-header">
+            <span class="tech-kanji">上段回蹴</span>
+            <span class="tech-zone jodan">Jodan</span>
+          </div>
+          <h3 class="tech-title">Mawashi Geri</h3>
+          <span class="tech-subtitle">Chute Circular na Cabeça</span>
+          <p class="tech-desc">Chute de alta flexibilidade e velocidade que contorna a guarda do adversário para atingir o pescoço ou têmpora com o peito do pé.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Prepare o chute na linha média e mude a trajetória no último segundo rumo à cabeça.</p>
+          </div>
+        </article>
+
+        <article class="technique-card" data-cat="joelho-defesa">
+          <div class="tech-card-header">
+            <span class="tech-kanji">膝蹴り</span>
+            <span class="tech-zone chudan">Chudan / Jodan</span>
+          </div>
+          <h3 class="tech-title">Hiza Geri</h3>
+          <span class="tech-subtitle">Joelhada de Curta Distância</span>
+          <p class="tech-desc">Arma devastadora no clinch e na trocação cerrada. Capaz de fraturar costelas ou nocautear se combinada com puxão de cabeça.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Aponte a ponta dos dedos do pé para baixo para tensionar e endurecer a patela.</p>
+          </div>
+        </article>
+
+        <article class="technique-card" data-cat="soco">
+          <div class="tech-card-header">
+            <span class="tech-kanji">突き連打</span>
+            <span class="tech-zone chudan">Chudan</span>
+          </div>
+          <h3 class="tech-title">Seiken Tsuki</h3>
+          <span class="tech-subtitle">Sequência de Punhos Diretos</span>
+          <p class="tech-desc">Bombardeio contínuo de socos curtos e retos no tronco do oponente, visando cansar o pulmão e quebrar a postura defensiva.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Respire ritmicamente em cada golpe e mantenha o cotovelo apontado para o solo.</p>
+          </div>
+        </article>
+
+        <article class="technique-card" data-cat="esquiva">
+          <div class="tech-card-header">
+            <span class="tech-kanji">体捌き</span>
+            <span class="tech-zone neutro">Evasão</span>
+          </div>
+          <h3 class="tech-title">Sabaki (Tai Sabaki)</h3>
+          <span class="tech-subtitle">Esquiva Circular e Ângulo</span>
+          <p class="tech-desc">Movimentação fluida para sair da linha de ataque do adversário e entrar no seu ponto cego, permitindo contra-ataques indefensáveis.</p>
+          <div class="tech-tip">
+            <span class="tip-label">💡 Dica do Sensei:</span>
+            <p>Não recue em linha reta; dê um passo em diagonal para absorver e redirecionar a pressão.</p>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ── SEÇÃO EXPLORADOR DE FAIXAS INTERATIVO ── -->
+    <section id="faixas" class="faixas-section container">
+
+      <div class="section-header-center">
+        <span class="section-eyebrow">CAMINHO DA GRADUAÇÃO</span>
+        <h2 class="section-title">Explorador Interativo de Faixas</h2>
+        <p class="section-desc">Cada cor de faixa no Kyokushin representa uma etapa espiritual e técnica de transformação. Clique em uma faixa para ver seus segredos.</p>
+      </div>
+
+      <!-- Seletor de Faixas (Tabs) -->
+      <div class="belt-selector-nav" id="beltNav">
+        <button class="belt-nav-item active" data-belt="branca">
+          <span class="belt-indicator belt-branca"></span>
+          <span>Branca</span>
+        </button>
+        <button class="belt-nav-item" data-belt="laranja">
+          <span class="belt-indicator belt-laranja"></span>
+          <span>Laranja</span>
+        </button>
+        <button class="belt-nav-item" data-belt="azul">
+          <span class="belt-indicator belt-azul"></span>
+          <span>Azul</span>
+        </button>
+        <button class="belt-nav-item" data-belt="amarela">
+          <span class="belt-indicator belt-amarela"></span>
+          <span>Amarela</span>
+        </button>
+        <button class="belt-nav-item" data-belt="verde">
+          <span class="belt-indicator belt-verde"></span>
+          <span>Verde</span>
+        </button>
+        <button class="belt-nav-item" data-belt="marrom">
+          <span class="belt-indicator belt-marrom"></span>
+          <span>Marrom</span>
+        </button>
+        <button class="belt-nav-item" data-belt="preta">
+          <span class="belt-indicator belt-preta"></span>
+          <span>Preta</span>
+        </button>
+      </div>
+
+      <!-- Display Interativo da Faixa Ativa -->
+      <div class="belt-showcase-card" id="beltShowcase">
+
+        <div class="belt-visual-col">
+          <div class="belt-graphic-wrapper">
+            <div class="belt-strap belt-branca" id="beltGraphic">
+              <div class="belt-tip-stitch"></div>
+              <div class="belt-kanji-embroidery">極真会館</div>
+              <div class="belt-stripes-container" id="beltStripes"></div>
+            </div>
+          </div>
+          <div class="belt-symbolic-element" id="beltElement">Elemento: Pureza & Potencial</div>
+        </div>
+
+        <div class="belt-info-col">
+          <div class="belt-level-header">
+            <span class="belt-badge-kyu" id="beltKyu">11º Kyu (Mu-Kyu)</span>
+            <h3 class="belt-name-title" id="beltTitle">Faixa Branca</h3>
+          </div>
+
+          <p class="belt-philosophical-desc" id="beltPhilosophy">
+            A pureza e o início da busca. A folha em branco onde tudo será gravado. O praticante aprende a disciplina, a etiqueta do dojo e a postura de respeito (Rei).
+          </p>
+
+          <div class="belt-specs-grid">
+            <div class="belt-spec-item">
+              <span class="spec-label">Katas Principais</span>
+              <strong id="beltKatas">Taikyoku Sono Ichi, Taikyoku Sono Ni</strong>
+            </div>
+            <div class="belt-spec-item">
+              <span class="spec-label">Tempo Mínimo</span>
+              <strong id="beltTime">3 a 6 meses de treino constante</strong>
+            </div>
+            <div class="belt-spec-item">
+              <span class="spec-label">Foco Técnico</span>
+              <strong id="beltFocus">Posturas básicas (Zenkutsu Dachi), Seiken Tsuki, Mae Geri</strong>
+            </div>
+            <div class="belt-spec-item">
+              <span class="spec-label">Exigência Física</span>
+              <strong id="beltConditioning">Flexibilidade de base, 20 flexões, 25 abdominais</strong>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ── SEÇÃO EQUIPAMENTO OFICIAL ── -->
+    <section id="training" class="gear-section container">
+
+      <div class="section-header-center">
+        <span class="section-eyebrow">INDUMENTÁRIA & PROTEÇÃO</span>
+        <h2 class="section-title">O Equipamento do Karateka</h2>
+        <p class="section-desc">No Kyokushin, o kimono e as proteções são extensões da disciplina do guerreiro. Conheça as especificações oficiais.</p>
+      </div>
+
+      <div class="gear-grid">
+
+        <div class="gear-card">
+          <div class="gear-media">
+            <img src="img/kimono-Photoroom.png" alt="Karategi de lona pesada oficial do Kyokushin" loading="lazy">
+          </div>
+          <div class="gear-content">
+            <span class="gear-tag">VESTIMENTA TRADICIONAL</span>
+            <h3>Karategi (空手着)</h3>
+            <p>Feito de algodão canvas pesado (12oz a 14oz) para suportar agarramentos, tração e suor intenso. Traz o bordado azul do Kyokushin no peito esquerdo.</p>
+            <ul class="gear-features">
+              <li>✓ Mangas 3/4 para liberdade nos socos</li>
+              <li>✓ Costuras reforçadas em ponto triplo</li>
+              <li>✓ Tecido que ressoa o estalo (kime) do golpe</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="gear-card">
+          <div class="gear-media">
+            <img src="img/faixakarate.png" alt="Faixa Obi do Karate Kyokushin" loading="lazy">
+          </div>
+          <div class="gear-content">
+            <span class="gear-tag">GRADUAÇÃO & HONRA</span>
+            <h3>Obi (帯 - Faixa)</h3>
+            <p>Mais do que segurar o kimono, a faixa acumula o suor, a poeira e o espírito das batalhas. Tradicionalmente nunca é lavada, simbolizando o esforço contínuo.</p>
+            <ul class="gear-features">
+              <li>✓ Bordado em fios dourados com o nome do aluno</li>
+              <li>✓ Sistema de pontas de graduação por Kyu</li>
+              <li>✓ Amarração firme que apoia a respiração tanden</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="gear-card gear-card-protection">
+          <div class="gear-protection-graphic">
+            <div class="shield-icon">🛡️</div>
+          </div>
+          <div class="gear-content">
+            <span class="gear-tag">SEGURANÇA NO DOJO</span>
+            <h3>Protetores Oficiais</h3>
+            <p>Protetores acolchoados para canela/peito do pé (Sune Ate) e coquilha genital, garantindo treinos de combate potentes sem lesões desnecessárias.</p>
+            <ul class="gear-features">
+              <li>✓ Homologados pela International Karate Organization</li>
+              <li>✓ Espuma de alta densidade anti-impacto</li>
+              <li>✓ Obrigatórios nos exames de faixa e kumite</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ── SEÇÃO DOJO KUN (INTERATIVO) ── -->
+    <section id="dojokun" class="dojokun-section container">
+
+      <div class="section-header-center">
+        <span class="section-eyebrow">CÓDIGO MORAL</span>
+        <h2 class="section-title">O Dojo Kun do Kyokushin</h2>
+        <p class="section-desc">Escrito por Masutatsu Oyama com o apoio do mestre Eiji Yoshikawa, estes são os sete juramentos recitados ao término de cada treino.</p>
+      </div>
+
+      <div class="dojokun-layout">
+
+        <div class="dojokun-list" id="dojoKunList">
+          <button class="dojokun-item active" data-precept="1">
+            <span class="precept-num">01</span>
+            <span class="precept-title">Treinar mente e corpo com firmeza inabalável</span>
+          </button>
+          <button class="dojokun-item" data-precept="2">
+            <span class="precept-num">02</span>
+            <span class="precept-title">Buscar o verdadeiro significado da arte marcial</span>
+          </button>
+          <button class="dojokun-item" data-precept="3">
+            <span class="precept-num">03</span>
+            <span class="precept-title">Cultivar perseverança com vigor e lealdade</span>
+          </button>
+          <button class="dojokun-item" data-precept="4">
+            <span class="precept-num">04</span>
+            <span class="precept-title">Respeitar a cortesia e repudiar a violência</span>
+          </button>
+          <button class="dojokun-item" data-precept="5">
+            <span class="precept-num">05</span>
+            <span class="precept-title">Seguir os ensinamentos e nunca esquecer a humildade</span>
+          </button>
+          <button class="dojokun-item" data-precept="6">
+            <span class="precept-num">06</span>
+            <span class="precept-title">Buscar sabedoria e força sem desejar o supérfluo</span>
+          </button>
+          <button class="dojokun-item" data-precept="7">
+            <span class="precept-num">07</span>
+            <span class="precept-title">Dedicar a vida ao caminho sagrado do Kyokushin</span>
+          </button>
+        </div>
+
+        <div class="dojokun-card-display">
+          <div class="dojokun-card-inner" id="dojoKunDetail">
+            <span class="dojokun-badge" id="dkBadge">PRIMEIRO PRECEITO · 一、我々は心身を錬磨し</span>
+            <h3 class="dojokun-quote" id="dkQuote">"Treinaremos firmemente nosso coração e nosso corpo para obter um espírito firme e inabalável."</h3>
+            <p class="dojokun-explanation" id="dkExplanation">
+              O karateka do Kyokushin não treina apenas músculos e ossos. A repetição exaustiva visa forjar a resiliência psíquica que não se dobra diante do cansaço, do medo ou do sofrimento.
+            </p>
+            <div class="dojokun-kanji-deco" id="dkKanji">道場訓</div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ── SEÇÃO DEPOIMENTOS ── -->
+    <section id="testimonials" class="testimonials-section container">
+
+      <div class="section-header-center">
+        <span class="section-eyebrow">VOZES DO DOJO</span>
+        <h2 class="section-title">Transformações Reais</h2>
+        <p class="section-desc">A experiência vivida por atletas e alunos que encontraram no Oyama Hub sua disciplina diária.</p>
+      </div>
 
       <div class="testimonial-grid">
 
         <blockquote class="testimonial-card">
-          <p>"Mudou minha vida."</p>
-          <cite>João</cite>
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"O Kyokushin me ensinou a encarar o estresse da vida real sem recuar um centímetro. O Oyama Hub facilitou organizar cada treino e evolução."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">JP</div>
+            <div class="testi-meta">
+              <strong>João Pedro</strong>
+              <span>Faixa Verde · 4 anos de treino</span>
+            </div>
+          </div>
         </blockquote>
 
         <blockquote class="testimonial-card">
-          <p>"Treino duro e recompensador."</p>
-          <cite>Maria</cite>
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Achei que o contato pleno seria violento demais, mas descobri o maior respeito e acolhimento que já vi em uma arte marcial. Sou outra pessoa hoje."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">MC</div>
+            <div class="testi-meta">
+              <strong>Mariana Costa</strong>
+              <span>Faixa Azul · Campeã Regional</span>
+            </div>
+          </div>
         </blockquote>
 
         <blockquote class="testimonial-card">
-          <p>"Comunidade incrível."</p>
-          <cite>Pedro</cite>
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Acompanhar os katas e tempos de kumite no hub me ajudou a passar no exame de Shodan (Faixa Preta). Essencial para qualquer karateka sério."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">TS</div>
+            <div class="testi-meta">
+              <strong>Thomas Silva</strong>
+              <span>Faixa Preta 1º Dan · Senpai</span>
+            </div>
+          </div>
         </blockquote>
 
       </div>
 
     </section>
-    <section id="faixas" class="faixas container">
-      <h2 class="section-title">Faixa</h2>
-      <div class="faixa-grid">
-        <div class="faixacss">
 
-          <article class="faixa-card" id="faixabranca">
-            <p>Faixa Branca</p>
-            <cite>11° Kyu</cite>
-          </article>
 
-          <article class="faixa-card" id="faixalaranja">
-            <p>Faixa Laranja</p>
-            <cite>10° e 9° Kyu</cite>
-          </article>
-
-          <article class="faixa-card" id="faixaazul">
-            <p>Faixa Azul</p>
-            <cite>8° e 7° Kyu</cite>
-          </article>
-
-          <article class="faixa-card" id="faixaamarela">
-            <p>Faixa Amarela</p>
-            <cite>6° e 5° Kyu</cite>
-          </article>
-
-          <article class="faixa-card" id="faixaverde">
-            <p>Faixa Verde</p>
-            <cite>4° e 3° Kyu</cite>
-          </article>
-
-          <article class="faixa-card" id="faixamarrom">
-            <p>Faixa Marrom</p>
-            <cite>2° Kyu</cite>
-          </article>
-
-          <article class="faixa-card" id="faixamarrompontapreta">
-            <p>Faixa Marrom com Ponta Preta</p>
-            <cite>1° Kyu</cite>
-          </article>
-
-          <article class="faixa-card" id="faixapreta">
-            <p>Faixa Preta</p>
-            <cite>Senpai</cite>
-          </article>
+    <!-- ── SEÇÃO CTA FINAL ── -->
+    <section class="cta-banner-section container">
+      <div class="cta-banner-card">
+        <div class="cta-content">
+          <span class="tag-gold">SEJA PARTE DO LEGADO</span>
+          <h2>Pronto para trilhar o caminho da verdade?</h2>
+          <p>Crie sua conta no Oyama Hub hoje mesmo. Gerencie seu histórico de treinos, domine os katas oficiais e alcance sua próxima graduação.</p>
+          <div class="cta-btn-group">
+            <a href="./php/registro.php" class="btn-primary">Criar Conta Gratuita</a>
+            <a href="./php/login.php" class="btn-secondary">Acessar Meu Painel</a>
+          </div>
         </div>
+        <div class="cta-symbol" aria-hidden="true">OSU</div>
       </div>
     </section>
 
   </main>
+
+  <!-- ── FOOTER ── -->
   <footer>
+    <div class="footer-inner container">
 
-    <p>© 2026 Oyama Hub</p>
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="./img/kyokushinicon.png" alt="Kyokushin Logo" width="30" height="30">
+          <span>OYAMA <strong>HUB</strong></span>
+        </div>
+        <p>A plataforma digital definitiva de treinamento e gestão para praticantes do Karate Kyokushin.</p>
+      </div>
 
-    <div class="footer-links">
-      <a href="#">Privacy</a>
-      <a href="#">Contato</a>
+      <div class="footer-nav">
+        <h4>Navegação</h4>
+        <a href="#home">Home</a>
+        <a href="#about">História & Mas Oyama</a>
+        <a href="#techniques">Técnicas</a>
+        <a href="#faixas">Sistema de Faixas</a>
+        <a href="#dojokun">Dojo Kun</a>
+      </div>
+
+      <div class="footer-nav">
+        <h4>Acesso Rápido</h4>
+        <a href="./php/login.php">Entrar no Dashboard</a>
+        <a href="./php/registro.php">Cadastre-se</a>
+        <a href="https://www.youtube.com/watch?v=viLy-JlkTCw" target="_blank" rel="noopener noreferrer">Vídeo Histórico</a>
+      </div>
+
     </div>
 
+    <div class="footer-bottom container">
+      <p>© 2026 Oyama Hub · Kyokushin Kaikan · Todos os direitos reservados. <em>OSU!</em></p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacidade</a>
+        <span>·</span>
+        <a href="#">Termos de Uso</a>
+        <span>·</span>
+        <a href="#home">Voltar ao topo ↑</a>
+      </div>
+    </div>
   </footer>
 
+  <!-- VLibras Widget A11y -->
   <div vw class="enabled">
     <div vw-access-button class="active"></div>
     <div vw-plugin-wrapper>
@@ -251,36 +659,10 @@
     new window.VLibras.Widget('https://vlibras.gov.br/app');
   </script>
 
-  <!-- Script A11Y Global -->
+  <!-- Scripts -->
   <script src="./js/acessibilidade.js" defer></script>
-  <script src="js/script.js"></script>
-  <script src="js/theme.js" defer></script>
-  <script>
-    // Hamburger menu for landing page
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const navLinks = document.getElementById('navLinks');
-    if (hamburgerBtn && navLinks) {
-      hamburgerBtn.addEventListener('click', () => {
-        const isOpen = navLinks.classList.toggle('nav-open');
-        hamburgerBtn.classList.toggle('is-open', isOpen);
-        hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
-      });
-      navLinks.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', () => {
-          navLinks.classList.remove('nav-open');
-          hamburgerBtn.classList.remove('is-open');
-          hamburgerBtn.setAttribute('aria-expanded', 'false');
-        });
-      });
-      document.addEventListener('click', e => {
-        if (!hamburgerBtn.contains(e.target) && !navLinks.contains(e.target)) {
-          navLinks.classList.remove('nav-open');
-          hamburgerBtn.classList.remove('is-open');
-          hamburgerBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
-    }
-  </script>
+  <script src="./js/theme.js" defer></script>
+  <script src="./js/landing.js"></script>
 </body>
 
 </html>
