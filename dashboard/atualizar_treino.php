@@ -43,12 +43,12 @@ if (!$result_check || mysqli_num_rows($result_check) === 0) {
 // Validações de data e duração
 $data_atual = date('Y-m-d');
 if ($data_treino > $data_atual) {
-    header("Location: editar_treino.php?id=$treino_id&erro=data_futura");
+    header("Location: treinos.php?erro=data_futura");
     exit();
 }
 
 if (empty($data_treino) || $duracao_min < 5 || empty($observacoes)) {
-    header("Location: editar_treino.php?id=$treino_id&erro=campos_obrigatorios");
+    header("Location: treinos.php?erro=campos_obrigatorios");
     exit();
 }
 
@@ -58,7 +58,7 @@ mysqli_stmt_bind_param($stmt_update, "sisii", $data_treino, $duracao_min, $obser
 
 if (!mysqli_stmt_execute($stmt_update)) {
     error_log("Erro ao atualizar treino: " . mysqli_error($conn));
-    header("Location: editar_treino.php?id=$treino_id&erro=banco_dados");
+    header("Location: treinos.php?erro=banco_dados");
     exit();
 }
 

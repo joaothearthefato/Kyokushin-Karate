@@ -111,17 +111,6 @@ if ($result) {
 <!-- ── Navbar ── -->
 <?php include '../includes/navbar.php'; ?>
 
- <div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-      <div class="vw-plugin-top-wrapper"></div>
-    </div>
-  </div>
-  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-  <script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-  </script>
-
 <!-- ── Hero ── -->
 <header class="hero">
   <div class="hero-tag">基本 · Fundamentos</div>
@@ -308,13 +297,25 @@ function toggleConcluidoKihon(btn) {
         btn.textContent = '✓ Dominado';
         btn.classList.add('concluido');
         btn.closest('.tech-card').classList.add('card-dominado');
+        if (window.AppModal) {
+          AppModal.toast({ message: 'Kihon dominado com sucesso! OSU!', type: 'success' });
+        }
       } else {
         btn.textContent = 'Marcar como Dominado';
         btn.classList.remove('concluido');
         btn.closest('.tech-card').classList.remove('card-dominado');
+        if (window.AppModal) {
+          AppModal.toast({ message: 'Status do Kihon desmarcado.', type: 'info' });
+        }
       }
     })
-    .catch(() => alert('Erro ao atualizar progresso.'));
+    .catch(() => {
+      if (window.AppModal) {
+        AppModal.alert({ title: 'Aviso', message: 'Erro ao atualizar o progresso do kihon.', type: 'error' });
+      } else {
+        alert('Erro ao atualizar progresso.');
+      }
+    });
 }
 
 /* ── Scroll-to-top ──────────────────────────────────── */

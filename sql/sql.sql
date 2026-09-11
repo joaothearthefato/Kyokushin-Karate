@@ -180,217 +180,266 @@ INSERT IGNORE INTO faixas (nome, ordem) VALUES
 ('Marrom com Ponta Preta (1º Kyu)', 7),
 ('Preta (1º Dan)',                  8);
 
--- Categorias de Kihon
-INSERT IGNORE INTO kihon_categorias (slug, nome, kanji, cor, numero) VALUES
-('tsuki', 'Socos',           '突き · Tsuki', '#c0392b', 1),
-('geri',  'Chutes',          '蹴り · Geri',  '#d4af37', 2),
-('uke',   'Bloqueios',       '受け · Uke',   '#2980b9', 3),
-('dachi', 'Posições',        '立ち · Dachi', '#27ae60', 4),
-('uchi',  'Golpes Especiais','打ち · Uchi',  '#8e44ad', 5);
 
--- ── TSUKI ──────────────────────────────────────────────────────
-INSERT IGNORE INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
-(1, 'Soco Direto',        'Seiken Tsuki', '正拳',   'Soco básico com os dois primeiros nós dos dedos. O punho gira no final do movimento para potencializar o impacto. Base de todos os socos do Kyokushin.',                                                          'https://www.youtube.com/watch?v=C88wANMHb0Q&pp=ygUVc2Vpa2VuIHRzdWtpIHR1dG9yaWFs',  'iniciante',     1),
-(1, 'Soco Reverso',       'Gyaku Tsuki',  '逆突き',  'Soco com a mão oposta à perna da frente. Usa a rotação completa do quadril — o golpe de maior potência no karate. Muito usado em kumite.',                                                                       'https://www.youtube.com/watch?v=DBzOc2_ETEA&pp=ygULZ3lha3UgdHN1a2nSBwkJ2goBhyohjO8%3D',   'iniciante',     2),
-(1, 'Soco com Avanço',    'Oi Tsuki',     '追い突き', 'Soco executado enquanto se avança um passo. A perna da frente lidera o movimento e o soco é desferido com a mão do mesmo lado.',                                                                                'https://www.youtube.com/watch?v=43iXcMfl5aE&pp=ygUIb2kgdHN1a2k%3D',      'iniciante',     3),
-(1, 'Soco Alto',          'Jodan Tsuki',  '上段突き', 'Soco direcionado à cabeça/queixo do adversário. No Kyokushin full-contact, socos à cabeça são proibidos no kumite — mas o kihon os pratica para desenvolver controle de nível.',                               'https://www.youtube.com/watch?v=NZEkDYGsgJY&pp=ygUSSk9EQU4gVFNVS0kga2FyYXRl',   'iniciante',     4),
-(1, 'Soco Médio',         'Chudan Tsuki', '中段突き', 'Soco ao nível do solar plexus ou costelas. É o alvo principal no kumite do Kyokushin, onde socos ao corpo são permitidos e muito efetivos.',                                                                    'https://www.youtube.com/watch?v=C88wANMHb0Q&pp=ygUTY2h1ZGFuIFRTVUtJIGthcmF0ZQ%3D%3D',  'iniciante',     5),
-(1, 'Socos em Sequência', 'Ren Tsuki',    '連突き',  'Combinação rápida de socos alternados — geralmente dois ou três. Treina a velocidade de recuperação do punho e a manutenção da posição do corpo durante combinações.',                                            'https://www.youtube.com/watch?v=XddFZONffYs&pp=ygUQcmVuIFRTVUtJIGthcmF0ZQ%3D%3D',     'intermediario', 6);
+-- ═══════════════════════════════════════════════════════════════
+--  KIHONS
+-- ═══════════════════════════════════════════════════════════════
 
--- ── GERI ───────────────────────────────────────────────────────
-INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
-(2, 'Chute Frontal',    'Mae Geri',          '前蹴り',   'Chute em linha reta para frente com a base da planta do pé (koshi). Usado para manter distância e atingir o abdômen. A joelho sobe antes de estender a perna.',                                             'http://youtube.com/watch?v=hYChPGOfzHU',       'iniciante',     1),
-(2, 'Chute Circular',   'Mawashi Geri',      '回し蹴り',  'Chute em arco horizontal com o peito do pé ou canela. Usado para atingir as costelas lateralmente. No Kyokushin a versão jodan é um dos golpes de maior pontuação.',                                        'http://youtube.com/watch?v=hYChPGOfzHU',   'iniciante',     2),
-(2, 'Low Kick',         'Gedan Mawashi Geri','下段回し',  'Chute circular baixo direcionado à coxa ou panturrilha do adversário com a canela. Muito utilizado no Kyokushin para desgastar e desequilibrar. Golpe de alta frequência em competição.',                   'https://www.youtube.com/watch?v=IDOvfrQwBcQ&pp=ygUjZ2VkYW4gbWF3YXNoaSBnZXJpIHR1dG9yaWFsIEtPIERPSk8%3D',     'iniciante',     3),
-(2, 'Chute de Costas',  'Ushiro Geri',       '後ろ蹴り',  'Chute para trás com o calcanhar, executado após girar o quadril. Extremamente poderoso pela linha reta e peso corporal envolvido. Requer boa consciência espacial.',                                        'https://www.youtube.com/watch?v=JcEJXgudhmE',    'intermediario', 4),
-(2, 'Joelhada',         'Hiza Geri',         '膝蹴り',   'Ataque com o joelho ao corpo do adversário em distância curta. Muito efetivo no clinch. A mão puxa o adversário para baixo enquanto o joelho sobe para o abdômen.',                                         'https://www.youtube.com/watch?v=LKfVBzQg9eQ',      'iniciante',     5),
-(2, 'Chute Voador',     'Tobi Geri',         '飛び蹴り',  'Chute executado no ar após um salto. Combina potência e alcance inesperado. Treinado para desenvolver explosão muscular e coordenação. Exige grande habilidade técnica.',                                   'https://www.youtube.com/watch?v=tUFvvza3HWY&pp=ugMICgJwdBABGAHKBRJ0b2JpIGdlcmkgdHV0b3JpYWw%3D',      'avancado',      6),
-(2, 'Chute Lateral',    'Yoko Geri',         '横蹴り',   'Chute em linha reta para o lado com o lado do pé (sokuto). O quadril abre completamente e o corpo inclina. Eficiente para criar ângulo e quebrar a guarda lateral.',                                         'https://www.youtube.com/watch?v=cHZ1P3h8Xg4',      'intermediario', 7);
+INSERT INTO kihons
+(categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem)
+VALUES
+(1, 'Soco médio', 'Seiken Chudan Tsuki', 'せいけんちゅうだんづき',
+ 'Soco direto direcionado à região média do corpo.',
+ 'https://www.youtube.com/watch?v=JcEJXgudhmE', 'iniciante', 1),
 
--- ── UKE ────────────────────────────────────────────────────────
-INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
-(3, 'Bloqueio Alto',     'Jodan Uke',   '上段受け', 'Bloqueio ascendente do antebraço para proteger a cabeça. O braço vai de baixo para cima, desviando golpes altos para cima e para fora. Mão defensora termina acima da cabeça.',                                    'https://www.youtube.com/watch?v=WS7ys0uxyMU&pp=0gcJCdoKAYcqIYzv', 'iniciante', 1),
-(3, 'Bloqueio Médio',    'Chudan Uke',  '中段受け', 'Bloqueio externo do antebraço ao nível do corpo. Desvia socos e chutes dirigidos ao abdômen para o lado. O antebraço roda no impacto para redirecionar a força.',                                                 'https://www.youtube.com/watch?v=VikdV4S2b70&pp=ygUKY2h1ZGFuIHVrZQ%3D%3D','iniciante', 2),
-(3, 'Bloqueio Baixo',    'Gedan Barai', '下段払い', 'Varredura descendente do antebraço para bloquear chutes baixos e socos ao abdômen inferior. Movimento de cima para baixo e para fora. Um dos bloqueios mais praticados no kihon.',                                 'https://www.youtube.com/watch?v=rOgfT21eoGQ', 'iniciante', 3),
-(3, 'Bloqueio Interno',  'Uchi Uke',    '内受け',  'Bloqueio de dentro para fora com o antebraço. Ideal contra socos retos ao corpo — redireciona a força para o lado externo do atacante, abrindo contra-ataque imediato.',                                           'https://www.youtube.com/watch?v=ZjRI_Abs1UQ',  'iniciante', 4),
-(3, 'Bloqueio Mão-Faca', 'Shuto Uke',   '手刀受け', 'Bloqueio com a lateral da mão aberta (shuto). Pode interceptar socos e também ser usado como ataque. A mão não-defensora fica na cintura em posição de câmara (hikite).',                                         'https://www.youtube.com/watch?v=3Po67EodOdM&pp=ygUJc2hvdG8gdWtl0gcJCdoKAYcqIYzv', 'intermediario', 5),
-(3, 'Bloqueio Circular', 'Mawas hi Uke', '回し受け', 'Bloqueio em movimento circular que redireciona o ataque. Ambas as mãos participam do movimento — uma guia e outra bloqueia. Eficiente para neutralizar chutes circulares.',                                       'https://www.youtube.com/watch?v=O6lmZ8IkyUM&pp=ygUM5Zue44GX5Y-X44GR',   'intermediario', 6);
+(1, 'Soco alto', 'Seiken Jodan Tsuki', 'せいけんじょうだんづき',
+ 'Soco direto direcionado à região superior do corpo.',
+ 'https://www.youtube.com/watch?v=575l-u9rbB0', 'iniciante', 2),
 
--- ── DACHI ──────────────────────────────────────────────────────
-INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
-(4, 'Posição Paralela',            'Heiko Dachi',   '平行立ち', 'Pés paralelos na largura dos ombros. Posição natural de repouso e ponto de partida para muitos movimentos. Usada no Yoi antes de executar sequências de kihon.',                                    'https://www.youtube.com/watch?v=vV3L5iQ8CiU&pp=ygULaGVpa28gZGFjaGk%3D',   'iniciante', 1),
-(4, 'Posição de Combate Frontal',  'Zenkutsu Dachi','前屈立ち', 'Perna da frente dobrada a 90°, perna de trás estendida. Peso ~70% na frente. Excelente para socos com avanço. Proporciona grande força de impulso para frente.',                                     'https://www.youtube.com/watch?v=b93Pmv1b44U&pp=ygUOemVua3V0c3UgZGFjaGk%3D',    'iniciante', 2),
-(4, 'Posição do Cavaleiro',        'Kiba Dachi',    '騎馬立ち', 'Pés afastados, joelhos dobrados e para fora, como se montasse um cavalo. Base muito estável e baixa. Excelente para treinar força de pernas e golpes laterais.',                                      'https://www.youtube.com/watch?v=7uDQK908dKA&pp=ygUKa2liYSBkYWNoaQ%3D%3D',    'iniciante', 3),
-(4, 'Posição Recuada',             'Kokutsu Dachi', '後屈立ち', 'Peso ~70% na perna de trás, joelho traseiro dobrado. Posição defensiva que mantém distância e facilita chutes rápidos com a perna da frente.',                                                        'https://www.youtube.com/watch?v=smbTru64xrA&pp=ygUNa29rdXRzdSBkYWNoaQ%3D%3D',    'iniciante', 4),
-(4, 'Posição Imóvel',              'Fudo Dachi',    '不動立ち', 'Posição natural de combate do Kyokushin — similar ao zenkutsu mas mais natural. Base do kumite, equilibra mobilidade e estabilidade.',                                                                'https://www.youtube.com/watch?v=rtM5H0lpe20&pp=ygUKZnVkbyBkYWNoaQ%3D%3D',    'intermediario', 5),
-(4, 'Posição dos Três Conflitos',  'Sanchin Dachi', '三戦立ち', 'Posição fechada e tensa onde os pés se cruzam levemente. Base do kata Sanchin — treina contração muscular total, respiração e tensão corporal. Fundamental no Kyokushin.',                           'https://www.youtube.com/watch?v=ryziGsaoOFU&pp=ygUNc2FuY2hpbiBkYWNoaQ%3D%3D', 'intermediario', 6);
+(2, 'Chute frontal', 'Mae Geri', 'まえげり',
+ 'Chute frontal direto direcionado ao alvo à frente.',
+ 'https://www.youtube.com/watch?v=D2fdO_QepKs', 'iniciante', 3),
 
+(2, 'Chute frontal ascendente', 'Mae Keage', 'まえけあげ',
+ 'Chute frontal ascendente realizado com a perna estendida.',
+ 'https://www.youtube.com/watch?v=V2e_adl_qCM', 'iniciante', 4),
 
+(2, 'Joelhada', 'Hiza Geri', 'ひざげり',
+ 'Golpe realizado com o joelho.',
+ 'https://www.youtube.com/watch?v=5mOmOXZ-FNU', 'iniciante', 5),
 
--- ── UCHI ───────────────────────────────────────────────────────
-INSERT INTO kihons (categoria_id, nome, romaji, kana, descricao, video_url, nivel, ordem) VALUES
-(5, 'Golpe Mão-Faca',       'Shuto Uchi',  '手刀打ち', 'Ataque com a lateral da mão aberta em movimento circular. Pode ser executado de dentro para fora ou de fora para dentro. Alvo clássico: pescoço ou têmpora do adversário.',                                   'https://www.youtube.com/watch?v=AbDz5GKXlU0&pp=ygUKc2h1dG8gdWNoaQ%3D%3D', 'intermediario', 1),
-(5, 'Golpe Martelo',        'Tetsui Uchi', '鉄槌打ち', 'Golpe com a parte inferior do punho fechado (lado do mindinho), como um martelo. Movimento descendente ou circular. Útil contra alvos duros como o topo da cabeça ou costelas.',                              'https://www.youtube.com/watch?v=ulj1_TjFM8o',  'intermediario', 2),
-(5, 'Golpe Lança-Dedos',    'Nukite',      '貫手',    'Ataque com as pontas dos dedos estendidos, como uma lança. Alvo: garganta, abdômen ou pontos vitais. Exige dedos muito fortalecidos — treinados com makiwara e areia.',                                        'https://www.youtube.com/watch?v=28--Q0F0ojQ&pp=ygURbnVraXRlICBreW9rdXNoaW4%3D',  'avancado',      3),
-(5, 'Cotovelada',           'Empi Uchi',   '肘打ち',  'Golpe com a ponta do cotovelo em curta distância. Devastador quando executado corretamente. Pode ser horizontal, ascendente ou descendente.',                                                                   'https://www.youtube.com/watch?v=w9ChXYYeAXw&pp=ygUJZW1waSB1Y2hp',    'intermediario', 4),
-(5, 'Soco Um Nó',           'Ippon Ken',   '一本拳',  'Soco com o nó do dedo indicador projetado à frente. Penetra em alvos pequenos e pontos de pressão como têmpora, philtrum ou costelas. Exige condicionamento dos dedos.',                                        'https://www.youtube.com/watch?v=0mT37QYsRyg&pp=ygUJaXBwb24ga2Vu',   'avancado',      5),
-(5, 'Golpe Dorso do Punho', 'Uraken Uchi', '裏拳打ち', 'Golpe com o dorso (costas) do punho fechado. Movimento rápido de chicote lateral ou circular. Eficiente para atingir a têmpora com velocidade surpreendente.',                                                'https://www.youtube.com/watch?v=sHyfuXHtpyQ&pp=ygULdXJha2VuIHVjaGk%3D',  'intermediario', 6);
+(2, 'Chute à virilha', 'Kin Geri / Kinteki Geri', 'きんてきげり',
+ 'Chute direcionado à região da virilha.',
+ 'https://www.youtube.com/watch?v=JntaVndHl5U', 'iniciante', 6),
 
--- GERENCIAMENTO DE KATAS E EXERCICIOS
-INSERT IGNORE INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
+(3, 'Bloqueio alto', 'Seiken Jodan Uke', 'せいけんじょうだんうけ',
+ 'Bloqueio alto utilizado para proteger a região superior do corpo.',
+ 'https://www.youtube.com/watch?v=WS7ys0uxyMU', 'iniciante', 7),
 
--- ══════════════════════════════════════════
--- KATAS NORTE (origem Shotokan)
--- ══════════════════════════════════════════
+(3, 'Bloqueio interno médio', 'Seiken Chudan Uchi Uke', 'せいけんちゅうだんうちうけ',
+ 'Bloqueio interno realizado na altura média do corpo.',
+ 'https://www.youtube.com/watch?v=ZjRI_Abs1UQ', 'iniciante', 8),
 
-('Taikyoku Sono Ichi',
- 'Primeiro kata do Kyokushin. Usa apenas dois movimentos: bloqueio baixo (Gedan Barai) e soco médio (Chudan Oi-Tsuki), todos em base Zenkutsu Dachi. É a porta de entrada para todos os katas.',
- 'https://www.youtube.com/watch?v=NCS6QB3ODnM', 'iniciante', 1),
+(3, 'Bloqueio externo médio', 'Seiken Chudan Soto Uke', 'せいけんちゅうだんそとうけ',
+ 'Bloqueio externo realizado na altura média do corpo.',
+ 'https://www.youtube.com/watch?v=JXOtx6aqeg0', 'iniciante', 9),
 
-('Taikyoku Sono Ni',
- 'Idêntico ao Sono Ichi, porém todos os socos são executados no nível Jodan (rosto). Desenvolve a percepção de altura dos ataques.',
- 'https://www.youtube.com/watch?v=W-y0Myy8i9Q', 'iniciante', 2),
+(3, 'Bloqueio baixo', 'Seiken Gedan Barai', 'せいけんげだんばらい',
+ 'Bloqueio descendente utilizado para proteger a região inferior.',
+ 'https://www.youtube.com/watch?v=f2Xdk6__7Ts', 'iniciante', 10),
 
-('Taikyoku Sono San',
- 'Terceiro kata da série Taikyoku. Introduz a base Kokutsu Dachi e o bloqueio Uchi Ude Uke, combinando socos Chudan e Jodan.',
- 'https://www.youtube.com/watch?v=5j1i4LHSet0', 'iniciante', 3),
+(4, 'Posição natural/firme', 'Fudo Dachi', 'ふどうだち',
+ 'Posição firme utilizada como base para execução das técnicas.',
+ 'https://www.youtube.com/watch?v=rtM5H0lpe20', 'iniciante', 11),
 
-('Pinan Sono Ichi',
- 'Primeiro kata da série Pinan. Introduz o bloqueio Age Uke (subida), Tetsui (martelo) e Shuto Mawashi Uke. Três bases: Zenkutsu, Neko Ashi e Kokutsu Dachi.',
- 'https://www.youtube.com/watch?v=WejnMH3Q21w', 'iniciante', 4),
+(4, 'Posição frontal', 'Zenkutsu Dachi', 'ぜんくつだち',
+ 'Base frontal com distribuição de peso voltada para a perna dianteira.',
+ 'https://www.youtube.com/watch?v=VLohuq5fPr0', 'iniciante', 12),
 
-('Pinan Sono Ni',
- 'Introduz chutes laterais (Yoko Geri), frontais (Mae Geri), Nuki-te e o bloqueio duplo Morote Uke. Apresenta a base Kiba Dachi para fortalecer a parte inferior.',
- 'https://www.youtube.com/watch?v=wUfnRRHRNmc', 'iniciante', 5),
+(4, 'Posição do cavaleiro', 'Kiba Dachi', 'きばだち',
+ 'Base ampla com os pés paralelos e joelhos flexionados.',
+ 'https://www.youtube.com/watch?v=b04SKpx7-H4', 'iniciante', 13),
 
-('Pinan Sono San',
- 'Combina técnicas dos dois primeiros Pinan com novos movimentos giratórios. Demonstrado por Hajime Kazumi, campeão mundial do Kyokushin.',
- 'https://www.youtube.com/watch?v=HcZ6ii6vTU4', 'iniciante', 6),
+(4, 'Posição traseira', 'Kokutsu Dachi', 'こうくつだち',
+ 'Base com maior distribuição de peso sobre a perna traseira.',
+ 'https://www.youtube.com/watch?v=7wtD_8d9JgM', 'iniciante', 14);
+ 
+ -- ───────────────────────────────────────────────────────────────
+-- INSERT DOS KATAS POR FAIXA (KYOKUSHIN)
+-- ───────────────────────────────────────────────────────────────
 
-('Pinan Sono Yon',
- 'Kata de transição para nível intermediário. Inclui sequências de bloqueios e contra-ataques encadeados, exigindo maior precisão e fluidez.',
- 'https://www.youtube.com/watch?v=972WxHremqo', 'iniciante', 7),
+INSERT INTO katas (nome, descricao, video_url, categoria, nivel, ordem) VALUES
 
-('Pinan Sono Go',
- 'Último da série Pinan. O mais complexo dos cinco, com combinações avançadas de bloqueios e golpes, preparando o praticante para katas superiores.',
- 'https://www.youtube.com/watch?v=3LvnVq4hryY', 'iniciante', 8),
+-- ⚪ FAIXA BRANCA (Iniciante)
+('Taikyoku Sono Ichi', 'Primeiro kata básico do Kyokushin. Foco em posições Zenkutsu Dachi e socos Chudan.', 'https://www.youtube.com/watch?v=NCS6QB3ODnM', 'Taikyoku', 'iniciante', 1),
+('Taikyoku Sono Ni', 'Segundo kata básico do Kyokushin, similar ao Sono Ichi, porém aplicando socos Jodan.', 'https://www.youtube.com/watch?v=W-y0Myy8i9Q', 'Taikyoku', 'iniciante', 2),
 
-('Yantsu',
- 'Nome significa "seguro em três direções". Kata curto porém avançado, executado em três direções (frente e dois lados). Exigido para graduação ao 1º Kyu (marrom).',
- 'https://www.youtube.com/watch?v=6rg1VUoLzGM', 'intermediario', 9),
+-- 🟠 FAIXA LARANJA (10º / 9º Kyu)
+('Taikyoku Sono San', 'Terceiro kata básico, introduzindo bloqueios Uchi Uke e posições Kiba Dachi.', 'https://www.youtube.com/watch?v=5j1i4LHSet0', 'Taikyoku', 'iniciante', 3),
+('Sokugi Taikyoku Sono Ichi', 'Primeiro kata focado exclusivamente em técnicas de chutes (Sokugi).', 'https://www.youtube.com/watch?v=WfEYcnmT7M4', 'Sokugi', 'iniciante', 4),
 
-('Tsuki no Kata',
- 'O "kata dos socos". Foca no desenvolvimento de potência nos golpes a partir de diferentes alturas, direções e bases. Treina a geração de força dos quadris e do Hara.',
- 'https://www.youtube.com/watch?v=AUxPA-2LDXI', 'intermediario', 10),
+-- 🔵 FAIXA AZUL (8º / 7º Kyu)
+('Pinan Sono Ichi', 'Primeiro kata da série Pinan. Trabalha esquivas, defesas e ataques variados.', 'https://www.youtube.com/watch?v=TEa5SPNTCLg', 'Pinan', 'iniciante', 5),
+('Pinan Sono Ni', 'Segundo kata da série Pinan, introduzindo defesas Kokutsu Dachi e chutes Mae Geri.', 'https://www.youtube.com/watch?v=6JLhRJdzJyA', 'Pinan', 'iniciante', 6),
+('Sokugi Taikyoku Sono Ni', 'Segundo kata da série Sokugi, trabalhando chutes em novas direções e ângulos.', 'https://www.youtube.com/watch?v=Ce-C_X1v1CQ', 'Sokugi', 'iniciante', 7),
 
-('Kanku',
- 'Nome significa "contemplar o céu". O movimento de abertura com as mãos em arco sobre a cabeça simboliza a grandeza do universo. Kata longo e complexo, exigido para graduação ao 2º Dan.',
- 'https://www.youtube.com/watch?v=wE5FWQTPG6w', 'avancado', 11),
+-- 🟡 FAIXA AMARELA (6º / 5º Kyu)
+('Pinan Sono San', 'Terceiro kata da série Pinan, focado em defesas duplas, cotoveladas e giros.', 'https://www.youtube.com/watch?v=HqxrJFDqCbw', 'Pinan', 'intermediario', 8),
+('Pinan Sono Yon', 'Quarto kata da série Pinan, extremamente dinâmico, com chutes e combinações rápidas.', 'https://www.youtube.com/watch?v=WrFtKCmgdwU', 'Pinan', 'intermediario', 9),
+('Pinan Sono Go', 'Quinto kata da série Pinan, introduzindo saltos, defesas baixas e ataques sequenciais.', 'https://www.youtube.com/watch?v=R6ZB1dYoPXY', 'Pinan', 'intermediario', 10),
+('Sokugi Taikyoku Sono San', 'Terceiro kata da série Sokugi, avançando em variações de chutes combinados.', 'https://www.youtube.com/watch?v=xH0yLnndYJw', 'Sokugi', 'intermediario', 11),
 
-('Sushiho',
- 'Nome significa "54 passos". Kata avançado com movimentos rápidos e explosivos, derivado do Gojushiho do Shotokan, modificado por Mas Oyama. Exigido para o 3º Dan.',
- 'https://www.youtube.com/watch?v=EVkcfY490aw', 'avancado', 12),
+-- 🟢 FAIXA VERDE (4º / 3º Kyu)
+('Yantsu', 'Kata avançado focado na manutenção da energia interna e fortalecimento de golpes curtos.', 'https://www.youtube.com/watch?v=Pb0xsTDKrjo', 'Avançado', 'intermediario', 12),
+('Sanchin no Kata', 'Kata tradicional isométrico focado no fortalecimento corporal e respiração profunda Ibuki.', 'https://www.youtube.com/watch?v=QPGLyHwtepA', 'Avançado', 'intermediario', 13),
+('Tsuki no Kata', 'Kata focado inteiramente na precisão, potência e sequências de socos e perfurações.', 'https://www.youtube.com/watch?v=wcieC2HfnLY', 'Avançado', 'intermediario', 14),
 
--- ══════════════════════════════════════════
--- KATAS SUL 
--- ══════════════════════════════════════════
+-- 🟤 FAIXA MARROM — 2º Kyu
+('Saifa', 'Kata de origem Goju-Ryu que significa "destruir e esmagar". Rápido, ágil e explosivo.', 'https://www.youtube.com/watch?v=LNtxEnEmRUw', 'Goju-Ryu', 'avancado', 15),
+('Gekisai Sono Ichi', 'Kata projetado para combate real, enfatizando ataques diretos e contundentes.', 'https://www.youtube.com/watch?v=lv43m1liVCs', 'Goju-Ryu', 'avancado', 16),
+('Tekki Sono Ichi', 'Kata executado totalmente na posição Kiba Dachi (posição do cavalo), simulando combate em locais estreitos.', 'https://www.youtube.com/watch?v=_5w-JLSsLU8', 'Shorei-Ryu', 'avancado', 17),
 
-('Sanchin no Kata',
- 'Nome significa "três batalhas": mente, corpo e espírito. Kata isométrico executado em tensão total com respiração Ibuki profunda. Um dos mais antigos e fundamentais do Kyokushin.',
- 'https://www.youtube.com/watch?v=pYDEjLVmAmI', 'intermediario', 13),
+-- 🟤 FAIXA MARROM — 1º Kyu
+('Gekisai Sono Ni', 'Segunda variação do Gekisai, adicionando esquivas fluidas e ataques com as mãos abertas (Shuto).', 'https://www.youtube.com/watch?v=6xmHr9ZhbH0', 'Goju-Ryu', 'avancado', 18);
 
-('Gekisai Dai',
- 'Nome significa "conquistar e ocupar". Kata dinâmico que ensina fluidez de movimento e mobilidade. Introduz técnicas circulares características dos katas sulistas.',
- 'https://www.youtube.com/watch?v=6lTHbNMzLRk', 'iniciante', 14),
+-- treinos
 
-('Gekisai Sho',
- 'Versão "menor" do Gekisai. Movimentos mais compactos e próximos ao corpo, reforçando distâncias de combate curtas e técnicas circulares.',
- 'https://www.youtube.com/watch?v=LpFOJpAT37A', 'intermediario', 15),
+INSERT INTO exercicios_kyokushin
+(nome, categoria, tipo, descricao, quantidade, video_url)
+VALUES
 
-('Tensho',
- 'Nome significa "palmas giratórias". Contraparte suave (Yin) do Sanchin. Considerado por Mas Oyama o kata mais indispensável — afirmou que quem o domina pode se defender de qualquer ataque.',
- 'https://www.youtube.com/watch?v=mPmpAaDN4vM', 'intermediario', 16),
+-- FORÇA
+('Flexão de braço', 'Força', 'Força',
+ 'Flexão tradicional para fortalecimento de peito, ombros e tríceps.',
+ '3 x 15', NULL),
 
-('Saiha',
- 'Também chamado Saifa. Nome significa "destruir e rasgar". Kata curto porém avançado, introduzindo técnicas de combate próximo: liberação de agarrões e contra-ataque com Tetsui. Representa a onda no logotipo da IFK.',
- 'https://www.youtube.com/watch?v=ORRrp4gTVv8', 'intermediario', 17),
+('Flexão fechada', 'Força', 'Força',
+ 'Flexão com as mãos mais próximas, enfatizando tríceps e estabilidade.',
+ '3 x 10', NULL),
 
-('Seienchin',
- 'Nome significa "subjugar o distante rebelde". Kata longo e exaustivo com muitas técnicas em Shiko Dachi (base de cavaleiro). Desenvolve força e perseverança nos membros inferiores.',
- 'https://www.youtube.com/watch?v=HimHCy3TBEY', 'avancado', 18),
+('Agachamento livre', 'Força', 'Força',
+ 'Agachamento com o peso corporal para fortalecimento das pernas.',
+ '3 x 20', NULL),
 
-('Seipai',
- 'Nome significa "18 mãos", derivado do conceito budista 6×3. Reflete a essência do Goju-Ryu: inclui movimentos duros e suaves, projeções, técnicas de longa e curta distância.',
- 'https://www.youtube.com/watch?v=5AYmJknIApc', 'avancado', 19),
+('Agachamento sumô', 'Força', 'Força',
+ 'Agachamento com base ampla para trabalhar pernas e quadril.',
+ '3 x 15', NULL),
 
-('Garyu',
- 'Nome significa "dragão reclinado" — o pseudônimo de Mas Oyama. Um grande homem que mantém sua força em reserva. Kata criado pelo próprio Oyama, simbolizando humildade e potência contida.',
- 'https://www.youtube.com/watch?v=f4QQzJACKOo', 'avancado', 20);
+('Afundo', 'Força', 'Força',
+ 'Exercício unilateral para fortalecimento das pernas e estabilidade.',
+ '3 x 10 cada perna', NULL),
 
-CREATE TABLE IF NOT EXISTS exercicios_kyokushin (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    categoria VARCHAR(50) NOT NULL
-);
+('Elevação de panturrilha', 'Força', 'Força',
+ 'Elevação do corpo sobre a ponta dos pés para fortalecer as panturrilhas.',
+ '3 x 20', NULL),
 
-INSERT IGNORE INTO exercicios_kyokushin (nome,categoria) VALUES
+('Abdominal tradicional', 'Força', 'Força',
+ 'Abdominal para fortalecimento da musculatura do tronco.',
+ '3 x 20', NULL),
 
--- SOCOS
-('Seiken Choku Tsuki','Soco'),
-('Seiken Ago Uchi','Soco'),
-('Seiken Shita Tsuki','Soco'),
-('Seiken Mawashi Uchi','Soco'),
-('Uraken Shomen Uchi','Soco'),
-('Uraken Sayu Uchi','Soco'),
-('Uraken Hizo Uchi','Soco'),
-('Tettsui Oroshi Ganmen Uchi','Soco'),
+('Abdominal bicicleta', 'Força', 'Força',
+ 'Exercício abdominal com movimento alternado de pernas e tronco.',
+ '3 x 20', NULL),
 
--- CHUTES
-('Mae Geri','Chute'),
-('Yoko Geri','Chute'),
-('Mawashi Geri','Chute'),
-('Ushiro Geri','Chute'),
-('Ushiro Mawashi Geri','Chute'),
-('Hiza Geri','Chute'),
-('Kansetsu Geri','Chute'),
+-- CORE / RESISTÊNCIA
+('Prancha', 'Core', 'Resistência',
+ 'Isometria para fortalecimento do abdômen e estabilização do tronco.',
+ '3 x 30 segundos', NULL),
 
--- DEFESAS
-('Jodan Uke','Defesa'),
-('Chudan Soto Uke','Defesa'),
-('Chudan Uchi Uke','Defesa'),
-('Gedan Barai','Defesa'),
-('Shuto Uke','Defesa'),
+('Prancha lateral', 'Core', 'Resistência',
+ 'Isometria lateral para fortalecimento do core e estabilidade do quadril.',
+ '3 x 20 segundos cada lado', NULL),
 
--- COTOVELADAS
-('Empi Uchi Jodan','Cotovelada'),
-('Empi Uchi Mawashi','Cotovelada'),
-('Empi Uchi Oroshi','Cotovelada'),
+('Mountain climber', 'Resistência', 'Resistência',
+ 'Movimento dinâmico para trabalhar core e condicionamento cardiovascular.',
+ '3 x 30 segundos', NULL),
 
--- JOELHADAS
-('Hiza Geri Jodan','Joelhada'),
-('Hiza Geri Chudan','Joelhada');
+('Burpee', 'Resistência', 'Resistência',
+ 'Exercício de corpo inteiro para desenvolver resistência e explosão.',
+ '3 x 10', NULL),
 
--- Katas de Chute (Sokugi)
-INSERT INTO katas (nome, descricao, video_url, nivel, ordem) VALUES
-('Ataque de Pernas 1', 'Kata básico focado em técnicas de pernas, utilizando Mae Keage (chute frontal ascendente).', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'iniciante', 21),
-('Ataque de Pernas 3', 'Foca no chute circular Mawashi Geri, fundamental para o combate Kyokushin.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 22),
+('Polichinelo', 'Resistência', 'Resistência',
+ 'Exercício cardiovascular utilizado para aquecimento e condicionamento.',
+ '3 x 30', NULL),
 
--- Série Pinan (Mente em Paz)
-('Mente em Paz 1', 'Primeiro da série Pinan. Introduz movimentos de Shuto Uchi e defesas variadas.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 23),
-('Mente em Paz 2', 'Trabalha a coordenação e o uso do Yoko Geri (chute lateral) e Nukite.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 24),
-('Mente em Paz 4', 'Kata dinâmico com movimentos de cotovelo (Empi) e mudanças rápidas de base.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'intermediario', 25),
+('Corrida estacionária', 'Resistência', 'Resistência',
+ 'Corrida no lugar para elevar a frequência cardíaca e melhorar o condicionamento.',
+ '3 x 1 minuto', NULL),
 
--- Katas Avançados/Superiores
-('Três Batalhas', 'Kata respiratório fundamental do Kyokushin. Foca no fortalecimento do corpo e respiração Ibuki.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 26),
-('Manter a Paz', 'Kata que enfatiza a pureza do movimento e a manutenção da calma sob pressão.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 27),
-('Destruição Extrema', 'Proveniente do Goju-ryu, utiliza movimentos circulares e ataques de curta distância.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 28),
-('Palmas Rotativas', 'Kata suave e circular que complementa o Sanchin, focando na flexibilidade das palmas das mãos.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 29),
-('Dragão Adormecido', 'Criado por Sosai Mas Oyama. Reflete a filosofia do karateca que permanece humilde mas pronto para agir.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 30),
-('Contemplar o Céu', 'Um dos katas mais longos e complexos, simbolizando a união com o universo.', 'https://www.youtube.com/watch?v=5lEBrn1rWRo', 'avancado', 31);
-UPDATE kihons
-SET video_url = 'https://www.youtube.com/watch?v=yPROqoPx3z8&pp=ygUIbWFlIGdlcmk%3D'
-WHERE romaji = 'Mae Geri';
+('Pular corda', 'Resistência', 'Resistência',
+ 'Exercício cardiovascular para coordenação, resistência e agilidade.',
+ '3 x 2 minutos', NULL),
 
+-- TÉCNICA
+('Kihon de socos', 'Técnica', 'Técnica',
+ 'Sequência de socos básicos do Kyokushin executados com controle e técnica.',
+ '3 x 20', NULL),
 
-select * from usuarios;
+('Kihon de chutes', 'Técnica', 'Chute',
+ 'Sequência de chutes básicos do Kyokushin executados com controle técnico.',
+ '3 x 10 cada perna', NULL),
 
+('Kihon de bloqueios', 'Técnica', 'Defesa',
+ 'Sequência de bloqueios básicos do Kyokushin.',
+ '3 x 10', NULL),
+
+('Ido Kihon', 'Técnica', 'Técnica',
+ 'Execução de técnicas básicas em deslocamento.',
+ '3 séries', NULL),
+
+-- SOCO
+('Seiken Tsuki no Makiwara', 'Condicionamento', 'Soco',
+ 'Prática controlada de socos no makiwara para desenvolver técnica e condicionamento.',
+ '3 x 20', NULL),
+
+('Soco direto no ar', 'Técnica', 'Soco',
+ 'Execução repetida de Seiken Tsuki com foco em velocidade e retorno da guarda.',
+ '3 x 30', NULL),
+
+-- CHUTE
+('Mae Geri no ar', 'Técnica', 'Chute',
+ 'Repetição de Mae Geri com foco em equilíbrio, velocidade e técnica.',
+ '3 x 10 cada perna', NULL),
+
+('Mawashi Geri no ar', 'Técnica', 'Chute',
+ 'Repetição de Mawashi Geri com foco em controle e mobilidade do quadril.',
+ '3 x 10 cada perna', NULL),
+
+('Mae Keage', 'Técnica', 'Chute',
+ 'Repetição do chute frontal ascendente.',
+ '3 x 10 cada perna', NULL),
+
+-- AGILIDADE / EXPLOSÃO
+('Saltos verticais', 'Explosão', 'Força',
+ 'Saltos explosivos para desenvolvimento de potência das pernas.',
+ '3 x 10', NULL),
+
+('Salto agachado', 'Explosão', 'Força',
+ 'Agachamento seguido de salto explosivo para desenvolver potência.',
+ '3 x 10', NULL),
+
+('Deslocamento lateral', 'Agilidade', 'Mobilidade',
+ 'Deslocamentos laterais rápidos para desenvolver agilidade e movimentação.',
+ '3 x 30 segundos', NULL),
+
+('Sprawl', 'Agilidade', 'Resistência',
+ 'Movimento rápido de queda e recuperação utilizado para condicionamento.',
+ '3 x 10', NULL),
+
+-- MOBILIDADE
+('Mobilidade de quadril', 'Mobilidade', 'Mobilidade',
+ 'Sequência de movimentos para melhorar a mobilidade do quadril.',
+ '3 x 30 segundos', NULL),
+
+('Alongamento posterior de coxa', 'Mobilidade', 'Mobilidade',
+ 'Alongamento para melhorar a flexibilidade da cadeia posterior das pernas.',
+ '3 x 30 segundos', NULL),
+
+('Alongamento de borboleta', 'Mobilidade', 'Mobilidade',
+ 'Alongamento para adutores e mobilidade do quadril.',
+ '3 x 30 segundos', NULL),
+
+('Alongamento de quadríceps', 'Mobilidade', 'Mobilidade',
+ 'Alongamento dos músculos anteriores da coxa.',
+ '3 x 30 segundos cada perna', NULL),
+
+-- CONDICIONAMENTO KYOKUSHIN
+('Flexão com socos', 'Condicionamento', 'Força',
+ 'Sequência combinando flexão de braço e socos para condicionamento geral.',
+ '3 x 10', NULL),
+
+('Agachamento com Mae Geri', 'Condicionamento', 'Chute',
+ 'Agachamento seguido de Mae Geri para combinar força e técnica.',
+ '3 x 10 cada perna', NULL),
+
+('Burpee com salto', 'Condicionamento', 'Resistência',
+ 'Burpee realizado com salto explosivo ao final do movimento.',
+ '3 x 10', NULL),
+
+('Abdominal com socos', 'Condicionamento', 'Soco',
+ 'Exercício combinando trabalho abdominal com golpes de punho.',
+ '3 x 20', NULL),
+
+('Chute alternado', 'Condicionamento', 'Chute',
+ 'Execução alternada de chutes para desenvolver resistência específica.',
+ '3 x 20', NULL);

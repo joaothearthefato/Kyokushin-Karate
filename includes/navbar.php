@@ -10,10 +10,12 @@ if ($currentDir === 'dashboard') {
     $link_kihons    = 'kihons.php';
     $link_logout    = '../php/logout.php';
     $link_progresso = 'progresso.php';
+    $link_anotacoes = 'anotacoes.php';
     $link_perfil    = 'perfil.php';
     $link_admin     = '../php/admin/index.php';
     $css_base       = '../css/';
     $js_a11y        = '../js/acessibilidade.js';
+    $js_modal       = '../js/app-modal.js';
 } else {
     $link_dashboard = 'dashboard.php';
     $link_katas     = '../dashboard/katas.php';
@@ -21,10 +23,12 @@ if ($currentDir === 'dashboard') {
     $link_kihons    = '../dashboard/kihons.php';
     $link_logout    = 'logout.php';
     $link_progresso = '../dashboard/progresso.php';
+    $link_anotacoes = '../dashboard/anotacoes.php';
     $link_perfil    = '../dashboard/perfil.php';
     $link_admin     = 'admin/index.php';
     $css_base       = '../css/';
     $js_a11y        = '../js/acessibilidade.js';
+    $js_modal       = 'js/app-modal.js';
 }
 ?>
 
@@ -33,6 +37,8 @@ if ($currentDir === 'dashboard') {
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= $css_base ?>tokens.css">
 <link rel="stylesheet" href="<?= $css_base ?>navbar.css">
+<link rel="stylesheet" href="<?= $css_base ?>app-modal.css">
+<script src="<?= $js_modal ?>"></script>
 
 <nav class="navbar-oh" role="navigation" aria-label="Navegação principal">
 
@@ -58,49 +64,93 @@ if ($currentDir === 'dashboard') {
            role="menuitem"
            class="<?= $currentPage === 'dashboard.php' ? 'active' : '' ?>"
            aria-current="<?= $currentPage === 'dashboard.php' ? 'page' : 'false' ?>">
-            Dashboard
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Dashboard</span>
         </a>
 
         <a href="<?= $link_treinos ?>"
            role="menuitem"
            class="<?= $currentPage === 'treinos.php' ? 'active' : '' ?>"
            aria-current="<?= $currentPage === 'treinos.php' ? 'page' : 'false' ?>">
-            Treinos
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Treinos</span>
         </a>
 
         <a href="<?= $link_katas ?>"
            role="menuitem"
            class="<?= $currentPage === 'katas.php' ? 'active' : '' ?>"
            aria-current="<?= $currentPage === 'katas.php' ? 'page' : 'false' ?>">
-            Katas
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
+            </svg>
+            <span>Katas</span>
         </a>
 
         <a href="<?= $link_kihons ?>"
            role="menuitem"
            class="<?= $currentPage === 'kihons.php' ? 'active' : '' ?>"
            aria-current="<?= $currentPage === 'kihons.php' ? 'page' : 'false' ?>">
-            Kihons
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="6"></circle>
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path>
+            </svg>
+            <span>Kihons</span>
         </a>
 
         <a href="<?= $link_progresso ?>"
            role="menuitem"
            class="<?= $currentPage === 'progresso.php' ? 'active' : '' ?>"
            aria-current="<?= $currentPage === 'progresso.php' ? 'page' : 'false' ?>">
-            Progresso
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Progresso</span>
+        </a>
+
+        <a href="<?= $link_anotacoes ?>"
+           role="menuitem"
+           class="<?= $currentPage === 'anotacoes.php' ? 'active' : '' ?>"
+           aria-current="<?= $currentPage === 'anotacoes.php' ? 'page' : 'false' ?>">
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                <path d="M6 6h10"></path>
+                <path d="M6 10h10"></path>
+            </svg>
+            <span>Anotações</span>
         </a>
 
         <a href="<?= $link_perfil ?>"
            role="menuitem"
            class="<?= $currentPage === 'perfil.php' ? 'active' : '' ?>"
            aria-current="<?= $currentPage === 'perfil.php' ? 'page' : 'false' ?>">
-            Perfil
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Perfil</span>
         </a>
 
         <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin'): ?>
         <a href="<?= $link_admin ?>"
            role="menuitem"
            class="nav-admin <?= $currentPage === 'index.php' && $currentDir === 'admin' ? 'active' : '' ?>">
-            Admin
+            <svg class="nav-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span>Admin</span>
         </a>
         <?php endif; ?>
 

@@ -103,8 +103,8 @@
   color: var(--color-text-2);
   cursor: pointer;
   transition: background var(--duration-base) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default),
-              color var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default),
+    color var(--duration-base) var(--ease-default);
 }
 
 .auth-theme-btn:hover {
@@ -118,10 +118,21 @@
   height: 15px;
 }
 
-.icon-sun  { display: none; }
-.icon-moon { display: block; }
-html.light .icon-sun  { display: block; }
-html.light .icon-moon { display: none; }
+.icon-sun {
+  display: none;
+}
+
+.icon-moon {
+  display: block;
+}
+
+html.light .icon-sun {
+  display: block;
+}
+
+html.light .icon-moon {
+  display: none;
+}
 
 /* ── CAIXA DO FORMULÁRIO ── */
 .auth-box {
@@ -191,7 +202,7 @@ html.light .icon-moon { display: none; }
   line-height: var(--leading-normal);
   outline: none;
   transition: border-color var(--duration-base) var(--ease-default),
-              box-shadow var(--duration-base) var(--ease-default);
+    box-shadow var(--duration-base) var(--ease-default);
 }
 
 .auth-form .form-input::placeholder {
@@ -209,9 +220,12 @@ html.light .auth-form .form-input {
 
 .auth-form .form-select {
   appearance: none;
+  -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a6763' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
+  background-size: 13px auto;
+  min-height: 44px;
   padding-right: 36px;
   cursor: pointer;
 }
@@ -219,6 +233,20 @@ html.light .auth-form .form-input {
 .auth-form .form-select option {
   background: var(--color-surface-2);
   color: var(--color-text);
+}
+
+.auth-form .form-select:hover {
+  border-color: var(--color-accent-rim);
+  background-color: var(--color-surface-2);
+}
+
+.auth-form .form-select:focus {
+  box-shadow: 0 0 0 3px var(--color-accent-dim), 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+html.light .auth-form .form-select,
+body.light-mode .auth-form .form-select {
+  background-color: var(--color-surface);
 }
 
 /* ── BOTÃO SUBMIT ── */
@@ -236,7 +264,7 @@ html.light .auth-form .form-input {
   text-transform: uppercase;
   cursor: pointer;
   transition: background var(--duration-base) var(--ease-default),
-              box-shadow var(--duration-base) var(--ease-default);
+    box-shadow var(--duration-base) var(--ease-default);
   margin-top: var(--space-2);
 }
 
@@ -370,9 +398,20 @@ html.light .auth-form .form-input {
   margin-bottom: var(--space-5);
 }
 
-.modal-icon-wrap.error   { background: var(--color-error-dim); color: var(--color-error); }
-.modal-icon-wrap.success { background: var(--color-success-dim); color: var(--color-success); }
-.modal-icon-wrap.info    { background: var(--color-info-dim); color: var(--color-info); }
+.modal-icon-wrap.error {
+  background: var(--color-error-dim);
+  color: var(--color-error);
+}
+
+.modal-icon-wrap.success {
+  background: var(--color-success-dim);
+  color: var(--color-success);
+}
+
+.modal-icon-wrap.info {
+  background: var(--color-info-dim);
+  color: var(--color-info);
+}
 
 .modal-icon-wrap svg {
   width: 22px;
@@ -433,7 +472,7 @@ html.light .auth-form .form-input {
   font-weight: var(--weight-medium);
   cursor: pointer;
   transition: background var(--duration-base) var(--ease-default),
-              color var(--duration-base) var(--ease-default);
+    color var(--duration-base) var(--ease-default);
 }
 
 .modal-btn-secondary:hover {
@@ -454,7 +493,7 @@ html.light .auth-form .form-input {
   outline: none;
   margin-bottom: var(--space-5);
   transition: border-color var(--duration-base) var(--ease-default),
-              box-shadow var(--duration-base) var(--ease-default);
+    box-shadow var(--duration-base) var(--ease-default);
 }
 
 .modal-input::placeholder {
@@ -488,12 +527,15 @@ html.light .auth-form .form-input {
     padding: var(--space-8) var(--space-5);
     padding-top: var(--space-12);
   }
+
   .auth-box {
     max-width: 100%;
   }
+
   .auth-box-title {
     font-size: var(--text-3xl);
   }
+
   .modal-box {
     padding: var(--space-6) var(--space-5);
   }
@@ -501,4 +543,6 @@ html.light .auth-form .form-input {
 
 /* ── Compatibilidade: classes antigas ── */
 /* Mantidas para não quebrar JS existente */
-.register-box { display: none; }
+.register-box {
+  display: none;
+}

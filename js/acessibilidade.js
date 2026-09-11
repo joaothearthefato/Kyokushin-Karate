@@ -31,7 +31,8 @@
       aria-expanded="false"
       aria-controls="a11y-panel"
       title="Acessibilidade">
-      ♿
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="4" r="2"/><path d="M5 8h14M12 8v11M8 21l4-6 4 6M8 8l-2 6M16 8l2 6"/></svg>
+      <span class="a11y-toggle-label">A11Y</span>
     </button>
 
     <div id="a11y-panel"
@@ -40,26 +41,32 @@
       aria-label="Configurações de Acessibilidade"
       aria-hidden="true">
 
-      <h3>Acessibilidade</h3>
+      <div class="a11y-panel-header">
+        <div>
+          <span class="a11y-panel-kicker">OYAMA HUB</span>
+          <h3>Acessibilidade</h3>
+        </div>
+        <button class="a11y-panel-close" id="a11y-close" type="button" aria-label="Fechar painel">&times;</button>
+      </div>
 
       <div class="a11y-control-group">
         <span>Tamanho do Texto</span>
-        <button class="a11y-btn" id="a11y-txt-normal">A — Normal (100%)</button>
-        <button class="a11y-btn" id="a11y-txt-large">A+ — Grande (110%)</button>
-        <button class="a11y-btn" id="a11y-txt-xl">A++ — Extra Grande (125%)</button>
+        <button class="a11y-btn" id="a11y-txt-normal" aria-pressed="false">A — Normal (100%)</button>
+        <button class="a11y-btn" id="a11y-txt-large" aria-pressed="false">A+ — Grande (110%)</button>
+        <button class="a11y-btn" id="a11y-txt-xl" aria-pressed="false">A++ — Extra Grande (125%)</button>
       </div>
 
       <div class="a11y-control-group">
         <span>Visualização</span>
-        <button class="a11y-btn" id="a11y-contrast">◑ Alto Contraste</button>
-        <button class="a11y-btn" id="a11y-motion">⏸ Reduzir Animações</button>
-        <button class="a11y-btn" id="a11y-links">🔗 Destacar Links</button>
-        <button class="a11y-btn" id="a11y-spacing">↕ Espaçamento Extra</button>
+        <button class="a11y-btn" id="a11y-contrast" aria-pressed="false">◑ Alto Contraste</button>
+        <button class="a11y-btn" id="a11y-motion" aria-pressed="false">⏸ Reduzir Animações</button>
+        <button class="a11y-btn" id="a11y-links" aria-pressed="false">🔗 Destacar Links</button>
+        <button class="a11y-btn" id="a11y-spacing" aria-pressed="false">↕ Espaçamento Extra</button>
       </div>
 
       <div class="a11y-control-group">
-        <span>Libras</span>
-        <button class="a11y-btn" id="a11y-vlibras">🤟 Abrir Tradutor VLibras</button>
+        <span>Leitura</span>
+        <button class="a11y-btn a11y-btn-feature" id="a11y-speech">◉ <span>Ler conteúdo da página</span></button>
       </div>
 
       <button class="a11y-btn" id="a11y-reset">↺ Restaurar Padrões</button>
@@ -74,18 +81,19 @@
 
   /* ─── 3. REFERÊNCIAS DOM ─── */
   const toggleBtn = document.getElementById('a11y-toggle-btn');
-  const panel     = document.getElementById('a11y-panel');
-  const html      = document.documentElement;
+  const panel = document.getElementById('a11y-panel');
+  const html = document.documentElement;
 
   const btnTxtNormal = document.getElementById('a11y-txt-normal');
-  const btnTxtLarge  = document.getElementById('a11y-txt-large');
-  const btnTxtXl     = document.getElementById('a11y-txt-xl');
-  const btnContrast  = document.getElementById('a11y-contrast');
-  const btnMotion    = document.getElementById('a11y-motion');
-  const btnLinks     = document.getElementById('a11y-links');
-  const btnSpacing   = document.getElementById('a11y-spacing');
-  const btnVlibras   = document.getElementById('a11y-vlibras');
-  const btnReset     = document.getElementById('a11y-reset');
+  const btnTxtLarge = document.getElementById('a11y-txt-large');
+  const btnTxtXl = document.getElementById('a11y-txt-xl');
+  const btnContrast = document.getElementById('a11y-contrast');
+  const btnMotion = document.getElementById('a11y-motion');
+  const btnLinks = document.getElementById('a11y-links');
+  const btnSpacing = document.getElementById('a11y-spacing');
+  const btnSpeech = document.getElementById('a11y-speech');
+  const btnReset = document.getElementById('a11y-reset');
+  const btnClose = document.getElementById('a11y-close');
 
 
   /* ─── 4. ESTADO (localStorageç) ─── */
@@ -104,9 +112,9 @@
   let state = {
     textSize: 'normal',    // 'normal' | 'large' | 'xl'
     contrast: false,
-    motion:   false,
-    links:    false,
-    spacing:  false,
+    motion: false,
+    links: false,
+    spacing: false,
     ...loadState()
   };
 
@@ -136,21 +144,29 @@
       btnTxtNormal.classList.add('active');
     }
 
+    [btnTxtNormal, btnTxtLarge, btnTxtXl].forEach(button => {
+      button.setAttribute('aria-pressed', String(button.classList.contains('active')));
+    });
+
     // Contraste
     html.classList.toggle('a11y-high-contrast', state.contrast);
     btnContrast.classList.toggle('active', state.contrast);
+    btnContrast.setAttribute('aria-pressed', String(state.contrast));
 
     // Animações
     html.classList.toggle('a11y-reduced-motion', state.motion);
     btnMotion.classList.toggle('active', state.motion);
+    btnMotion.setAttribute('aria-pressed', String(state.motion));
 
     // Links destacados
     html.classList.toggle('a11y-highlight-links', state.links);
     btnLinks.classList.toggle('active', state.links);
+    btnLinks.setAttribute('aria-pressed', String(state.links));
 
     // Espaçamento
     html.classList.toggle('a11y-extra-spacing', state.spacing);
     btnSpacing.classList.toggle('active', state.spacing);
+    btnSpacing.setAttribute('aria-pressed', String(state.spacing));
   }
 
   function saveAndApply() {
@@ -173,52 +189,49 @@
     }
   });
 
+  function closePanel(restoreFocus = false) {
+    panel.classList.remove('open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+    if (restoreFocus) toggleBtn.focus();
+  }
+
+  btnClose.addEventListener('click', () => closePanel(true));
+
   // Fechar ao clicar fora
   document.addEventListener('click', (e) => {
     if (!panel.contains(e.target) && e.target !== toggleBtn) {
-      panel.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      panel.setAttribute('aria-hidden', 'true');
+      closePanel();
     }
   });
 
   // Fechar com Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && panel.classList.contains('open')) {
-      panel.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      panel.setAttribute('aria-hidden', 'true');
-      toggleBtn.focus();
+      closePanel(true);
     }
   });
 
 
   /* ─── 7. EVENT LISTENERS DOS BOTÕES ─── */
   btnTxtNormal.addEventListener('click', () => { state.textSize = 'normal'; saveAndApply(); });
-  btnTxtLarge.addEventListener('click',  () => { state.textSize = 'large';  saveAndApply(); });
-  btnTxtXl.addEventListener('click',    () => { state.textSize = 'xl';     saveAndApply(); });
+  btnTxtLarge.addEventListener('click', () => { state.textSize = 'large'; saveAndApply(); });
+  btnTxtXl.addEventListener('click', () => { state.textSize = 'xl'; saveAndApply(); });
 
   btnContrast.addEventListener('click', () => { state.contrast = !state.contrast; saveAndApply(); });
-  btnMotion.addEventListener('click',   () => { state.motion   = !state.motion;   saveAndApply(); });
-  btnLinks.addEventListener('click',    () => { state.links    = !state.links;    saveAndApply(); });
-  btnSpacing.addEventListener('click',  () => { state.spacing  = !state.spacing;  saveAndApply(); });
+  btnMotion.addEventListener('click', () => { state.motion = !state.motion; saveAndApply(); });
+  btnLinks.addEventListener('click', () => { state.links = !state.links; saveAndApply(); });
+  btnSpacing.addEventListener('click', () => { state.spacing = !state.spacing; saveAndApply(); });
 
-  // VLibras — localiza o botão injetado pelo widget e simula um clique
-  btnVlibras.addEventListener('click', () => {
-    // O VLibras injeta .vw-access-button dentro do [vw] container
-    const vwBtn = document.querySelector('[vw-access-button]') ||
-                  document.querySelector('.vw-access-button');
-    if (vwBtn) {
-      vwBtn.click();
-      // Fecha o painel de acessibilidade para não sobrepor o VLibras
-      panel.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      panel.setAttribute('aria-hidden', 'true');
-    } else {
-      // VLibras não está disponível nesta página
-      btnVlibras.textContent = '⚠️ VLibras indisponível aqui';
-      setTimeout(() => { btnVlibras.textContent = '🤟 Abrir Tradutor VLibras'; }, 2500);
-    }
+  btnSpeech.addEventListener('click', () => {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const content = document.querySelector('main')?.innerText || document.body.innerText;
+    const utterance = new SpeechSynthesisUtterance(content.slice(0, 5000));
+    utterance.lang = 'pt-BR';
+    utterance.rate = 0.95;
+    window.speechSynthesis.speak(utterance);
+    closePanel();
   });
 
   btnReset.addEventListener('click', () => {

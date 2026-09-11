@@ -197,7 +197,11 @@ mysqli_close($conn);
         if (rows.length > 1) {
             btn.closest('.exercicio-row').remove();
         } else {
-            alert('⚠️ Adicione pelo menos um exercício!');
+            if (window.AppModal) {
+                AppModal.alert({ title: 'Atenção', message: 'Adicione pelo menos um exercício!', type: 'warning' });
+            } else {
+                alert('⚠️ Adicione pelo menos um exercício!');
+            }
         }
     }
 
@@ -212,17 +216,29 @@ mysqli_close($conn);
         });
 
         if (!data || duracao < 5) {
-            alert('❌ Preencha todos os campos corretamente.');
+            if (window.AppModal) {
+                AppModal.alert({ title: 'Campos Obrigatórios', message: 'Preencha todos os campos corretamente (duração mínima de 5 min).', type: 'warning' });
+            } else {
+                alert('❌ Preencha todos os campos corretamente.');
+            }
             return false;
         }
 
         if (new Date(data) > new Date()) {
-            alert('❌ Não é permitido registrar treinos com data futura.');
+            if (window.AppModal) {
+                AppModal.alert({ title: 'Data Inválida', message: 'Não é permitido registrar treinos com data futura.', type: 'error' });
+            } else {
+                alert('❌ Não é permitido registrar treinos com data futura.');
+            }
             return false;
         }
 
         if (!temExercicio) {
-            alert('⚠️ Adicione pelo menos um exercício!');
+            if (window.AppModal) {
+                AppModal.alert({ title: 'Técnica Necessária', message: 'Adicione pelo menos um exercício/técnica!', type: 'warning' });
+            } else {
+                alert('⚠️ Adicione pelo menos um exercício!');
+            }
             return false;
         }
 

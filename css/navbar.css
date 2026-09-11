@@ -97,6 +97,19 @@ html.light .navbar-oh {
   transform: scaleX(1);
 }
 
+.navbar-oh-links a .nav-link-icon {
+  margin-right: 6px;
+  opacity: 0.8;
+  transition: opacity var(--duration-fast) var(--ease-default),
+              color var(--duration-fast) var(--ease-default);
+}
+
+.navbar-oh-links a:hover .nav-link-icon,
+.navbar-oh-links a.active .nav-link-icon {
+  opacity: 1;
+  color: var(--color-accent);
+}
+
 /* Link admin — destaque especial sem exagero */
 .navbar-oh-links a.nav-admin {
   color: var(--color-gold);
@@ -233,6 +246,23 @@ html.light .icon-moon { display: none; }
   padding: var(--space-4) var(--space-6) var(--space-5);
   border-top: 1px solid var(--color-border);
   gap: var(--space-3);
+}
+
+/* ── RESPONSIVE PADDING FOR DESKTOP LINKS ── */
+@media (max-width: 1120px) and (min-width: 769px) {
+  .navbar-oh {
+    padding: 0 var(--space-4);
+  }
+  .navbar-oh-links a {
+    padding: 0 var(--space-2);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .navbar-oh-links a .nav-link-icon {
+    margin-right: 4px;
+    width: 13px;
+    height: 13px;
+  }
 }
 
 /* ── RESPONSIVE ── */

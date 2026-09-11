@@ -53,7 +53,6 @@ if (isset($_POST["email"])) {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/tokens.css">
   <link rel="stylesheet" href="../css/registerlogin.css">
-  <link rel="preconnect" href="https://vlibras.gov.br">
   <script>
     (function() {
       var t = localStorage.getItem('oyama-theme');
@@ -196,16 +195,6 @@ if (isset($_POST["email"])) {
     </div>
   </div>
 </div>
-
-<!-- VLibras Acessibilidade -->
-<div vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
-  </div>
-</div>
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
 <script>
   // ── Tema ──

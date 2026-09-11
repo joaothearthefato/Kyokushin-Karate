@@ -136,6 +136,11 @@ a {
   width: 36px;
   height: 36px;
   object-fit: contain;
+  filter: invert(1);
+}
+
+html.light-mode .admin-brand-icon {
+  filter: none;
 }
 
 .admin-brand-title {

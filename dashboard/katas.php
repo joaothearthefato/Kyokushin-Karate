@@ -23,6 +23,14 @@ function youtubeEmbed(?string $url): string {
     return '';
 }
 
+function get_yt_id(?string $url): string {
+    if (!$url) return '';
+    if (preg_match('/(?:v=|youtu\.be\/|\/embed\/|\/shorts\/)([A-Za-z0-9_\-]{11})/', $url, $m)) {
+        return $m[1];
+    }
+    return '';
+}
+
 $sql = 'SELECT * FROM katas ORDER BY ordem ASC';
 $result = $conexao->query($sql);
 
@@ -47,7 +55,7 @@ if ($r_prog) {
   <title>Oyama Hub | Katas</title>
   <link rel="icon" href="../img/kyokushinicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/katas.css">
 </head>
 <body>
@@ -61,17 +69,6 @@ if ($r_prog) {
   <h1>KATAS</h1>
   <p>Formas codificadas de combate. Cada kata é um diálogo com os fundadores do estilo.</p>
 </section>
-
- <div vw class="enabled">
-    <div vw-access-button class="active"></div>
-    <div vw-plugin-wrapper>
-      <div class="vw-plugin-top-wrapper"></div>
-    </div>
-  </div>
-  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-  <script>
-    new window.VLibras.Widget('https://vlibras.gov.br/app');
-  </script>
 
 <!-- CONTROLS -->
 <div class="controls">
@@ -89,6 +86,9 @@ if ($r_prog) {
 <div class="kata-grid" id="kata-grid">
   <?php foreach ($katas_db as $i => $kata):
       $embed = youtubeEmbed($kata['video_url'] ?? '');
+      $vid_id = get_yt_id($kata['video_url'] ?? '');
+      $thumb = $vid_id ? "https://img.youtube.com/vi/{$vid_id}/mqdefault.jpg" : '../img/oyama2.jpg';
+      $has_vid = (bool)$vid_id;
   ?>
     <article class="kata-card"
              data-nivel="<?= htmlspecialchars($kata['nivel']) ?>"
@@ -97,18 +97,45 @@ if ($r_prog) {
              data-titulo="<?= htmlspecialchars($kata['nome']) ?>"
              data-descricao="<?= htmlspecialchars($kata['descricao']) ?>"
              data-id="<?= $kata['id'] ?>">
-      <div class="kata-card-inner">
-        <span class="kata-number"><?= str_pad($kata['ordem'], 2, '0', STR_PAD_LEFT) ?></span>
-        <span class="kata-level level-<?= htmlspecialchars($kata['nivel']) ?>">
-          <?= htmlspecialchars($kata['nivel']) ?>
+
+      <!-- Zona da Capa de Vídeo do Kata (estilo Kihon) -->
+      <div class="card-video-zone">
+        <img class="yt-thumb"
+             src="<?= $thumb ?>"
+             alt="<?= htmlspecialchars($kata['nome']) ?>"
+             loading="lazy">
+
+        <div class="play-btn">
+          <div class="play-icon">
+            <?php if ($has_vid): ?>
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <?php else: ?>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+              </svg>
+            <?php endif; ?>
+          </div>
+          <span class="play-label"><?= $has_vid ? 'Ver execução' : 'Em breve' ?></span>
+        </div>
+
+        <span class="level-badge level-<?= htmlspecialchars($kata['nivel']) ?>">
+          <?= ucfirst(htmlspecialchars($kata['nivel'])) ?>
         </span>
+
         <?php if (in_array($kata['id'], $concluidos)): ?>
           <span class="kata-concluido-badge">✓ Concluído</span>
         <?php endif; ?>
+      </div>
+
+      <div class="kata-card-inner">
+        <span class="kata-number"><?= str_pad($kata['ordem'], 2, '0', STR_PAD_LEFT) ?></span>
         <h3 class="kata-name"><?= htmlspecialchars($kata['nome']) ?></h3>
         <p class="kata-desc"><?= htmlspecialchars($kata['descricao']) ?></p>
         <div class="kata-actions">
-          <button class="kata-btn" onclick="event.stopPropagation(); openKataModal(this.closest('.kata-card'))">Ver Detalhes</button>
+          <button class="kata-btn" onclick="event.stopPropagation(); openKataModal(this.closest('.kata-card'))">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            Assistir Kata
+          </button>
           <button class="btn-concluir <?= in_array($kata['id'], $concluidos) ? 'concluido' : '' ?>"
                   data-id="<?= $kata['id'] ?>"
                   data-tipo="kata"
@@ -240,24 +267,36 @@ function toggleConcluido(btn) {
     .then(data => {
       if (!data.ok) return;
       const card = btn.closest('.kata-card');
-      // Atualizar badge no card
+      const videoZone = card.querySelector('.card-video-zone');
       let badge = card.querySelector('.kata-concluido-badge');
       if (data.concluido) {
         btn.textContent = '✓ Concluído';
         btn.classList.add('concluido');
-        if (!badge) {
+        if (!badge && videoZone) {
           badge = document.createElement('span');
           badge.className = 'kata-concluido-badge';
           badge.textContent = '✓ Concluído';
-          card.querySelector('.kata-card-inner').insertBefore(badge, card.querySelector('h3'));
+          videoZone.appendChild(badge);
+        }
+        if (window.AppModal) {
+          AppModal.toast({ message: 'Kata marcado como concluído! OSU!', type: 'success' });
         }
       } else {
         btn.textContent = 'Marcar como Concluído';
         btn.classList.remove('concluido');
         if (badge) badge.remove();
+        if (window.AppModal) {
+          AppModal.toast({ message: 'Progresso do Kata desmarcado.', type: 'info' });
+        }
       }
     })
-    .catch(() => alert('Erro ao atualizar progresso.'));
+    .catch(() => {
+      if (window.AppModal) {
+        AppModal.alert({ title: 'Aviso', message: 'Erro ao atualizar progresso do kata.', type: 'error' });
+      } else {
+        alert('Erro ao atualizar progresso.');
+      }
+    });
 }
 </script>
 

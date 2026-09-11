@@ -7,18 +7,18 @@
 
 /* ── ALIASES LEGADOS (compatibilidade com tokens) ── */
 :root {
-  --black:    var(--color-bg);
-  --dark:     var(--color-bg-raised);
-  --surface:  var(--color-surface);
+  --black: var(--color-bg);
+  --dark: var(--color-bg-raised);
+  --surface: var(--color-surface);
   --surface2: var(--color-surface-2);
-  --border:   var(--color-border);
-  --red:      var(--color-accent);
-  --red2:     var(--color-accent-2);
+  --border: var(--color-border);
+  --red: var(--color-accent);
+  --red2: var(--color-accent-2);
   --red-glow: var(--color-accent-dim);
-  --gold:     var(--color-gold);
-  --white:    var(--color-text);
-  --muted:    var(--color-text-2);
-  --text:     var(--color-text);
+  --gold: var(--color-gold);
+  --white: var(--color-text);
+  --muted: var(--color-text-2);
+  --text: var(--color-text);
 }
 
 /* ── AMBIENT BODY BACKGROUND ── */
@@ -51,7 +51,7 @@ header {
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--color-border);
   transition: background var(--duration-base) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default);
 }
 
 html.light header {
@@ -85,7 +85,8 @@ html.light header {
   width: 32px;
   height: 32px;
   object-fit: contain;
-  transition: transform var(--duration-fast) var(--ease-default);
+  transition: transform var(--duration-fast) var(--ease-default),
+    filter var(--duration-base) var(--ease-default);
 }
 
 .nav-logo:hover .logo {
@@ -117,7 +118,7 @@ html.light header {
   color: var(--color-text-2);
   cursor: pointer;
   transition: background var(--duration-fast) var(--ease-default),
-              border-color var(--duration-fast) var(--ease-default);
+    border-color var(--duration-fast) var(--ease-default);
 }
 
 .theme-btn:hover {
@@ -151,7 +152,7 @@ html.light header {
   border-radius: var(--radius-sm);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-default),
-              background var(--duration-fast) var(--ease-default);
+    background var(--duration-fast) var(--ease-default);
 }
 
 .nav-link:hover {
@@ -201,7 +202,7 @@ html.light header {
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: background var(--duration-fast) var(--ease-default),
-              box-shadow var(--duration-fast) var(--ease-default);
+    box-shadow var(--duration-fast) var(--ease-default);
 }
 
 .nav-btn-register:hover {
@@ -292,9 +293,17 @@ html.light header {
 }
 
 @keyframes pulseDot {
-  0%   { box-shadow: 0 0 0 0 rgba(200, 0, 10, 0.7); }
-  70%  { box-shadow: 0 0 0 8px rgba(200, 0, 10, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(200, 0, 10, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(200, 0, 10, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(200, 0, 10, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 0, 10, 0);
+  }
 }
 
 .hero-title {
@@ -421,7 +430,7 @@ html.light header {
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   transition: transform var(--duration-slow) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default);
 }
 
 .hero-card-frame:hover {
@@ -480,8 +489,13 @@ html.light .floating-chip {
 }
 
 @keyframes floatSlow {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-8px);
+  }
 }
 
 .chip-icon {
@@ -569,8 +583,8 @@ html.light .floating-chip {
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   transition: transform var(--duration-base) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default),
-              box-shadow var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default),
+    box-shadow var(--duration-base) var(--ease-default);
 }
 
 .bento-card:hover {
@@ -735,9 +749,9 @@ html.light .floating-chip {
   display: flex;
   flex-direction: column;
   transition: transform var(--duration-base) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default),
-              box-shadow var(--duration-base) var(--ease-default),
-              opacity var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default),
+    box-shadow var(--duration-base) var(--ease-default),
+    opacity var(--duration-base) var(--ease-default);
   position: relative;
   overflow: hidden;
 }
@@ -852,11 +866,14 @@ html.light .floating-chip {
 }
 
 .belt-selector-nav {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   margin-bottom: var(--space-8);
 }
 
@@ -864,6 +881,7 @@ html.light .floating-chip {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-height: 58px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   color: var(--color-text-2);
@@ -872,39 +890,103 @@ html.light .floating-chip {
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  padding: 8px 16px;
-  border-radius: var(--radius-full);
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-default);
+  text-align: left;
+  transition: transform var(--duration-fast) var(--ease-default), background var(--duration-fast) var(--ease-default), border-color var(--duration-fast) var(--ease-default), box-shadow var(--duration-fast) var(--ease-default);
 }
 
 .belt-nav-item:hover {
   background: var(--color-surface-2);
   color: var(--color-text);
   border-color: var(--color-border-2);
+  transform: translateY(-2px);
 }
 
 .belt-nav-item.active {
-  background: var(--color-surface-3);
+  background: linear-gradient(135deg, var(--color-surface-3), var(--color-surface));
   color: var(--color-text);
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-accent-dim);
+  box-shadow: 0 7px 18px var(--color-accent-dim), inset 0 0 0 1px var(--color-accent-dim);
 }
 
 .belt-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+  width: 34px;
+  height: 14px;
+  flex: 0 0 34px;
+  border-radius: 3px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.belt-branca  { background: #ffffff; }
-.belt-laranja { background: #f97316; }
-.belt-azul    { background: #2563eb; }
-.belt-amarela { background: #eab308; }
-.belt-verde   { background: #16a34a; }
-.belt-marrom  { background: #854d0e; }
-.belt-preta   { background: #111114; border-color: #eab308; }
+.belt-nav-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.belt-nav-name {
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.belt-nav-kyu {
+  color: var(--color-text-3);
+  font-size: 10px;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.belt-branca {
+  background: #ffffff;
+}
+
+.belt-laranja {
+  background: #f97316;
+}
+
+.belt-azul {
+  background: #2563eb;
+}
+
+.belt-amarela {
+  background: #eab308;
+}
+
+.belt-verde {
+  background: #16a34a;
+}
+
+.belt-marrom {
+  background: #854d0e;
+}
+
+.belt-marrom-preta {
+  background: linear-gradient(to right, #854d0e 65%, #0c0c0e 65%, #0c0c0e 82%, #854d0e 82%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.belt-preta {
+  background: linear-gradient(to right, #111114 65%, #eab308 65%, #eab308 82%, #111114 82%);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+@media (max-width: 700px) {
+  .belt-selector-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .belt-selector-nav {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* Belt Showcase Card */
 .belt-showcase-card {
@@ -918,7 +1000,7 @@ html.light .floating-chip {
   align-items: center;
   box-shadow: var(--shadow-lg);
   transition: opacity var(--duration-base) var(--ease-default),
-              transform var(--duration-base) var(--ease-default);
+    transform var(--duration-base) var(--ease-default);
 }
 
 .belt-visual-col {
@@ -955,16 +1037,50 @@ html.light .floating-chip {
   transition: background-color var(--duration-base) var(--ease-default);
 }
 
-.belt-strap.belt-branca  { background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.15); }
-.belt-strap.belt-branca .belt-kanji-embroidery { color: #111114; text-shadow: none; }
-.belt-strap.belt-laranja { background: #ea580c; }
-.belt-strap.belt-azul    { background: #1d4ed8; }
-.belt-strap.belt-amarela { background: #ca8a04; }
-.belt-strap.belt-amarela .belt-kanji-embroidery { color: #111114; text-shadow: none; }
-.belt-strap.belt-verde   { background: #15803d; }
-.belt-strap.belt-marrom  { background: #78350f; }
-.belt-strap.belt-preta   { background: #0f0f12; border: 1px solid rgba(234, 179, 8, 0.5); }
-.belt-strap.belt-preta .belt-kanji-embroidery { color: #eab308; text-shadow: 0 0 6px rgba(234, 179, 8, 0.5); }
+.belt-strap.belt-branca {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.belt-strap.belt-branca .belt-kanji-embroidery {
+  color: #111114;
+  text-shadow: none;
+}
+
+.belt-strap.belt-laranja {
+  background: #ea580c;
+}
+
+.belt-strap.belt-azul {
+  background: #1d4ed8;
+}
+
+.belt-strap.belt-amarela {
+  background: #ca8a04;
+}
+
+.belt-strap.belt-amarela .belt-kanji-embroidery {
+  color: #111114;
+  text-shadow: none;
+}
+
+.belt-strap.belt-verde {
+  background: #15803d;
+}
+
+.belt-strap.belt-marrom {
+  background: #78350f;
+}
+
+.belt-strap.belt-preta {
+  background: #0f0f12;
+  border: 1px solid rgba(234, 179, 8, 0.5);
+}
+
+.belt-strap.belt-preta .belt-kanji-embroidery {
+  color: #eab308;
+  text-shadow: 0 0 6px rgba(234, 179, 8, 0.5);
+}
 
 .belt-kanji-embroidery {
   font-size: 14px;
@@ -979,14 +1095,34 @@ html.light .floating-chip {
   pointer-events: none;
 }
 
-.belt-tip-stitch {
+/* Ponta / tip da faixa — wrapper no canto direito */
+.belt-tip-wrap {
   position: absolute;
   right: 0;
   top: 0;
   bottom: 0;
   width: 6px;
-  background: rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 4px 0;
+  overflow: hidden;
+}
+
+/* O risco interno fica invisível por padrão */
+.belt-tip-stitch {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}
+
+/* Ponta preta sólida para Faixa Marrom com Ponta Preta (1º Kyu) */
+.belt-tip-wrap.belt-tip-black {
+  width: 24px;
+  background: #0f0f12;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 2px 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.belt-tip-wrap.belt-tip-black .belt-tip-stitch {
+  display: none;
 }
 
 .belt-stripes-container {
@@ -1008,7 +1144,7 @@ html.light .floating-chip {
 
 .stripe-black {
   background: #0c0c0e;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .stripe-gold {
@@ -1110,7 +1246,7 @@ html.light .floating-chip {
   display: flex;
   flex-direction: column;
   transition: transform var(--duration-base) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default);
 }
 
 .gear-card:hover {
@@ -1129,6 +1265,9 @@ html.light .floating-chip {
 }
 
 .gear-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
   max-height: 100%;
   object-fit: contain;
   transition: transform var(--duration-base) var(--ease-default);
@@ -1136,15 +1275,6 @@ html.light .floating-chip {
 
 .gear-card:hover .gear-media img {
   transform: scale(1.04);
-}
-
-.gear-card-protection .gear-protection-graphic {
-  height: 220px;
-  background: var(--color-bg-raised);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .shield-icon {
@@ -1277,7 +1407,7 @@ html.light .floating-chip {
   flex-direction: column;
   gap: var(--space-4);
   transition: opacity var(--duration-base) var(--ease-default),
-              transform var(--duration-base) var(--ease-default);
+    transform var(--duration-base) var(--ease-default);
 }
 
 .dojokun-badge {
@@ -1337,7 +1467,7 @@ html.light .floating-chip {
   justify-content: space-between;
   gap: var(--space-5);
   transition: transform var(--duration-base) var(--ease-default),
-              border-color var(--duration-base) var(--ease-default);
+    border-color var(--duration-base) var(--ease-default);
 }
 
 .testimonial-card:hover {
@@ -1513,9 +1643,11 @@ html.light .floating-chip {
     padding: var(--space-10) var(--space-6);
     text-align: center;
   }
+
   .cta-btn-group {
     justify-content: center;
   }
+
   .cta-symbol {
     font-size: 60px;
   }

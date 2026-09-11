@@ -515,7 +515,14 @@ main {
 }
 
 .card-dominado {
-  border-color: rgba(22, 163, 74, 0.25) !important;
+  border-color: rgba(22, 163, 74, 0.45) !important;
+  box-shadow: 0 0 16px rgba(22, 163, 74, 0.15) !important;
+}
+
+html.light .card-dominado,
+body.light-mode .card-dominado {
+  border-color: rgba(22, 163, 74, 0.5) !important;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.18) !important;
 }
 
 /* ── DIVIDER ── */

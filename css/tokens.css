@@ -25,6 +25,20 @@ img {
   max-width: 100%;
 }
 
+/* Ícone Kyokushin (PNG preto): branco no tema escuro, preto no claro */
+img.logo,
+.footer-logo img,
+.admin-brand-icon {
+  filter: invert(1);
+}
+
+html.light img.logo,
+html.light .footer-logo img,
+html.light .admin-brand-icon,
+html.light-mode .admin-brand-icon {
+  filter: none;
+}
+
 a {
   text-decoration: none;
   color: inherit;

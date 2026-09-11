@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       focus: 'Bloqueios (Jodan Uke, Gedan Barai), chutes circulares baixos (Gedan Mawashi Geri) e postura Kokutsu Dachi.',
       conditioning: '30 flexões, 35 abdominais, 30 agachamentos, kumite leve.',
       cssClass: 'belt-laranja',
-      stripes: 1
+      stripes: 0
     },
     azul: {
       title: 'Faixa Azul (青帯)',
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
       focus: 'Esquivas (Tai Sabaki), chute circular médio (Mawashi Geri Chudan) e defesas circulares (Mawashi Uke).',
       conditioning: '40 flexões, 45 abdominais, kumite com contato moderado.',
       cssClass: 'belt-azul',
-      stripes: 1
+      stripes: 0
     },
     amarela: {
       title: 'Faixa Amarela (黄帯)',
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       focus: 'Golpes com cotovelo (Hiji Ate), chutes altos (Jodan Geri) e controle da distância e tempo de reação.',
       conditioning: '50 flexões nos punhos (Seiken), 50 abdominais, 5 rounds de kumite.',
       cssClass: 'belt-amarela',
-      stripes: 1
+      stripes: 0
     },
     verde: {
       title: 'Faixa Verde (緑帯)',
@@ -171,11 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
       focus: 'Combinações complexas (Renraku), chutes giratórios (Ushiro Geri) e estratégias táticas de combate livre.',
       conditioning: '60 flexões, 60 abdominais, 10 rounds de kumite com contato pleno.',
       cssClass: 'belt-verde',
-      stripes: 1
+      stripes: 0
     },
     marrom: {
       title: 'Faixa Marrom (茶帯)',
-      kyu: '2º e 1º Kyu',
+      kyu: '2º Kyu',
       element: 'Elemento: Fruto & Criatividade',
       philosophy: 'O fruto pronto para colheita. O praticante torna-se exemplo aos mais novos, refinando suas fraquezas e preparando corpo e alma para o desafio da Faixa Preta.',
       katas: 'Saifa, Seienchin, Garyu',
@@ -183,7 +183,21 @@ document.addEventListener('DOMContentLoaded', () => {
       focus: 'Refinamento milimétrico de katas superiores, absorção de impacto corporal e kumite contínuo de alta intensidade.',
       conditioning: '75 flexões, 80 abdominais, 15 a 20 lutas consecutivas.',
       cssClass: 'belt-marrom',
-      stripes: 1
+      stripes: 0,
+      tipBlack: false
+    },
+    'marrom-preta': {
+      title: 'Faixa Marrom com Ponta Preta (茶帯黒先)',
+      kyu: '1º Kyu',
+      element: 'Elemento: Maturidade & Transição',
+      philosophy: 'O ponto culminante antes da Faixa Preta. A ponta negra simboliza que o guerreiro já toca a escuridão da maestria. É o último rito de purificação antes do verdadeiro recomeço.',
+      katas: 'Saifa, Seienchin, Garyu, Kanku',
+      time: '2 a 3 anos após a Faixa Marrom comum',
+      focus: 'Maestria dos katas avançados (Kanku), kumite de alta intensidade e demonstração de liderança no dojo.',
+      conditioning: '80 flexões nos punhos, 90 abdominais, 20 a 25 lutas consecutivas.',
+      cssClass: 'belt-marrom',
+      stripes: 1,
+      tipBlack: false
     },
     preta: {
       title: 'Faixa Preta (黒帯 - Shodan)',
@@ -195,7 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
       focus: 'Maestria completa de Kihon, Kata, Bunkai e teste físico do Kumite de 30 a 50 lutadores.',
       conditioning: '100 flexões nos nós dos dedos, 100 abdominais, teste de quebramento (Tameshiwari) e Kumite brutal.',
       cssClass: 'belt-preta',
-      stripes: 1
+      stripes: 1,
+      tipBlack: false
     }
   };
 
@@ -213,8 +228,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   beltNavItems.forEach(btn => {
     btn.addEventListener('click', () => {
-      beltNavItems.forEach(b => b.classList.remove('active'));
+      beltNavItems.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
       btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
 
       const beltKey = btn.dataset.belt;
       const data = beltData[beltKey];
@@ -239,9 +258,15 @@ document.addEventListener('DOMContentLoaded', () => {
         beltFocus.textContent = data.focus;
         beltConditioning.textContent = data.conditioning;
 
-        // Adicionar listra preta/dourada se aplicável
+        // Controle da ponta da faixa (sem bloco sólido de ponta)
+        const beltTipWrap = document.getElementById('beltTipWrap');
+        if (beltTipWrap) {
+          beltTipWrap.className = 'belt-tip-wrap';
+        }
+
+        // Adicionar apenas a listra preta na Marrom/Preta e o risco amarelo na Preta
         beltStripes.innerHTML = '';
-        if (data.stripes > 0 && beltKey !== 'preta') {
+        if (beltKey === 'marrom-preta') {
           const stripe = document.createElement('div');
           stripe.className = 'belt-stripe-bar stripe-black';
           beltStripes.appendChild(stripe);
