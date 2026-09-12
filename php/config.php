@@ -23,7 +23,7 @@ function carregar_env_local(): void {
 carregar_env_local();
 
 $host = getenv('DB_HOST') ?: 'localhost';
-$usuario = getenv('DB_USER') !== false ? (string) getenv('DB_USER') : '';
+$usuario = getenv('DB_USER') !== false ? (string) getenv('DB_USER') : 'oyama_app';
 $senha = getenv('DB_PASSWORD') !== false ? (string) getenv('DB_PASSWORD') : '';
 $banco = getenv('DB_NAME') ?: 'oyama_hub';
 $charset = getenv('DB_CHARSET') ?: 'utf8mb4';
