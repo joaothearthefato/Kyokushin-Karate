@@ -1,7 +1,7 @@
 <?php
-session_start();
-require_once '../php/config.php';
-require_once '../php/csrf.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 // Validação de Sessão
 if (!isset($_SESSION['id'])) {
@@ -11,19 +11,6 @@ if (!isset($_SESSION['id'])) {
 
 $usuario_id = intval($_SESSION['id']);
 $usuario_nome = $_SESSION['nome'] ?? 'Praticante';
-
-// Garantir estrutura da tabela anotacoes
-mysqli_query($conn, "CREATE TABLE IF NOT EXISTS anotacoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    titulo VARCHAR(255) NOT NULL,
-    conteudo TEXT NOT NULL,
-    categoria VARCHAR(50) NOT NULL DEFAULT 'Geral',
-    cor VARCHAR(20) NOT NULL DEFAULT 'purple',
-    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    atualizado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user (usuario_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
 // Mapa de Categorias e Cores
 $categorias_config = [

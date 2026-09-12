@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /php/
+Disallow: /dashboard/
+Disallow: /database/
+Disallow: /sql/
+Disallow: /uploads/
+Sitemap: http://localhost/Kyokushin-Karate/sitemap.xml

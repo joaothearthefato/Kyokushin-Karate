@@ -1,6 +1,6 @@
 <?php
-include("config.php");
-require_once("csrf.php");
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/csrf.php';
 
 $status = $_GET['status'] ?? '';
 $msgKey = $_GET['msg'] ?? '';

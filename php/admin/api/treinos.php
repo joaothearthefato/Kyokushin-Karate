@@ -71,12 +71,21 @@ switch ($method) {
                 $types .= "i";
             }
 
+            $pagination = api_pagination();
+            $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM treinos t JOIN usuarios u ON t.usuario_id = u.id WHERE " . implode(" AND ", $where));
+            if (!empty($params)) mysqli_stmt_bind_param($countStmt, $types, ...$params);
+            mysqli_stmt_execute($countStmt);
+            $total = intval(mysqli_fetch_assoc(mysqli_stmt_get_result($countStmt))['total'] ?? 0);
+
             $sql = "SELECT t.*, u.nome AS usuario_nome, f.nome AS faixa_nome 
                     FROM treinos t 
                     JOIN usuarios u ON t.usuario_id = u.id 
                     LEFT JOIN faixas f ON u.faixa_id = f.id 
                     WHERE " . implode(" AND ", $where) . " 
-                    ORDER BY t.data_treino DESC, t.id DESC";
+                        ORDER BY t.data_treino DESC, t.id DESC LIMIT ? OFFSET ?";
+                    $params[] = $pagination['limit'];
+                    $params[] = $pagination['offset'];
+                    $types .= "ii";
 
             $stmt = mysqli_prepare($conn, $sql);
             if (!empty($params)) {
@@ -86,7 +95,8 @@ switch ($method) {
             $res = mysqli_stmt_get_result($stmt);
             $treinos = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-            echo json_encode(['success' => true, 'count' => count($treinos), 'data' => $treinos]);
+            echo json_encode(['success' => true, 'count' => count($treinos), 'data' => $treinos,
+                'pagination' => ['page' => $pagination['page'], 'limit' => $pagination['limit'], 'total' => $total, 'total_pages' => (int) ceil($total / $pagination['limit'])]], JSON_UNESCAPED_UNICODE);
         }
         break;
 
@@ -102,6 +112,7 @@ switch ($method) {
 
         validar_dados_treino($conn, $usuario_id, $nome, $nivel, $duracao_min, $data_treino, $exercicios);
 
+        mysqli_begin_transaction($conn);
         $stmt = mysqli_prepare($conn, "INSERT INTO treinos (usuario_id, nome, descricao, nivel, duracao_min, observacoes, data_treino) VALUES (?, ?, ?, ?, ?, ?, ?)");
         mysqli_stmt_bind_param($stmt, "isssiss", $usuario_id, $nome, $descricao, $nivel, $duracao_min, $observacoes, $data_treino);
 
@@ -117,14 +128,19 @@ switch ($method) {
                     if (!empty($exDesc)) {
                         $stmtEx = mysqli_prepare($conn, "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes) VALUES (?, ?, ?, ?)");
                         mysqli_stmt_bind_param($stmtEx, "isii", $treinoId, $exDesc, $series, $repeticoes);
-                        mysqli_stmt_execute($stmtEx);
+                        if (!mysqli_stmt_execute($stmtEx)) {
+                            mysqli_rollback($conn);
+                            api_error(db_error($conn, 'Erro ao salvar exercícios do treino'), 500);
+                        }
                     }
                 }
             }
 
+            mysqli_commit($conn);
             log_activity($conn, 'treinos_create', "Treino '$nome' cadastrado (ID $treinoId)");
             echo json_encode(['success' => true, 'message' => 'Treino criado com sucesso!', 'id' => $treinoId]);
         } else {
+            mysqli_rollback($conn);
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao cadastrar Treino')]);
         }
@@ -159,28 +175,38 @@ switch ($method) {
         $stmt = mysqli_prepare($conn, "UPDATE treinos SET usuario_id = ?, nome = ?, descricao = ?, nivel = ?, duracao_min = ?, observacoes = ?, data_treino = ? WHERE id = ?");
         mysqli_stmt_bind_param($stmt, "isssissi", $usuario_id, $nome, $descricao, $nivel, $duracao_min, $observacoes, $data_treino, $id);
 
+        mysqli_begin_transaction($conn);
         if (mysqli_stmt_execute($stmt)) {
             $exerciciosValidos = array_filter($exercicios, function ($ex) {
                 return trim(is_array($ex) ? ($ex['descricao'] ?? '') : (string) $ex) !== '';
             });
-            if (!empty($exerciciosValidos)) {
-                $deleteExercises = mysqli_prepare($conn, 'DELETE FROM treino_exercicios WHERE treino_id = ?');
-                mysqli_stmt_bind_param($deleteExercises, 'i', $id);
-                mysqli_stmt_execute($deleteExercises);
+            $deleteExercises = mysqli_prepare($conn, 'DELETE FROM treino_exercicios WHERE treino_id = ?');
+            mysqli_stmt_bind_param($deleteExercises, 'i', $id);
+            if (!mysqli_stmt_execute($deleteExercises)) {
+                mysqli_rollback($conn);
+                api_error(db_error($conn, 'Erro ao atualizar exercícios do treino'), 500);
             }
             foreach ($exerciciosValidos as $ex) {
                 $exDesc = is_array($ex) ? trim($ex['descricao'] ?? '') : trim((string) $ex);
                 if ($exDesc === '') continue;
                 $series = is_array($ex) ? max(0, min(255, intval($ex['series'] ?? 3))) : 3;
                 $repeticoes = is_array($ex) ? max(0, min(255, intval($ex['repeticoes'] ?? 15))) : 15;
-                if (mb_strlen($exDesc) > 255) api_error('A descrição de um exercício excede 255 caracteres.');
+                if (mb_strlen($exDesc) > 255) {
+                    mysqli_rollback($conn);
+                    api_error('A descrição de um exercício excede 255 caracteres.');
+                }
                 $stmtEx = mysqli_prepare($conn, "INSERT INTO treino_exercicios (treino_id, descricao, series, repeticoes) VALUES (?, ?, ?, ?)");
                 mysqli_stmt_bind_param($stmtEx, "isii", $id, $exDesc, $series, $repeticoes);
-                if (!mysqli_stmt_execute($stmtEx)) api_error(db_error($conn, 'Erro ao salvar exercícios do treino'), 500);
+                if (!mysqli_stmt_execute($stmtEx)) {
+                    mysqli_rollback($conn);
+                    api_error(db_error($conn, 'Erro ao salvar exercícios do treino'), 500);
+                }
             }
+            mysqli_commit($conn);
             log_activity($conn, 'treinos_update', "Treino '$nome' atualizado (ID $id)");
             echo json_encode(['success' => true, 'message' => 'Treino atualizado com sucesso!']);
         } else {
+            mysqli_rollback($conn);
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => db_error($conn, 'Erro ao atualizar Treino')]);
         }

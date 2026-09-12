@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/../php/session.php';
 require '../php/config.php';
 require_once '../php/csrf.php';
 
@@ -32,7 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     validar_csrf();
     $nome      = trim($_POST['nome'] ?? '');
     $nascimento = $_POST['nascimento'] ?? '';
-    $faixa_id  = intval($_POST['faixa_id'] ?? 0);
+    $stmt_faixa_atual = mysqli_prepare($conn, 'SELECT faixa_id FROM usuarios WHERE id = ?');
+    mysqli_stmt_bind_param($stmt_faixa_atual, 'i', $usuario_id);
+    mysqli_stmt_execute($stmt_faixa_atual);
+    $faixa_atual = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt_faixa_atual));
+    $faixa_id = intval($faixa_atual['faixa_id'] ?? 0);
     $nova_senha = $_POST['nova_senha'] ?? '';
     $conf_senha = $_POST['confirmar_senha'] ?? '';
 
@@ -227,11 +231,12 @@ mysqli_close($conn);
                     </div>
                     <div class="form-group profile-edit-full">
                         <label for="edit_faixa">Faixa atual</label>
-                        <select id="edit_faixa" name="faixa_id" required>
+                        <select id="edit_faixa" name="faixa_id" disabled aria-describedby="faixa-help">
                             <?php foreach ($faixas as $faixa): ?>
                                 <option value="<?= intval($faixa['id']) ?>" <?= intval($faixa['id']) === intval($usuario['faixa_id']) ? 'selected' : '' ?>><?= htmlspecialchars($faixa['nome']) ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <small id="faixa-help">A graduação é atualizada pelo administrador do dojo.</small>
                     </div>
                 </div>
                 <div class="form-separator"><span>SEGURANÇA</span></div>

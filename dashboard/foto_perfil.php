@@ -1,8 +1,8 @@
 <?php
-session_start();
-require '../php/config.php';
-require_once '../php/auth_check.php';
-require_once '../php/csrf.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/auth_check.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 if (!is_logged_in() || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: perfil.php');
@@ -161,6 +161,12 @@ if (!in_array($mime, $mimesPermitidos, true)) {
 // Normalizar pjpeg para jpeg
 if ($mime === 'image/pjpeg') {
     $mime = 'image/jpeg';
+}
+
+$dimensoes = @getimagesize($arquivo['tmp_name']);
+if (!$dimensoes || $dimensoes[0] < 1 || $dimensoes[1] < 1 || $dimensoes[0] > 4000 || $dimensoes[1] > 4000) {
+    header('Location: perfil.php?foto=dimensoes_invalidas');
+    exit();
 }
 
 // Processar a foto (com ou sem GD)

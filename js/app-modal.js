@@ -5,6 +5,45 @@
 window.AppModal = (function () {
   let modalOverlay = null;
   let toastContainer = null;
+  let lastFocusedElement = null;
+  let modalKeydownHandler = null;
+
+  function openModal(initialFocus) {
+    lastFocusedElement = document.activeElement;
+    modalOverlay.classList.add('open');
+    modalOverlay.setAttribute('aria-hidden', 'false');
+    modalKeydownHandler = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        const cancel = document.getElementById('btnAppModalCancel') || document.getElementById('btnAppModalOk');
+        cancel?.click();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = modalOverlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', modalKeydownHandler);
+    initialFocus?.focus();
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('open');
+    modalOverlay.setAttribute('aria-hidden', 'true');
+    if (modalKeydownHandler) document.removeEventListener('keydown', modalKeydownHandler);
+    modalKeydownHandler = null;
+    if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
+    lastFocusedElement = null;
+  }
 
   function ensureElements() {
     if (!modalOverlay) {
@@ -13,7 +52,7 @@ window.AppModal = (function () {
       modalOverlay.id = 'universalAppModal';
       modalOverlay.setAttribute('aria-hidden', 'true');
       modalOverlay.innerHTML = `
-        <div class="app-modal-box" role="dialog" aria-modal="true">
+          <div class="app-modal-box" role="dialog" aria-modal="true" aria-labelledby="appModalTitle" aria-describedby="appModalText">
           <div class="app-modal-icon-wrap" id="appModalIcon"></div>
           <h3 class="app-modal-title" id="appModalTitle">Aviso</h3>
           <p class="app-modal-text" id="appModalText"></p>
@@ -65,19 +104,15 @@ window.AppModal = (function () {
 
       actionsEl.innerHTML = `<button type="button" class="btn-app-modal-primary" id="btnAppModalOk">${buttonText}</button>`;
 
-      modalOverlay.classList.add('open');
-      modalOverlay.setAttribute('aria-hidden', 'false');
-
       const okBtn = document.getElementById('btnAppModalOk');
       const close = () => {
-        modalOverlay.classList.remove('open');
-        modalOverlay.setAttribute('aria-hidden', 'true');
+        closeModal();
         okBtn.removeEventListener('click', close);
         resolve(true);
       };
 
       okBtn.addEventListener('click', close);
-      okBtn.focus();
+      openModal(okBtn);
     });
   }
 
@@ -106,9 +141,6 @@ window.AppModal = (function () {
         <button type="button" class="btn-app-modal-primary" id="btnAppModalConfirm">${confirmText}</button>
       `;
 
-      modalOverlay.classList.add('open');
-      modalOverlay.setAttribute('aria-hidden', 'false');
-
       const confirmBtn = document.getElementById('btnAppModalConfirm');
       const cancelBtn = document.getElementById('btnAppModalCancel');
 
@@ -123,15 +155,14 @@ window.AppModal = (function () {
       };
 
       const cleanup = () => {
-        modalOverlay.classList.remove('open');
-        modalOverlay.setAttribute('aria-hidden', 'true');
+        closeModal();
         confirmBtn.removeEventListener('click', onConfirm);
         cancelBtn.removeEventListener('click', onCancel);
       };
 
       confirmBtn.addEventListener('click', onConfirm);
       cancelBtn.addEventListener('click', onCancel);
-      confirmBtn.focus();
+      openModal(confirmBtn);
     });
   }
 
@@ -146,8 +177,9 @@ window.AppModal = (function () {
     t.className = `app-toast ${type}`;
     t.innerHTML = `
       <div class="app-toast-icon">${getIconSvg(type)}</div>
-      <span>${message}</span>
+      <span></span>
     `;
+    t.querySelector('span').textContent = String(message);
 
     toastContainer.appendChild(t);
 

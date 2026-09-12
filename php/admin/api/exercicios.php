@@ -38,7 +38,16 @@ switch ($method) {
                 $types .= "s";
             }
 
-            $sql = "SELECT * FROM exercicios_kyokushin WHERE " . implode(" AND ", $where) . " ORDER BY categoria ASC, nome ASC";
+            $pagination = api_pagination();
+            $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM exercicios_kyokushin WHERE " . implode(" AND ", $where));
+            if (!empty($params)) mysqli_stmt_bind_param($countStmt, $types, ...$params);
+            mysqli_stmt_execute($countStmt);
+            $total = intval(mysqli_fetch_assoc(mysqli_stmt_get_result($countStmt))['total'] ?? 0);
+
+            $sql = "SELECT * FROM exercicios_kyokushin WHERE " . implode(" AND ", $where) . " ORDER BY categoria ASC, nome ASC LIMIT ? OFFSET ?";
+            $params[] = $pagination['limit'];
+            $params[] = $pagination['offset'];
+            $types .= "ii";
             $stmt = mysqli_prepare($conn, $sql);
             if (!empty($params)) {
                 mysqli_stmt_bind_param($stmt, $types, ...$params);
@@ -47,7 +56,8 @@ switch ($method) {
             $res = mysqli_stmt_get_result($stmt);
             $exercicios = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-            echo json_encode(['success' => true, 'count' => count($exercicios), 'data' => $exercicios]);
+            echo json_encode(['success' => true, 'count' => count($exercicios), 'data' => $exercicios,
+                'pagination' => ['page' => $pagination['page'], 'limit' => $pagination['limit'], 'total' => $total, 'total_pages' => (int) ceil($total / $pagination['limit'])]], JSON_UNESCAPED_UNICODE);
         }
         break;
 

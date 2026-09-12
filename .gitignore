@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+
+# Local/runtime files
+uploads/perfil/*
+!uploads/perfil/.htaccess
+.vscode/*.local.json

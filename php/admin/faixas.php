@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Gerenciamento de Faixas';
-require_once 'header.php';
+require_once __DIR__ . '/header.php';
 ?>
 
 <div class="panel-box">
@@ -183,7 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
     window.deleteFaixa = function(id, nome) {
         if (!confirm(`Tem certeza que deseja excluir a Faixa "${nome}"?`)) return;
 
-        fetch('api/faixas.php?id=' + id, { method: 'DELETE' })
+        fetch('api/faixas.php?id=' + id, {
+            method: 'DELETE',
+            headers: { 'Accept': 'application/json', 'X-CSRF-Token': window.oyamaCsrfToken || '' }
+        })
             .then(res => res.json())
             .then(res => {
                 if (res.success) {
@@ -199,4 +202,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/footer.php'; ?>

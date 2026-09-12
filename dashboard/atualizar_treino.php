@@ -4,10 +4,10 @@
  * Handler seguro para atualizar treinos registrados
  */
 
-session_start();
-require '../php/config.php';
-require_once '../php/auth_check.php';
-require_once '../php/csrf.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/auth_check.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 // RNF04 – Validação de Sessão
 if (!is_logged_in() || $_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -52,11 +52,14 @@ if (empty($data_treino) || $duracao_min < 5 || empty($observacoes)) {
     exit();
 }
 
+mysqli_begin_transaction($conn);
+
 // Atualizar treino com prepared statement
 $stmt_update = mysqli_prepare($conn, "UPDATE treinos SET data_treino = ?, duracao_min = ?, observacoes = ? WHERE id = ? AND usuario_id = ?");
 mysqli_stmt_bind_param($stmt_update, "sisii", $data_treino, $duracao_min, $observacoes, $treino_id, $usuario_id);
 
 if (!mysqli_stmt_execute($stmt_update)) {
+    mysqli_rollback($conn);
     error_log("Erro ao atualizar treino: " . mysqli_error($conn));
     header("Location: treinos.php?erro=banco_dados");
     exit();
@@ -81,6 +84,11 @@ if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
             mysqli_stmt_bind_param($stmt_in_ex, "isii", $treino_id, $descricao, $series, $repeticoes);
             if (mysqli_stmt_execute($stmt_in_ex)) {
                 $total_exercicios++;
+            } else {
+                mysqli_rollback($conn);
+                error_log("Erro ao inserir exercício: " . mysqli_error($conn));
+                header("Location: treinos.php?erro=banco_dados");
+                exit();
             }
         }
     }
@@ -88,12 +96,12 @@ if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
 
 // Validação: deve ter pelo menos 1 exercício
 if ($total_exercicios === 0) {
-    $stmt_del = mysqli_prepare($conn, "DELETE FROM treinos WHERE id = ? AND usuario_id = ?");
-    mysqli_stmt_bind_param($stmt_del, "ii", $treino_id, $usuario_id);
-    mysqli_stmt_execute($stmt_del);
+    mysqli_rollback($conn);
     header("Location: treinos.php?erro=sem_exercicios");
     exit();
 }
+
+mysqli_commit($conn);
 
 log_activity($conn, 'treino_atualizado', "Treino ID $treino_id atualizado pelo usuário ID $usuario_id");
 

@@ -47,11 +47,20 @@ switch ($method) {
                 $types .= "s";
             }
 
-            $sql = "SELECT k.*, c.nome AS categoria_nome, c.kanji, c.slug, c.cor AS categoria_cor 
+                $pagination = api_pagination();
+                $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM kihons k JOIN kihon_categorias c ON k.categoria_id = c.id WHERE " . implode(" AND ", $where));
+                if (!empty($params)) mysqli_stmt_bind_param($countStmt, $types, ...$params);
+                mysqli_stmt_execute($countStmt);
+                $total = intval(mysqli_fetch_assoc(mysqli_stmt_get_result($countStmt))['total'] ?? 0);
+
+                $sql = "SELECT k.*, c.nome AS categoria_nome, c.kanji, c.slug, c.cor AS categoria_cor 
                     FROM kihons k 
                     JOIN kihon_categorias c ON k.categoria_id = c.id 
                     WHERE " . implode(" AND ", $where) . " 
-                    ORDER BY c.numero ASC, k.ordem ASC, k.id ASC";
+                    ORDER BY c.numero ASC, k.ordem ASC, k.id ASC LIMIT ? OFFSET ?";
+                $params[] = $pagination['limit'];
+                $params[] = $pagination['offset'];
+                $types .= "ii";
             
             $stmt = mysqli_prepare($conn, $sql);
             if (!empty($params)) {
@@ -65,7 +74,8 @@ switch ($method) {
             $resCat = mysqli_query($conn, "SELECT * FROM kihon_categorias ORDER BY numero ASC");
             $categorias = mysqli_fetch_all($resCat, MYSQLI_ASSOC);
 
-            echo json_encode(['success' => true, 'count' => count($kihons), 'data' => $kihons, 'categorias' => $categorias]);
+            echo json_encode(['success' => true, 'count' => count($kihons), 'data' => $kihons, 'categorias' => $categorias,
+                'pagination' => ['page' => $pagination['page'], 'limit' => $pagination['limit'], 'total' => $total, 'total_pages' => (int) ceil($total / $pagination['limit'])]], JSON_UNESCAPED_UNICODE);
         }
         break;
 

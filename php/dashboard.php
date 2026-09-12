@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/session.php';
 require 'config.php';
 require_once '../includes/icons.php';
 

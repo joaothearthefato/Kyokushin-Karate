@@ -1,7 +1,7 @@
 <?php
-session_start();
-require '../php/config.php';
-require_once '../php/csrf.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 // RNF04 – Validação de Sessão
 if (!isset($_SESSION['id'])) {

@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Dashboard Administrativo';
-require_once 'header.php';
+require_once __DIR__ . '/header.php';
 
 // Fetch stats directly or via query
 $totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM usuarios"))['c'] ?? 0;
@@ -137,4 +137,4 @@ $atividades = $resAct ? mysqli_fetch_all($resAct, MYSQLI_ASSOC) : [];
     </div>
 </div>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/footer.php'; ?>

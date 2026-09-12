@@ -1,7 +1,16 @@
 <?php
-session_start();
-require 'config.php';
-require_once 'auth_check.php';
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth_check.php';
+require_once __DIR__ . '/csrf.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    header('Allow: POST');
+    exit('Método não permitido.');
+}
+
+validar_csrf();
 
 // Registrar logout antes de destruir sessão
 if (isset($_SESSION['id'])) {

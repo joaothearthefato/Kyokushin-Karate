@@ -2,6 +2,7 @@
 // admin/api/bootstrap.php - Base comum das APIs REST administrativas
 require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../auth_check.php';
+require_once __DIR__ . '/../../csrf.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -85,6 +86,13 @@ function api_input() {
     return is_array($json) ? $json : $_POST;
 }
 
+function api_pagination(): array {
+    $page = max(1, intval($_GET['page'] ?? 1));
+    $limit = intval($_GET['limit'] ?? 50);
+    $limit = max(1, min(100, $limit));
+    return ['page' => $page, 'limit' => $limit, 'offset' => ($page - 1) * $limit];
+}
+
 // Qualquer exceção ou erro fatal devolve JSON padronizado sem expor dados internos
 set_exception_handler(function ($e) {
     error_log("Erro de exceção na API admin: " . $e->getMessage());
@@ -102,6 +110,11 @@ register_shutdown_function(function () {
 require_admin();
 
 $method = $_SERVER['REQUEST_METHOD'];
+
+if (in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
+    validar_csrf(true);
+}
+
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $input = api_input();
 

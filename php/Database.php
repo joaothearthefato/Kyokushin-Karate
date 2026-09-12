@@ -16,8 +16,8 @@ class Database {
     // Configurações padrão
     private static string $host     = 'localhost';
     private static string $dbname   = 'oyama_hub';
-    private static string $username = 'root';
-    private static string $password = 'Home@spSENAI2025!';
+    private static string $username = '';
+    private static string $password = '';
     private static string $charset  = 'utf8mb4';
 
     /**

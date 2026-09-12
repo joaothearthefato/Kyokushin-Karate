@@ -1,8 +1,8 @@
 <?php
-session_start();
-require '../php/config.php';
-require_once '../php/csrf.php';
-require_once '../includes/icons.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/csrf.php';
+require_once __DIR__ . '/../includes/icons.php';
 
 // RNF04 – Validação de Sessão
 if (!isset($_SESSION['id'])) {
@@ -522,9 +522,12 @@ mysqli_close($conn);
         <p>Tem certeza que deseja excluir este treino? Esta ação removerá todas as repetições e não poderá ser desfeita.</p>
         <div class="delete-confirm-buttons">
             <button type="button" class="btn-cancelar" onclick="cancelarDelecao()">Cancelar</button>
-            <button type="button" class="btn-confirmar-delete" onclick="executarDelecao()">Sim, Excluir</button>
+            <form id="deleteTreinoForm" method="POST" action="deletar_treino.php">
+                <?= csrf_input() ?>
+                <input type="hidden" name="id" id="treinoParaDeletar" value="">
+                <button type="submit" class="btn-confirmar-delete">Sim, Excluir</button>
+            </form>
         </div>
-        <input type="hidden" id="treinoParaDeletar" value="">
     </div>
 </div>
 
@@ -764,13 +767,6 @@ mysqli_close($conn);
         if (modal) {
             modal.classList.remove('show');
             document.body.style.overflow = '';
-        }
-    }
-
-    function executarDelecao() {
-        const treinoId = document.getElementById('treinoParaDeletar').value;
-        if (treinoId) {
-            window.location.href = 'deletar_treino.php?id=' + encodeURIComponent(treinoId);
         }
     }
 

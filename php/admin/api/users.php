@@ -27,7 +27,7 @@ switch ($method) {
             $q = trim($_GET['q'] ?? '');
             $tipo = trim($_GET['tipo'] ?? '');
             $faixa_id = intval($_GET['faixa_id'] ?? 0);
-            $page = intval($_GET['page'] ?? 0);
+            $page = max(1, intval($_GET['page'] ?? 1));
             $limit = intval($_GET['limit'] ?? 15);
             if ($limit <= 0 || $limit > 100) $limit = 15;
 
@@ -97,7 +97,8 @@ switch ($method) {
                 'page'  => $page,
                 'limit' => $limit,
                 'total' => $totalCount,
-                'pages' => ceil($totalCount / $limit)
+                'pages' => ceil($totalCount / $limit),
+                'total_pages' => (int) ceil($totalCount / $limit)
             ] : null;
 
             // Enviar resposta mantendo compatibilidade com res.data e res.faixas

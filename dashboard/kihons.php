@@ -1,6 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/../php/session.php';
 include_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 // ── Redireciona se não autenticado ──────────────────────────────
 if (empty($_SESSION['id'])) {
@@ -288,6 +289,7 @@ function toggleConcluidoKihon(btn) {
   const fd = new FormData();
   fd.append('referencia_id', id);
   fd.append('tipo', tipo);
+  fd.append('csrf_token', <?= json_encode(csrf_token()) ?>);
 
   fetch('toggle_progresso.php', { method: 'POST', body: fd })
     .then(r => r.json())

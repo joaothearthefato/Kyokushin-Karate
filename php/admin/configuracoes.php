@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Configurações do Sistema';
-require_once 'header.php';
+require_once __DIR__ . '/header.php';
 
 $php_version = phpversion();
 $db_version = mysqli_get_server_info($conn);
@@ -37,7 +37,10 @@ $db_version = mysqli_get_server_info($conn);
 document.getElementById('btnRunMigration')?.addEventListener('click', function() {
     if (!confirm('Deseja re-executar a migração de banco de dados?')) return;
     
-    fetch('../setup_db.php')
+    fetch('../setup_db.php', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': window.oyamaCsrfToken || '' }
+    })
         .then(res => res.text())
         .then(msg => {
             alert(msg);
@@ -47,4 +50,4 @@ document.getElementById('btnRunMigration')?.addEventListener('click', function()
 });
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/footer.php'; ?>

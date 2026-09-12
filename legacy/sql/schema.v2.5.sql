@@ -1,6 +1,6 @@
--- ═══════════════════════════════════════════════════════════════
---  OYAMA HUB — Schema v2.5 (Oyama Hub Full Architecture)
--- ═══════════════════════════════════════════════════════════════
+-- LEGACY: a fonte operacional do schema é database/schema.sql.
+-- Este arquivo é mantido apenas como referência histórica da versão 2.5.
+-- Novas instalações e migrações devem usar database/schema.sql e database/migrations/.
 CREATE DATABASE IF NOT EXISTS oyama_hub
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;

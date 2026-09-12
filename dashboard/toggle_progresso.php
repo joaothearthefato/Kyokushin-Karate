@@ -1,15 +1,18 @@
 <?php
-session_start();
-require '../php/config.php';
-require_once '../php/auth_check.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/auth_check.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
-if (!is_logged_in()) {
+if (!is_logged_in() || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(401);
     echo json_encode(['ok' => false, 'msg' => 'Não autenticado']);
     exit();
 }
+
+validar_csrf(true);
 
 $usuario_id    = intval($_SESSION['id']);
 $tipo          = $_POST['tipo']          ?? '';
@@ -18,6 +21,16 @@ $referencia_id = intval($_POST['referencia_id'] ?? 0);
 if (!in_array($tipo, ['kata', 'kihon'], true) || $referencia_id <= 0) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'msg' => 'Dados inválidos']);
+    exit();
+}
+
+$tabelaReferencia = $tipo === 'kata' ? 'katas' : 'kihons';
+$stmt_ref = mysqli_prepare($conn, "SELECT id FROM {$tabelaReferencia} WHERE id = ?");
+mysqli_stmt_bind_param($stmt_ref, 'i', $referencia_id);
+mysqli_stmt_execute($stmt_ref);
+if (!mysqli_fetch_assoc(mysqli_stmt_get_result($stmt_ref))) {
+    http_response_code(404);
+    echo json_encode(['ok' => false, 'msg' => 'Referência de progresso não encontrada']);
     exit();
 }
 

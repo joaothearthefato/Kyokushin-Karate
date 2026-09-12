@@ -1,6 +1,18 @@
 <?php
 // setup_db.php - Dynamic DB Migration & Seed script for Oyama Hub
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth_check.php';
+require_once __DIR__ . '/csrf.php';
+
+if (PHP_SAPI !== 'cli') {
+    require_admin();
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        header('Allow: POST');
+        exit('Método não permitido.');
+    }
+    validar_csrf(true);
+}
 
 header('Content-Type: text/plain; charset=utf-8');
 

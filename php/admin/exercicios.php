@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Gerenciamento de Exercícios';
-require_once 'header.php';
+require_once __DIR__ . '/header.php';
 ?>
 
 <div class="panel-box">
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.deleteEx = function(id, nome) {
         showDeleteConfirm(
             'Excluir Exercício',
-            `Tem certeza que deseja excluir <strong>${escapeHtml(nome)}</strong>? Esta ação não pode ser desfeita.`,
+            `Tem certeza que deseja excluir ${escapeHtml(nome)}? Esta ação não pode ser desfeita.`,
             function() {
                 adminApi('api/exercicios.php?id=' + id, 'DELETE')
                     .then(res => {
@@ -379,4 +379,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/footer.php'; ?>

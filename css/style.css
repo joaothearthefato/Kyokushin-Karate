@@ -1334,116 +1334,69 @@ html.light .floating-chip {
   padding: var(--space-16) var(--space-8);
 }
 
-.dojokun-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: var(--space-6);
-  align-items: stretch;
+.dojokun-scroll {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 48px) clamp(18px, 5vw, 64px);
+  background: #fff;
+  border: 1px solid #e2e5ec;
+  border-radius: 4px;
+  box-shadow: 0 18px 45px rgba(12, 29, 68, 0.12);
 }
 
 .dojokun-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 14px;
 }
 
 .dojokun-item {
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-2);
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #122b70;
   text-align: left;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-default);
+  transition: color var(--duration-fast) var(--ease-default), transform var(--duration-fast) var(--ease-default);
 }
 
 .dojokun-item:hover {
-  background: var(--color-surface-2);
-  color: var(--color-text);
+  color: #071b55;
+  transform: translateX(3px);
 }
 
 .dojokun-item.active {
-  background: var(--color-surface-3);
-  border-color: var(--color-accent);
-  color: var(--color-text);
+  color: #102b75;
 }
 
 .precept-num {
+  display: grid;
+  flex: 0 0 31px;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  margin-top: 1px;
   font-family: var(--font-display);
-  font-size: var(--text-lg);
+  font-size: 16px;
   font-weight: 700;
-  color: var(--color-accent);
-  min-width: 24px;
+  color: #fff;
+  background: #d71932;
+  border: 3px solid #f4a0a9;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #c5162d;
 }
 
 .precept-title {
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-snug);
-}
-
-.dojokun-card-display {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-}
-
-.dojokun-card-inner {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  transition: opacity var(--duration-base) var(--ease-default),
-    transform var(--duration-base) var(--ease-default);
-}
-
-.dojokun-badge {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-wider);
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.55;
   text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.dojokun-quote {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 3.5vw, 36px);
-  font-weight: 700;
-  color: var(--color-text);
-  line-height: var(--leading-tight);
-}
-
-.dojokun-explanation {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  color: var(--color-text-2);
-  line-height: var(--leading-relaxed);
-}
-
-.dojokun-kanji-deco {
-  position: absolute;
-  bottom: 10px;
-  right: 20px;
-  font-size: 90px;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.04);
-  user-select: none;
-  pointer-events: none;
-  line-height: 1;
 }
 
 /* ── TESTIMONIALS SECTION ── */
@@ -1781,10 +1734,6 @@ footer {
   }
 
   .belt-showcase-card {
-    grid-template-columns: 1fr;
-  }
-
-  .dojokun-layout {
     grid-template-columns: 1fr;
   }
 

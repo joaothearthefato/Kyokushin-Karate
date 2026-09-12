@@ -16,9 +16,7 @@
  *   // Na resposta ao JS: echo json_encode(['csrf' => $token]);
  */
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/session.php';
 
 /**
  * Retorna o token CSRF da sessão atual, criando um se não existir.
@@ -56,6 +54,10 @@ function validar_csrf(bool $isAjax = false): void {
                 break;
             }
         }
+    }
+
+    if (empty($tokenEnviado)) {
+        $tokenEnviado = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
     }
 
     // Fallback para POST (formulários e AJAX via body)

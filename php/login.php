@@ -1,23 +1,24 @@
 <?php
-session_start();
+require_once __DIR__ . '/session.php';
 
 if (isset($_SESSION["id"])) {
     header("Location: ../php/dashboard.php");
     exit;
 }
 
-require("config.php");
-require_once("csrf.php");
-require_once("auth_check.php");
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/auth_check.php';
 
 $erro = null;
+$recuperacaoSolicitada = isset($_GET['recovery']) && $_GET['recovery'] === 'sent';
 
 if (isset($_POST["email"])) {
     validar_csrf();
     $email = $_POST["email"];
     $senha = $_POST["senha"];
 
-    $stmt = mysqli_prepare($conn, "SELECT * FROM usuarios WHERE email=?");
+    $stmt = mysqli_prepare($conn, "SELECT * FROM usuarios WHERE email=? AND ativo = 1");
     mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -27,6 +28,7 @@ if (isset($_POST["email"])) {
 
         if (password_verify($senha, $usuario["senha_hash"])) {
             session_regenerate_id(true);
+            regenerar_csrf();
             $_SESSION["id"]   = $usuario["id"];
             $_SESSION["nome"] = $usuario["nome"];
             $_SESSION["tipo"] = $usuario["tipo"];
@@ -101,6 +103,12 @@ if (isset($_POST["email"])) {
       </div>
       <?php endif; ?>
 
+      <?php if ($recuperacaoSolicitada): ?>
+      <div class="auth-alert auth-alert-success" role="status">
+        Se o e-mail estiver cadastrado, enviaremos instruções para redefinir a senha.
+      </div>
+      <?php endif; ?>
+
       <!-- Formulário -->
       <form method="POST" class="auth-form" novalidate>
         <?= csrf_input() ?>
@@ -163,9 +171,11 @@ if (isset($_POST["email"])) {
     <h2 class="modal-title" id="modal-forgot-title">Recuperar senha</h2>
     <p class="modal-msg">Digite seu e-mail cadastrado para receber as instruções de recuperação.</p>
 
-    <form id="forgot-password-form" onsubmit="handleForgotPassword(event)" novalidate>
+    <form id="forgot-password-form" method="POST" action="solicitar_recuperacao.php" novalidate>
+      <?= csrf_input() ?>
       <input
         type="email"
+        name="email"
         id="forgot-email"
         class="modal-input"
         placeholder="seu@email.com"

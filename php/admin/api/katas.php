@@ -42,7 +42,16 @@ switch ($method) {
                 $types .= "s";
             }
 
-            $sql = "SELECT * FROM katas WHERE " . implode(" AND ", $where) . " ORDER BY ordem ASC, id ASC";
+            $pagination = api_pagination();
+            $countStmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM katas WHERE " . implode(" AND ", $where));
+            if (!empty($params)) mysqli_stmt_bind_param($countStmt, $types, ...$params);
+            mysqli_stmt_execute($countStmt);
+            $total = intval(mysqli_fetch_assoc(mysqli_stmt_get_result($countStmt))['total'] ?? 0);
+
+            $sql = "SELECT * FROM katas WHERE " . implode(" AND ", $where) . " ORDER BY ordem ASC, id ASC LIMIT ? OFFSET ?";
+            $params[] = $pagination['limit'];
+            $params[] = $pagination['offset'];
+            $types .= "ii";
             $stmt = mysqli_prepare($conn, $sql);
             if (!empty($params)) {
                 mysqli_stmt_bind_param($stmt, $types, ...$params);
@@ -51,7 +60,10 @@ switch ($method) {
             $res = mysqli_stmt_get_result($stmt);
             $katas = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-            api_success($katas, 'Katas listados com sucesso');
+            $response = ['status' => 'success', 'code' => 200, 'data' => $katas, 'message' => 'Katas listados com sucesso', 'success' => true,
+                'pagination' => ['page' => $pagination['page'], 'limit' => $pagination['limit'], 'total' => $total, 'total_pages' => (int) ceil($total / $pagination['limit'])]];
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
+            exit;
         }
         break;
 

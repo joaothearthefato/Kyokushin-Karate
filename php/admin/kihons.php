@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Gerenciamento de Kihons';
-require_once 'header.php';
+require_once __DIR__ . '/header.php';
 ?>
 
 <div class="panel-box">
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.deleteKihon = function(id, romaji) {
         showDeleteConfirm(
             'Excluir Kihon',
-            `Tem certeza que deseja excluir o kihon <strong>${escapeHtml(romaji)}</strong>? Esta ação não pode ser desfeita.`,
+            `Tem certeza que deseja excluir o kihon ${escapeHtml(romaji)}? Esta ação não pode ser desfeita.`,
             function() {
                 adminApi('api/kihons.php?id=' + id, 'DELETE')
                     .then(res => {
@@ -422,4 +422,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/footer.php'; ?>

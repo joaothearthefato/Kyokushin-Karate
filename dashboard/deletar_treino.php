@@ -4,10 +4,10 @@
  * Handler seguro para deletar um treino registrado
  */
 
-session_start();
-require '../php/config.php';
-require_once '../php/auth_check.php';
-require_once '../php/csrf.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/auth_check.php';
+require_once __DIR__ . '/../php/csrf.php';
 
 // Validar autenticação
 if (!is_logged_in()) {
@@ -16,7 +16,14 @@ if (!is_logged_in()) {
 }
 
 $usuario_id = intval($_SESSION['id']);
-$treino_id  = intval($_GET['id'] ?? ($_POST['id'] ?? 0));
+$treino_id  = intval($_POST['id'] ?? 0);
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    header('Allow: POST');
+    header('Location: treinos.php?erro=metodo_nao_permitido');
+    exit();
+}
 
 // Validar ID do treino
 if ($treino_id <= 0) {
@@ -24,10 +31,7 @@ if ($treino_id <= 0) {
     exit();
 }
 
-// Se for POST, validar CSRF
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    validar_csrf();
-}
+validar_csrf();
 
 // Verificar se o treino pertence ao usuário usando prepared statement
 $stmt_check = mysqli_prepare($conn, "SELECT id FROM treinos WHERE id = ? AND usuario_id = ?");

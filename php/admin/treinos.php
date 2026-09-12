@@ -1,6 +1,6 @@
 <?php
 $page_title = 'Gerenciamento de Treinos';
-require_once 'header.php';
+require_once __DIR__ . '/header.php';
 ?>
 
 <div class="panel-box">
@@ -253,4 +253,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'footer.php'; ?>
+<?php require_once __DIR__ . '/footer.php'; ?>

@@ -27,6 +27,7 @@
 </div>
 
 <script>
+    window.oyamaCsrfToken = <?= json_encode(csrf_token(), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
     // =========================================================================
     // THEME TOGGLE
     // =========================================================================
@@ -40,6 +41,10 @@
     // =========================================================================
     async function adminApi(url, method = 'GET', payload = null) {
         const options = { method: method, headers: { 'Accept': 'application/json' } };
+
+        if (method !== 'GET') {
+            options.headers['X-CSRF-Token'] = window.oyamaCsrfToken;
+        }
 
         if (payload !== null) {
             options.headers['Content-Type'] = 'application/json';
@@ -92,7 +97,7 @@
         toast.innerHTML = `
             <div class="admin-toast-inner">
                 <div class="admin-toast-icon">${TOAST_ICONS[type] || TOAST_ICONS.success}</div>
-                <span class="admin-toast-msg">${msg}</span>
+                <span class="admin-toast-msg"></span>
                 <button class="admin-toast-close" title="Fechar">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
@@ -101,6 +106,7 @@
         `;
 
         document.body.appendChild(toast);
+        toast.querySelector('.admin-toast-msg').textContent = String(msg);
 
         // Stack multiple toasts
         const existing = document.querySelectorAll('.admin-toast');
@@ -140,7 +146,7 @@
 
         window.showDeleteConfirm = function(title, message, callback) {
             titleEl.textContent = title || 'Confirmar Exclusão';
-            msgEl.innerHTML = message || 'Esta ação <strong>não pode ser desfeita</strong>.';
+            msgEl.textContent = message || 'Esta ação não pode ser desfeita.';
             _callback = callback;
             overlay.classList.add('active');
             btnCancel.focus();

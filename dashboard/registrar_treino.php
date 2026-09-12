@@ -5,10 +5,10 @@
  * Requisitos: RF01-RF07, RNF03-RNF04
  */
 
-session_start();
-require '../php/config.php';
-require_once '../php/csrf.php';
-require_once '../php/auth_check.php';
+require_once __DIR__ . '/../php/session.php';
+require_once __DIR__ . '/../php/config.php';
+require_once __DIR__ . '/../php/csrf.php';
+require_once __DIR__ . '/../php/auth_check.php';
 
 // RNF04 – Validação de Sessão
 if (!isset($_SESSION['id'])) {
@@ -40,11 +40,14 @@ if (empty($data_treino) || $duracao_min < 5 || empty($observacoes)) {
     exit();
 }
 
+mysqli_begin_transaction($conn);
+
 // Sanitizar e inserir com prepared statement
 $stmt_treino = mysqli_prepare($conn, "INSERT INTO treinos (usuario_id, data_treino, duracao_min, observacoes) VALUES (?, ?, ?, ?)");
 mysqli_stmt_bind_param($stmt_treino, "isis", $usuario_id, $data_treino, $duracao_min, $observacoes);
 
 if (!mysqli_stmt_execute($stmt_treino)) {
+    mysqli_rollback($conn);
     error_log("Erro ao inserir treino: " . mysqli_error($conn));
     header("Location: treinos.php?erro=banco_dados");
     exit();
@@ -68,6 +71,9 @@ if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
                 $total_exercicios++;
             } else {
                 error_log("Erro ao inserir exercício: " . mysqli_error($conn));
+                mysqli_rollback($conn);
+                header("Location: treinos.php?erro=banco_dados");
+                exit();
             }
         }
     }
@@ -75,13 +81,12 @@ if (isset($_POST['exercicios']) && is_array($_POST['exercicios'])) {
 
 // Validação: deve ter pelo menos 1 exercício
 if ($total_exercicios === 0) {
-    // Deletar o treino já inserido (prepared)
-    $stmt_del = mysqli_prepare($conn, "DELETE FROM treinos WHERE id = ?");
-    mysqli_stmt_bind_param($stmt_del, "i", $treino_id);
-    mysqli_stmt_execute($stmt_del);
+    mysqli_rollback($conn);
     header("Location: treinos.php?erro=sem_exercicios");
     exit();
 }
+
+mysqli_commit($conn);
 
 mysqli_close($conn);
 

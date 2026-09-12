@@ -1,9 +1,9 @@
 <?php
 
-include("config.php");
+require_once __DIR__ . '/config.php';
 
-require_once("csrf.php");
-require_once("auth_check.php");
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/auth_check.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: registro.php");
@@ -20,6 +20,11 @@ $faixa_id = $_POST["faixa_id"] ?? "";
 
 if ($nome === "" || $email === "" || $senha === "" || $nascimento === "") {
     header("Location: registro.php?status=erro&msg=campos_obrigatorios");
+    exit();
+}
+
+if (strlen($senha) < 8 || strlen($senha) > 255) {
+    header("Location: registro.php?status=erro&msg=senha_invalida");
     exit();
 }
 
@@ -109,6 +114,19 @@ if ($faixa_id === "") {
 } else {
 
     $faixa_id_sql = (int) $faixa_id;
+
+    if ($faixa_id_sql <= 0) {
+        header("Location: registro.php?status=erro&msg=faixa_invalida");
+        exit();
+    }
+
+    $stmt_faixa = mysqli_prepare($conn, "SELECT id FROM faixas WHERE id = ?");
+    mysqli_stmt_bind_param($stmt_faixa, "i", $faixa_id_sql);
+    mysqli_stmt_execute($stmt_faixa);
+    if (!mysqli_fetch_assoc(mysqli_stmt_get_result($stmt_faixa))) {
+        header("Location: registro.php?status=erro&msg=faixa_invalida");
+        exit();
+    }
 
     $stmt_insert = mysqli_prepare(
         $conn,
